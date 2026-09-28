@@ -70,3 +70,82 @@ class TestCompat(FrappeTestCase):
 		from theme_myrmex.compat import desk_css
 
 		return desk_css()
+
+
+class TestTableStyles(FrappeTestCase):
+	"""The Tables tab must reach the CSS, in both colour schemes."""
+
+	def test_table_colours_emitted(self):
+		from theme_myrmex.api import build_payload
+		from theme_myrmex.presets import TABLE_COLOR_FIELDS, COLOR_VARIABLE_MAP
+
+		payload = build_payload()
+		for field in TABLE_COLOR_FIELDS:
+			variable = COLOR_VARIABLE_MAP[field]
+			self.assertIn(variable, payload["vars"], f"{variable} missing from light mode")
+			self.assertIn(variable, payload["dark_vars"], f"{variable} missing from dark mode")
+
+	def test_table_colours_are_rederived_for_dark(self):
+		"""A pale header must not be carried into dark mode."""
+		from theme_myrmex.api import build_payload
+		from theme_myrmex.presets import DEFAULTS
+
+		settings = DEFAULTS.copy()
+		settings["table_header_background"] = "#FFFFFF"
+		payload = build_payload(settings)
+
+		self.assertEqual(payload["vars"]["--myrmex-table-header-bg"], "#FFFFFF")
+		self.assertNotEqual(payload["dark_vars"]["--myrmex-table-header-bg"], "#FFFFFF")
+
+	def test_dark_overrides_feed_derived_table_colours(self):
+		from theme_myrmex.api import build_payload
+		from theme_myrmex.presets import DEFAULTS
+
+		settings = DEFAULTS.copy()
+		settings["dark_border_color"] = "#2C3A4B"
+		payload = build_payload(settings)
+
+		self.assertEqual(payload["dark_vars"]["--myrmex-border"], "#2C3A4B")
+		self.assertEqual(payload["dark_vars"]["--myrmex-table-border"], "#2C3A4B")
+
+	def test_empty_dark_override_falls_back(self):
+		from theme_myrmex.api import build_payload
+		from theme_myrmex.presets import DARK_SURFACES, DEFAULTS
+
+		settings = DEFAULTS.copy()
+		settings["dark_background_color"] = ""
+		payload = build_payload(settings)
+
+		self.assertEqual(
+			payload["dark_vars"]["--myrmex-background"], DARK_SURFACES["--myrmex-background"]
+		)
+
+	def test_class_driven_settings_are_in_the_payload(self):
+		from theme_myrmex.api import build_payload
+		from theme_myrmex.presets import DEFAULTS
+
+		settings = DEFAULTS.copy()
+		settings.update({"table_border_style": "All", "table_sticky_header": 1, "table_header_uppercase": 1})
+		payload = build_payload(settings)
+
+		self.assertEqual(payload["table_border_style"], "all")
+		self.assertTrue(payload["table_sticky_header"])
+		self.assertTrue(payload["table_header_uppercase"])
+
+	def test_row_height_is_clamped(self):
+		doc = frappe.get_single("Theme Settings")
+		doc.table_row_height = 500
+		doc.validate()
+		self.assertLessEqual(doc.table_row_height, 64)
+
+	def test_optional_dark_colour_may_be_empty(self):
+		doc = frappe.get_single("Theme Settings")
+		doc.dark_surface_color = ""
+		doc.validate()
+		self.assertEqual(doc.dark_surface_color, "")
+
+	def test_optional_dark_colour_is_still_validated(self):
+		doc = frappe.get_single("Theme Settings")
+		doc.dark_surface_color = "nonsense"
+		with self.assertRaises(frappe.ValidationError):
+			doc.validate()

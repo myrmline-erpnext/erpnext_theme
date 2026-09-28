@@ -12,7 +12,7 @@
 	border: 1px solid var(--myrmex-border);
 	border-radius: var(--myrmex-card-radius);
 	padding: var(--myrmex-card-padding);
-	margin-bottom: var(--myrmex-space-4);
+	margin-bottom: var(--myrmex-form-section-gap);
 	box-shadow: var(--myrmex-shadow);
 }
 
@@ -73,30 +73,24 @@
 	border-bottom-color: var(--myrmex-primary);
 }
 
-/* Grids (child tables) ---------------------------------------------------- */
+/* Grids (child tables) ----------------------------------------------------
+ * Surface and palette live in myrmex-lists.bundle.css, which loads after this
+ * file, so a child table always matches the other tables. Only the structural
+ * bits stay here. */
 
 .myrmex-enabled .form-grid {
-	border: 1px solid var(--myrmex-border);
+	border: 1px solid var(--myrmex-table-border);
 	border-radius: var(--myrmex-radius-md);
 	overflow: hidden;
 	background-color: var(--myrmex-surface);
 }
 
 .myrmex-enabled .form-grid .grid-heading-row {
-	background-color: var(--myrmex-surface-alt);
-	border-bottom: 1px solid var(--myrmex-border);
-	font-size: 12px;
 	font-weight: 600;
-	color: var(--myrmex-muted);
 }
 
 .myrmex-enabled .form-grid .grid-row {
-	border-bottom: 1px solid var(--myrmex-border);
 	transition: background-color var(--myrmex-transition);
-}
-
-.myrmex-enabled .form-grid .grid-row:hover {
-	background-color: var(--myrmex-surface-alt);
 }
 
 .myrmex-enabled .form-grid .grid-row.grid-row-open {

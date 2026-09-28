@@ -39,7 +39,8 @@
 
 .myrmex-enabled .btn {
 	border-radius: var(--myrmex-button-radius);
-	font-weight: 500;
+	min-height: var(--myrmex-button-height);
+	font-weight: var(--myrmex-button-weight);
 	letter-spacing: 0;
 	box-shadow: none;
 	transition: background-color var(--myrmex-transition), border-color var(--myrmex-transition),
@@ -133,11 +134,18 @@
 .myrmex-enabled textarea.form-control,
 .myrmex-enabled .like-disabled-input {
 	background-color: var(--myrmex-surface);
+	/* Height applies to single-line controls only; a textarea must still grow. */
+	min-height: var(--myrmex-input-height);
 	border: 1px solid var(--myrmex-border);
 	border-radius: var(--myrmex-input-radius);
 	color: var(--myrmex-text);
 	transition: border-color var(--myrmex-transition), box-shadow var(--myrmex-transition),
 		background-color var(--myrmex-transition);
+}
+
+.myrmex-enabled textarea.form-control {
+	min-height: calc(var(--myrmex-input-height) * 2);
+	height: auto;
 }
 
 .myrmex-enabled .form-control::placeholder {

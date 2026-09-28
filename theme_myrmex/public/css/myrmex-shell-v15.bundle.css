@@ -430,3 +430,11 @@
 		padding: 0 var(--myrmex-space-3);
 	}
 }
+
+/* A sticky table header must clear the v15 navbar, which is itself sticky.
+ * (The shared rule in myrmex-lists.bundle.css pins it to 0, which is correct on
+ * v16 where there is no navbar.) */
+.myrmex-table-sticky.myrmex-enabled .list-row-head,
+.myrmex-table-sticky.myrmex-enabled table.table thead th {
+	top: var(--myrmex-navbar-height);
+}

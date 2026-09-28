@@ -34,7 +34,10 @@ myrmex.theme = {
 
 	apply(payload) {
 		if (!payload || !payload.enabled) {
-			myrmex.ROOT.classList.remove("myrmex-enabled");
+			myrmex.ROOT.classList.remove("myrmex-enabled", "myrmex-zebra", "myrmex-table-sticky", "myrmex-table-upper");
+			for (const option of ["all", "horizontal", "none"]) {
+				myrmex.ROOT.classList.remove(`myrmex-table-borders-${option}`);
+			}
 			const existing = document.getElementById(STYLE_ID);
 			if (existing) existing.remove();
 			return;
@@ -44,8 +47,25 @@ myrmex.theme = {
 		myrmex.ROOT.classList.add("myrmex-enabled");
 		myrmex.ROOT.dataset.myrmexDensity = (payload.density || "Comfortable").toLowerCase();
 		myrmex.ROOT.classList.toggle("myrmex-zebra", !!payload.zebra_tables);
+		this.applyTableFlags(payload);
 		this.writeVariables(payload);
 		this.applyDefaultAppearance(payload.appearance);
+	},
+
+	/**
+	 * The three table settings that are not a single value: border style is
+	 * three mutually exclusive rule sets, sticky and uppercase are switches.
+	 * See the class list in myrmex-lists.bundle.css.
+	 */
+	applyTableFlags(payload) {
+		const style = payload.table_border_style || "horizontal";
+
+		for (const option of ["all", "horizontal", "none"]) {
+			myrmex.ROOT.classList.toggle(`myrmex-table-borders-${option}`, option === style);
+		}
+
+		myrmex.ROOT.classList.toggle("myrmex-table-sticky", !!payload.table_sticky_header);
+		myrmex.ROOT.classList.toggle("myrmex-table-upper", !!payload.table_header_uppercase);
 	},
 
 	writeVariables(payload) {

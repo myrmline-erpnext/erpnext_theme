@@ -10,6 +10,10 @@ copied from Frappe's own templates:
   (`frappe/public/js/frappe/ui/sidebar/sidebar_header.js`,
   `.dropdown-menu-item[data-name="logout"]`).
 * `compat.test.js` — shell detection and the selectors each shell exposes.
+* `theme_builder.test.js` — the builder's tabs against the Theme Settings
+  DocType: every tab edits a field that exists, every stored setting is
+  reachable from some tab, and no field appears twice. The middle check is the
+  one that would have caught the missing Tables tab.
 
 They need only Node and jsdom, not a bench:
 
@@ -17,6 +21,7 @@ They need only Node and jsdom, not a bench:
 npm install jsdom
 node theme_myrmex/tests/js/logout.test.js
 node theme_myrmex/tests/js/compat.test.js
+node theme_myrmex/tests/js/theme_builder.test.js
 ```
 
 If Frappe changes either menu's markup, these fail loudly instead of the

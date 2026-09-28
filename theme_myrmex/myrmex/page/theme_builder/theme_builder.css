@@ -269,3 +269,124 @@
 		position: static;
 	}
 }
+
+/* Notes: a tab-level or field-level caveat, e.g. "v15 only". */
+
+.myrmex-builder__note {
+	font-size: 12px;
+	line-height: 1.45;
+	color: var(--myrmex-muted, #6b7280);
+	margin: 0 0 12px;
+}
+
+.myrmex-builder__note--field {
+	margin: -4px 0 0;
+	padding-bottom: 8px;
+	border-bottom: 1px solid var(--myrmex-border, #e5e7eb);
+}
+
+.myrmex-builder__field-wrap + .myrmex-builder__field {
+	border-top: none;
+}
+
+.myrmex-builder__field-wrap .myrmex-builder__field {
+	border-bottom: none;
+}
+
+.myrmex-builder__control .btn-xs {
+	padding: 2px 8px;
+	font-size: 11px;
+	border-radius: 6px;
+}
+
+/* The tables tab has the most controls; keep the panel scrollable rather than
+ * letting it push the preview off screen. */
+.myrmex-builder__groups {
+	max-height: min(62vh, 620px);
+	overflow-y: auto;
+	/* Bottom padding so the last control is not sliced by the scroll edge. */
+	padding: 0 4px 8px 0;
+}
+
+/* Sample table in the preview -------------------------------------------- */
+
+.myrmex-preview__tablewrap {
+	grid-column: 1 / -1;
+	border: 1px solid var(--myrmex-table-border, #e5e7eb);
+	border-radius: var(--myrmex-card-radius, 14px);
+	overflow: hidden;
+	background-color: var(--myrmex-surface, #fff);
+}
+
+.myrmex-preview__table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 13px;
+	color: var(--myrmex-text, #111827);
+}
+
+.myrmex-preview__table th {
+	background-color: var(--myrmex-table-header-bg, #fbfbfc);
+	color: var(--myrmex-table-header-text, #6b7280);
+	font-size: var(--myrmex-table-header-size, 12px);
+	font-weight: 600;
+	text-align: left;
+	padding: var(--myrmex-table-cell-padding, 12px);
+	border-bottom: 1px solid var(--myrmex-table-border, #e5e7eb);
+}
+
+.myrmex-preview__table td {
+	padding: var(--myrmex-table-cell-padding, 12px);
+	height: var(--myrmex-table-row-height, 42px);
+	border-bottom: 1px solid var(--myrmex-table-border, #e5e7eb);
+}
+
+.myrmex-preview__table tbody tr:last-child td {
+	border-bottom: none;
+}
+
+.myrmex-preview__table tbody tr:hover td {
+	background-color: var(--myrmex-table-row-hover, #f7f7f9);
+}
+
+/* The class-driven options, mirrored from the payload by refresh_preview(). */
+
+.myrmex-preview--zebra .myrmex-preview__table tbody tr:nth-child(even) td {
+	background-color: var(--myrmex-table-stripe, #fafafb);
+}
+
+.myrmex-preview--zebra .myrmex-preview__table tbody tr:nth-child(even):hover td {
+	background-color: var(--myrmex-table-row-hover, #f7f7f9);
+}
+
+.myrmex-preview--upper .myrmex-preview__table th {
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+}
+
+.myrmex-preview--borders-all .myrmex-preview__table th,
+.myrmex-preview--borders-all .myrmex-preview__table td {
+	border: 1px solid var(--myrmex-table-border, #e5e7eb);
+}
+
+.myrmex-preview--borders-none .myrmex-preview__table th,
+.myrmex-preview--borders-none .myrmex-preview__table td {
+	border: none;
+}
+
+.myrmex-preview--borders-none .myrmex-preview__table th {
+	border-bottom: 1px solid var(--myrmex-table-border, #e5e7eb);
+}
+
+/* Buttons and inputs in the sample follow the Buttons / Forms tabs. */
+
+.myrmex-preview__btn {
+	min-height: var(--myrmex-button-height, 32px);
+	display: inline-flex;
+	align-items: center;
+	font-weight: var(--myrmex-button-weight, 500);
+}
+
+.myrmex-preview__input {
+	height: var(--myrmex-input-height, 34px);
+}
