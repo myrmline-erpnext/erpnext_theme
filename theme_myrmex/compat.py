@@ -95,6 +95,10 @@ SHARED_CSS_AFTER_SHELL = [
 	"myrmex-lists.bundle.css",
 	"myrmex-dark.bundle.css",
 	"myrmex-responsive.bundle.css",
+	# Last: RTL typography corrections, which must win over everything above.
+	# Frappe runs every bundle through rtlcss and serves rtl_*.css for ar/he/fa/ps,
+	# so this file only carries what rtlcss cannot infer. See the file header.
+	"myrmex-rtl.bundle.css",
 ]
 
 

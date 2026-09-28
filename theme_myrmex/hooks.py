@@ -33,6 +33,7 @@ app_include_js = "myrmex.bundle.js"
 web_include_css = [
 	"myrmex-variables.bundle.css",
 	"myrmex-login.bundle.css",
+	"myrmex-rtl.bundle.css",
 ]
 
 web_include_js = "myrmex-web.bundle.js"

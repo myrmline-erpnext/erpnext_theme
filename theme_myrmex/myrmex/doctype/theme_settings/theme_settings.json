@@ -234,7 +234,7 @@
   },
   {
    "default": "260",
-   "description": "v15 only. On v16 the sidebar has its own resize handle, which wins.",
+   "description": "v15 only \u2014 on v16 the sidebar has its own resize handle.",
    "fieldname": "sidebar_width",
    "fieldtype": "Int",
    "label": "Sidebar width (px)",
@@ -281,7 +281,7 @@
   },
   {
    "default": "60",
-   "description": "v15 only. v16 has no top navbar.",
+   "description": "v15 only. v16 has no top navbar \u2014 its shell lives in the sidebar.",
    "fieldname": "navbar_height",
    "fieldtype": "Int",
    "label": "Navbar height (px)",
@@ -459,15 +459,16 @@
   },
   {
    "default": "1",
+   "description": "The header stays put while the table body scrolls.",
    "fieldname": "table_sticky_header",
    "fieldtype": "Check",
-   "label": "Keep header visible while scrolling"
+   "label": "Keep header visible"
   },
   {
    "default": "0",
    "fieldname": "table_header_uppercase",
    "fieldtype": "Check",
-   "label": "Uppercase header labels"
+   "label": "Uppercase headers"
   },
   {
    "fieldname": "dark_mode_section",
