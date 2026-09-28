@@ -1,66 +1,85 @@
-// Sidebar behaviour for the Frappe v15 Desk.
+// Sidebar behaviour.
 //
-// v15 renders the workspace sidebar inside each page:
-//   .layout-side-section > .list-sidebar.overlay-sidebar > .desk-sidebar
-//     > .standard-sidebar-section > .sidebar-item-container > .item-anchor
-// and ships its own toggle (.page-head .sidebar-toggle-btn) that hides the
-// sidebar on desktop and opens it as an overlay drawer on mobile.
+// The two shells need opposite treatment:
 //
-// Myrmex keeps that native toggle and drawer exactly as they are, and adds:
-//   * a brand block at the top of the workspace sidebar;
-//   * a collapsed "rail" mode for the workspace sidebar on desktop, toggled
-//     from the navbar button or Ctrl/Cmd+B, and remembered across reloads;
-//   * a floating tooltip for rail items (a CSS ::after would be clipped by the
-//     sidebar's own scroll container).
-// Nothing is re-parented or removed.
+//   v15  has no collapse control and no drawer, so the theme supplies both,
+//        plus a brand block and rail tooltips. State lives in classes on <html>
+//        and in localStorage.
+//
+//   v16  already collapses (.collapse-sidebar-link), already has a resize
+//        handle, its own mobile overlay and its own tooltips. Adding ours would
+//        mean two controls fighting over one width, so on v16 this module only
+//        forwards toggle() to the native button and stays out of the way.
 
 const myrmex = window.myrmex;
 
 const COLLAPSED_CLASS = "myrmex-sidebar-collapsed";
+const OPEN_CLASS = "myrmex-sidebar-open";
 const STORAGE_KEY = "sidebar-collapsed";
 
 myrmex.sidebar = {
 	init() {
+		if (myrmex.compat.isV16()) {
+			this.initV16();
+			return;
+		}
+		this.initV15();
+	},
+
+	// --- v16: defer to the shell ------------------------------------------
+
+	initV16() {
+		// Nothing to mount. The native control owns the width, and the items
+		// already carry data-toggle="tooltip".
+	},
+
+	// --- v15: the theme supplies the behaviour ----------------------------
+
+	initV15() {
 		this.restoreState();
-		this.mountTooltip();
+		this.mountOverlay();
 
 		myrmex.onRoute(() => {
-			const page = myrmex.currentPage();
-			const deskSidebar = page && page.querySelector(".desk-sidebar");
-			myrmex.ROOT.classList.toggle("myrmex-has-rail", !!deskSidebar);
-			if (!deskSidebar) return;
+			const host = myrmex.compat.sidebarItemHost();
+			if (!host) return;
 
-			this.mountBrand(deskSidebar);
-			this.decorateItems(deskSidebar);
-			// Workspace items stream in after an XHR and are re-rendered in
-			// edit mode, with no event to hook. One scoped observer, dropped on
-			// the next route change.
-			myrmex.observe(deskSidebar, () => this.decorateItems(deskSidebar));
+			this.mountBrand(host);
+			this.decorateItems(host);
+
+			// The workspace list is re-rendered when workspaces are edited and
+			// Frappe emits no event for it. One scoped observer, dropped on the
+			// next route change by myrmex.disconnectObservers().
+			myrmex.observe(host, () => this.decorateItems(host));
+		});
+
+		// A tap inside the drawer should close it.
+		document.addEventListener("click", (event) => {
+			if (!myrmex.isMobile()) return;
+			if (event.target.closest && event.target.closest(".sidebar-item-container .item-anchor")) {
+				this.closeDrawer();
+			}
 		});
 
 		document.addEventListener("keydown", (event) => {
-			if (!(event.ctrlKey || event.metaKey) || event.altKey || event.shiftKey) return;
-			if (event.key.toLowerCase() !== "b") return;
-			// Leave Ctrl+B to text fields and editors, where it means bold.
-			if (myrmex.isTypingTarget(event.target)) return;
-			if (myrmex.isMobile()) return;
-			event.preventDefault();
-			this.toggle();
+			if (!event.key) return;
+			if (event.key === "Escape") this.closeDrawer();
+			// Ctrl/Cmd + B mirrors the convention people know from editors.
+			if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "b") {
+				event.preventDefault();
+				this.toggle();
+			}
 		});
 
-		// A tap on an item inside the native mobile drawer should close it.
-		document.addEventListener("click", (event) => {
-			if (!myrmex.isMobile()) return;
-			if (!event.target.closest(".overlay-sidebar.opened .item-anchor")) return;
-			const backdrop = document.querySelector(".layout-side-section .close-sidebar");
-			if (backdrop) backdrop.click();
+		window.addEventListener("resize", () => {
+			if (!myrmex.isMobile()) this.closeDrawer();
 		});
 	},
 
 	restoreState() {
-		const boot = frappe.boot && frappe.boot.myrmex_theme;
-		const fallback = boot ? !!boot.collapse_sidebar_by_default : false;
-		myrmex.ROOT.classList.toggle(COLLAPSED_CLASS, !!myrmex.storage.get(STORAGE_KEY, fallback));
+		const payload = (window.frappe && frappe.boot && frappe.boot.myrmex_theme) || null;
+		const fallback = payload ? !!payload.collapse_sidebar_by_default : false;
+		const collapsed = myrmex.storage.get(STORAGE_KEY, fallback);
+		myrmex.ROOT.classList.toggle(COLLAPSED_CLASS, !!collapsed);
 	},
 
 	isCollapsed() {
@@ -68,95 +87,69 @@ myrmex.sidebar = {
 	},
 
 	/**
-	 * Workspace pages: switch between the full sidebar and the rail.
-	 * Other pages (list, form, report): defer to Frappe's own toggle, so the
-	 * shortcut does the same thing the page's sidebar button does.
+	 * On v16 this clicks the shell's own button, so there is exactly one source
+	 * of truth for the sidebar width. On v15 it drives our classes.
 	 */
 	toggle() {
-		const page = myrmex.currentPage();
-		if (!page) return;
-
-		if (page.querySelector(".desk-sidebar")) {
-			const collapsed = !this.isCollapsed();
-			myrmex.ROOT.classList.toggle(COLLAPSED_CLASS, collapsed);
-			myrmex.storage.set(STORAGE_KEY, collapsed);
-			this.hideTooltip();
-			document.dispatchEvent(new CustomEvent("myrmex:sidebar-change", { detail: { collapsed } }));
-			// Charts and datatables measure their container.
-			window.dispatchEvent(new Event("resize"));
+		if (myrmex.compat.isV16()) {
+			const native = document.querySelector(".collapse-sidebar-link, .sidebar-toggle-btn");
+			if (native) native.click();
 			return;
 		}
 
-		const nativeToggle = page.querySelector(".page-head .sidebar-toggle-btn");
-		if (nativeToggle && nativeToggle.offsetParent !== null) nativeToggle.click();
+		if (myrmex.isMobile()) {
+			myrmex.ROOT.classList.toggle(OPEN_CLASS);
+			return;
+		}
+
+		const collapsed = !this.isCollapsed();
+		myrmex.ROOT.classList.toggle(COLLAPSED_CLASS, collapsed);
+		myrmex.storage.set(STORAGE_KEY, collapsed);
+
+		// Charts and datatables measure their container, so tell them it moved.
+		window.dispatchEvent(new Event("resize"));
 	},
 
-	mountBrand(deskSidebar) {
-		myrmex.once(deskSidebar, "Brand", () => {
-			const brandText =
-				(frappe.boot && frappe.boot.sysdefaults && frappe.boot.sysdefaults.app_name) ||
-				(frappe.boot && frappe.boot.app_name) ||
+	closeDrawer() {
+		myrmex.ROOT.classList.remove(OPEN_CLASS);
+	},
+
+	mountOverlay() {
+		if (document.querySelector(".myrmex-sidebar-overlay")) return;
+		const overlay = document.createElement("div");
+		overlay.className = "myrmex-sidebar-overlay";
+		overlay.addEventListener("click", () => this.closeDrawer());
+		document.body.appendChild(overlay);
+	},
+
+	mountBrand(host) {
+		myrmex.once(host, "Brand", () => {
+			const label =
+				(window.frappe && frappe.boot && frappe.boot.sysdefaults && frappe.boot.sysdefaults.app_name) ||
 				"Myrmex";
-			const brand = document.createElement("a");
+			const safe = frappe.utils.escape_html(label);
+			const brand = document.createElement("div");
 			brand.className = "myrmex-sidebar-brand";
-			brand.href = "/app";
-			brand.setAttribute("aria-label", brandText);
 			brand.innerHTML = `
-				<span class="myrmex-mark" aria-hidden="true">${myrmex.escape(brandText.charAt(0).toUpperCase())}</span>
-				<span class="myrmex-wordmark">${myrmex.escape(brandText)}</span>
+				<span class="myrmex-mark">${frappe.utils.escape_html(label.charAt(0).toUpperCase())}</span>
+				<span class="myrmex-wordmark">${safe}</span>
 			`;
-			deskSidebar.prepend(brand);
+			host.prepend(brand);
 		});
 	},
 
-	/** Copy each label into a data attribute for the rail tooltip. */
-	decorateItems(deskSidebar) {
-		deskSidebar.querySelectorAll(".sidebar-item-container").forEach((item) => {
-			const label = item.querySelector(":scope > .desk-sidebar-item .sidebar-item-label");
+	/**
+	 * Copy each item's label into data-myrmex-label so the collapsed rail can
+	 * show a CSS tooltip without inserting extra nodes into Frappe's tree.
+	 */
+	decorateItems(host) {
+		host.querySelectorAll(".sidebar-item-container").forEach((item) => {
+			const label = item.querySelector(".sidebar-item-label");
 			const text = label ? label.textContent.trim() : "";
-			if (text && item.dataset.myrmexLabel !== text) item.dataset.myrmexLabel = text;
+			if (text && item.dataset.myrmexLabel !== text) {
+				item.dataset.myrmexLabel = text;
+			}
 		});
-	},
-
-	// --- rail tooltip --------------------------------------------------------
-
-	mountTooltip() {
-		if (this.tooltip) return;
-		const tip = document.createElement("div");
-		tip.className = "myrmex-tooltip";
-		tip.setAttribute("role", "tooltip");
-		tip.hidden = true;
-		document.body.appendChild(tip);
-		this.tooltip = tip;
-
-		const show = (event) => {
-			if (!this.isCollapsed() || myrmex.isMobile()) return;
-			const anchor = event.target.closest(".desk-sidebar .item-anchor");
-			if (!anchor) return;
-			const item = anchor.closest(".sidebar-item-container");
-			const text = item && item.dataset.myrmexLabel;
-			if (!text) return;
-
-			const rect = anchor.getBoundingClientRect();
-			const rtl = document.documentElement.dir === "rtl";
-			tip.textContent = text;
-			tip.hidden = false;
-			tip.style.top = `${rect.top + rect.height / 2}px`;
-			tip.style.left = rtl ? "" : `${rect.right + 10}px`;
-			tip.style.right = rtl ? `${window.innerWidth - rect.left + 10}px` : "";
-		};
-
-		document.addEventListener("mouseover", show);
-		document.addEventListener("focusin", show);
-		document.addEventListener("mouseout", (event) => {
-			if (event.target.closest(".desk-sidebar .item-anchor")) this.hideTooltip();
-		});
-		document.addEventListener("focusout", () => this.hideTooltip());
-		window.addEventListener("scroll", () => this.hideTooltip(), { passive: true, capture: true });
-	},
-
-	hideTooltip() {
-		if (this.tooltip) this.tooltip.hidden = true;
 	},
 };
 
