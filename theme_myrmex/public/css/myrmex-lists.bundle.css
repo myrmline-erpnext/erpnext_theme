@@ -39,17 +39,17 @@
 }
 
 .myrmex-enabled .list-row-head {
-	background-color: var(--myrmex-surface-alt);
-	border-bottom: 1px solid var(--myrmex-border);
-	font-size: 12px;
+	background-color: var(--myrmex-table-header-bg);
+	border-bottom: 1px solid var(--myrmex-table-border);
+	font-size: var(--myrmex-table-header-size);
 	font-weight: 600;
 	letter-spacing: 0.02em;
-	color: var(--myrmex-muted);
-	min-height: 40px;
+	color: var(--myrmex-table-header-text);
+	min-height: var(--myrmex-table-row-height);
 }
 
 .myrmex-enabled .list-row-container {
-	border-bottom: 1px solid var(--myrmex-border);
+	border-bottom: 1px solid var(--myrmex-table-border);
 	transition: background-color var(--myrmex-transition);
 }
 
@@ -58,12 +58,14 @@
 }
 
 .myrmex-enabled .list-row {
-	min-height: var(--myrmex-row-height);
+	min-height: var(--myrmex-table-row-height);
+	padding-top: 0;
+	padding-bottom: 0;
 	color: var(--myrmex-text);
 }
 
 .myrmex-enabled .list-row-container:hover {
-	background-color: var(--myrmex-surface-alt);
+	background-color: var(--myrmex-table-row-hover);
 }
 
 .myrmex-enabled .list-row-container:has(.list-row-checkbox:checked) {
@@ -78,9 +80,18 @@
 	color: var(--myrmex-muted);
 }
 
-/* Optional zebra striping, driven by the "Striped table rows" setting. */
-.myrmex-zebra.myrmex-enabled .list-row-container:nth-child(even) {
-	background-color: color-mix(in srgb, var(--myrmex-surface-alt) 60%, var(--myrmex-surface));
+/* Optional zebra striping, driven by the "Striped rows" setting. */
+.myrmex-zebra.myrmex-enabled .list-row-container:nth-child(even),
+.myrmex-zebra.myrmex-enabled .datatable .dt-row--odd .dt-cell,
+.myrmex-zebra.myrmex-enabled table.table tbody tr:nth-child(even),
+.myrmex-zebra.myrmex-enabled .form-grid .grid-row:nth-child(even) {
+	background-color: var(--myrmex-table-stripe);
+}
+
+/* Hover must still win over the stripe. */
+.myrmex-zebra.myrmex-enabled .list-row-container:nth-child(even):hover,
+.myrmex-zebra.myrmex-enabled table.table tbody tr:nth-child(even):hover {
+	background-color: var(--myrmex-table-row-hover);
 }
 
 /* Bulk actions ------------------------------------------------------------ */
@@ -101,20 +112,21 @@
 .myrmex-enabled .datatable {
 	border-radius: var(--myrmex-card-radius);
 	overflow: hidden;
-	border: 1px solid var(--myrmex-border);
+	border: 1px solid var(--myrmex-table-border);
 	background-color: var(--myrmex-surface);
 }
 
 .myrmex-enabled .datatable .dt-header,
 .myrmex-enabled .datatable .dt-row-header {
-	background-color: var(--myrmex-surface-alt);
-	border-bottom: 1px solid var(--myrmex-border);
-	color: var(--myrmex-muted);
+	background-color: var(--myrmex-table-header-bg);
+	border-bottom: 1px solid var(--myrmex-table-border);
+	color: var(--myrmex-table-header-text);
+	font-size: var(--myrmex-table-header-size);
 	font-weight: 600;
 }
 
 .myrmex-enabled .datatable .dt-cell {
-	border-color: var(--myrmex-border);
+	border-color: var(--myrmex-table-border);
 	color: var(--myrmex-text);
 }
 
@@ -123,28 +135,37 @@
 }
 
 .myrmex-enabled .datatable .dt-row:hover .dt-cell {
-	background-color: var(--myrmex-surface-alt);
+	background-color: var(--myrmex-table-row-hover);
 }
 
 .myrmex-enabled table.table {
 	color: var(--myrmex-text);
-	border-color: var(--myrmex-border);
+	border-color: var(--myrmex-table-border);
 }
 
 .myrmex-enabled table.table thead th {
-	background-color: var(--myrmex-surface-alt);
-	border-bottom: 1px solid var(--myrmex-border);
-	color: var(--myrmex-muted);
-	font-size: 12px;
+	background-color: var(--myrmex-table-header-bg);
+	border-bottom: 1px solid var(--myrmex-table-border);
+	color: var(--myrmex-table-header-text);
+	font-size: var(--myrmex-table-header-size);
 	font-weight: 600;
 	letter-spacing: 0.02em;
-	padding: var(--myrmex-space-3);
+	padding: var(--myrmex-table-cell-padding);
 }
 
 .myrmex-enabled table.table td {
-	border-color: var(--myrmex-border);
-	padding: var(--myrmex-space-3);
+	border-color: var(--myrmex-table-border);
+	padding: var(--myrmex-table-cell-padding);
+	height: var(--myrmex-table-row-height);
 	vertical-align: middle;
+}
+
+.myrmex-enabled table.table tbody tr {
+	transition: background-color var(--myrmex-transition);
+}
+
+.myrmex-enabled table.table tbody tr:hover {
+	background-color: var(--myrmex-table-row-hover);
 }
 
 .myrmex-enabled .myrmex-table-wrapper,
@@ -210,4 +231,130 @@
 
 .myrmex-enabled .gantt .bar {
 	fill: var(--myrmex-primary);
+}
+
+/* ===========================================================================
+ * Table styles driven by a class rather than a variable
+ * ---------------------------------------------------------------------------
+ * These three settings cannot be expressed as a single value, so
+ * myrmex-theme.js puts the choice on <html> and each option is a rule set:
+ *
+ *   .myrmex-table-borders-all         every cell outlined
+ *   .myrmex-table-borders-horizontal  row separators only (default)
+ *   .myrmex-table-borders-none        no rules at all
+ *   .myrmex-table-sticky              header stays put while the body scrolls
+ *   .myrmex-table-upper               uppercase header labels
+ *
+ * The surfaces they apply to are the four kinds of table the Desk renders: the
+ * list view, DataTable (report view), plain Bootstrap tables, and the child
+ * table grid on a form.
+ * ======================================================================== */
+
+/* All borders ------------------------------------------------------------- */
+
+.myrmex-table-borders-all.myrmex-enabled table.table th,
+.myrmex-table-borders-all.myrmex-enabled table.table td {
+	border: 1px solid var(--myrmex-table-border);
+}
+
+.myrmex-table-borders-all.myrmex-enabled .datatable .dt-cell {
+	border-right: 1px solid var(--myrmex-table-border);
+	border-bottom: 1px solid var(--myrmex-table-border);
+}
+
+.myrmex-table-borders-all.myrmex-enabled .list-row-col:not(:last-child) {
+	border-right: 1px solid var(--myrmex-table-border);
+}
+
+.myrmex-table-borders-all.myrmex-enabled .form-grid .grid-static-col:not(:last-child) {
+	border-right: 1px solid var(--myrmex-table-border);
+}
+
+/* Horizontal only --------------------------------------------------------- */
+
+.myrmex-table-borders-horizontal.myrmex-enabled table.table th,
+.myrmex-table-borders-horizontal.myrmex-enabled table.table td {
+	border-left: none;
+	border-right: none;
+	border-top: none;
+	border-bottom: 1px solid var(--myrmex-table-border);
+}
+
+.myrmex-table-borders-horizontal.myrmex-enabled .datatable .dt-cell {
+	border-right: none;
+	border-bottom: 1px solid var(--myrmex-table-border);
+}
+
+/* None -------------------------------------------------------------------- */
+
+.myrmex-table-borders-none.myrmex-enabled table.table th,
+.myrmex-table-borders-none.myrmex-enabled table.table td,
+.myrmex-table-borders-none.myrmex-enabled .datatable .dt-cell,
+.myrmex-table-borders-none.myrmex-enabled .list-row-container,
+.myrmex-table-borders-none.myrmex-enabled .form-grid .grid-row {
+	border: none;
+}
+
+/* The header rule is the one separator worth keeping without borders. */
+.myrmex-table-borders-none.myrmex-enabled .list-row-head,
+.myrmex-table-borders-none.myrmex-enabled table.table thead th {
+	border-bottom: 1px solid var(--myrmex-table-border);
+}
+
+/* Sticky header ----------------------------------------------------------- */
+
+.myrmex-table-sticky.myrmex-enabled table.table thead th {
+	position: sticky;
+	top: 0;
+	z-index: 2;
+	background-color: var(--myrmex-table-header-bg);
+}
+
+.myrmex-table-sticky.myrmex-enabled .list-row-head {
+	position: sticky;
+	/* Below the navbar on v15; the v16 shell has none, so 0 is right there. */
+	top: 0;
+	z-index: 2;
+}
+
+.myrmex-table-sticky.myrmex-enabled .form-grid .grid-heading-row {
+	position: sticky;
+	top: 0;
+	z-index: 2;
+	background-color: var(--myrmex-table-header-bg);
+}
+
+/* Uppercase headers ------------------------------------------------------- */
+
+.myrmex-table-upper.myrmex-enabled .list-row-head,
+.myrmex-table-upper.myrmex-enabled table.table thead th,
+.myrmex-table-upper.myrmex-enabled .datatable .dt-header,
+.myrmex-table-upper.myrmex-enabled .form-grid .grid-heading-row {
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+}
+
+/* Child-table grids on a form share the table palette ------------------- */
+
+.myrmex-enabled .form-grid {
+	border-color: var(--myrmex-table-border);
+}
+
+.myrmex-enabled .form-grid .grid-heading-row {
+	background-color: var(--myrmex-table-header-bg);
+	border-bottom-color: var(--myrmex-table-border);
+	color: var(--myrmex-table-header-text);
+	font-size: var(--myrmex-table-header-size);
+}
+
+.myrmex-enabled .form-grid .grid-row {
+	border-bottom-color: var(--myrmex-table-border);
+}
+
+.myrmex-enabled .form-grid .grid-row:hover {
+	background-color: var(--myrmex-table-row-hover);
+}
+
+.myrmex-enabled .form-grid .grid-row > .data-row {
+	min-height: var(--myrmex-table-row-height);
 }

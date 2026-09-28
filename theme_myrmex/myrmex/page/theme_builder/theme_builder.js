@@ -22,12 +22,6 @@ const GROUPS = [
 		fields: [
 			{ fieldname: "theme_preset", label: __("Preset"), type: "preset" },
 			{
-				fieldname: "default_appearance",
-				label: __("Default appearance"),
-				type: "select",
-				options: ["Light", "Dark", "System"],
-			},
-			{
 				fieldname: "density",
 				label: __("Density"),
 				type: "select",
@@ -62,13 +56,22 @@ const GROUPS = [
 			{ fieldname: "sidebar_active", label: __("Active"), type: "color" },
 			{ fieldname: "sidebar_hover", label: __("Hover"), type: "color" },
 			{ fieldname: "sidebar_icon", label: __("Icon"), type: "color" },
-			{ fieldname: "sidebar_width", label: __("Width (px)"), type: "number", min: 180, max: 380 },
+			{
+				fieldname: "sidebar_width",
+				label: __("Width (px)"),
+				type: "number",
+				min: 180,
+				max: 380,
+				note: __("v15 only — on v16 the sidebar has its own resize handle."),
+			},
 			{ fieldname: "collapse_sidebar_by_default", label: __("Start collapsed"), type: "check" },
 		],
 	},
 	{
 		key: "navbar",
 		label: __("Navbar"),
+		// v16 has no top navbar; the tab stays visible but says so.
+		note: __("v15 only. v16 has no top navbar — its shell lives in the sidebar."),
 		fields: [
 			{ fieldname: "navbar_background", label: __("Background"), type: "color" },
 			{ fieldname: "navbar_text", label: __("Text"), type: "color" },
@@ -78,20 +81,93 @@ const GROUPS = [
 		],
 	},
 	{
-		key: "components",
-		label: __("Components"),
+		key: "cards",
+		label: __("Cards"),
 		fields: [
-			{ fieldname: "card_radius", label: __("Card radius (px)"), type: "number", min: 0, max: 32 },
-			{ fieldname: "card_padding", label: __("Card padding (px)"), type: "number", min: 8, max: 40 },
-			{ fieldname: "button_radius", label: __("Button radius (px)"), type: "number", min: 0, max: 32 },
-			{ fieldname: "input_radius", label: __("Input radius (px)"), type: "number", min: 0, max: 32 },
+			{ fieldname: "card_radius", label: __("Radius (px)"), type: "number", min: 0, max: 32 },
+			{ fieldname: "card_padding", label: __("Padding (px)"), type: "number", min: 8, max: 40 },
 			{
 				fieldname: "shadow_size",
 				label: __("Shadow"),
 				type: "select",
 				options: ["None", "Small", "Medium", "Large"],
 			},
-			{ fieldname: "zebra_tables", label: __("Striped table rows"), type: "check" },
+		],
+	},
+	{
+		key: "buttons",
+		label: __("Buttons"),
+		fields: [
+			{ fieldname: "button_radius", label: __("Radius (px)"), type: "number", min: 0, max: 32 },
+			{ fieldname: "button_height", label: __("Height (px)"), type: "number", min: 24, max: 48 },
+			{
+				fieldname: "button_font_weight",
+				label: __("Label weight"),
+				type: "select",
+				options: ["400", "500", "600", "700"],
+			},
+		],
+	},
+	{
+		key: "forms",
+		label: __("Forms"),
+		fields: [
+			{ fieldname: "input_radius", label: __("Input radius (px)"), type: "number", min: 0, max: 32 },
+			{ fieldname: "input_height", label: __("Input height (px)"), type: "number", min: 24, max: 48 },
+			{
+				fieldname: "form_section_spacing",
+				label: __("Space between sections (px)"),
+				type: "number",
+				min: 8,
+				max: 40,
+			},
+		],
+	},
+	{
+		key: "tables",
+		label: __("Tables"),
+		note: __("Applies to list views, report tables, child tables and datatables."),
+		fields: [
+			{ fieldname: "table_header_background", label: __("Header background"), type: "color" },
+			{ fieldname: "table_header_text", label: __("Header text"), type: "color" },
+			{ fieldname: "table_border_color", label: __("Border"), type: "color" },
+			{ fieldname: "table_row_hover", label: __("Row hover"), type: "color" },
+			{ fieldname: "table_stripe_color", label: __("Stripe"), type: "color" },
+			{ fieldname: "zebra_tables", label: __("Striped rows"), type: "check" },
+			{
+				fieldname: "table_border_style",
+				label: __("Borders"),
+				type: "select",
+				options: ["All", "Horizontal", "None"],
+			},
+			{ fieldname: "table_row_height", label: __("Row height (px)"), type: "number", min: 28, max: 64 },
+			{ fieldname: "table_cell_padding", label: __("Cell padding (px)"), type: "number", min: 4, max: 24 },
+			{
+				fieldname: "table_header_font_size",
+				label: __("Header font size (px)"),
+				type: "number",
+				min: 10,
+				max: 16,
+			},
+			{ fieldname: "table_sticky_header", label: __("Keep header visible"), type: "check" },
+			{ fieldname: "table_header_uppercase", label: __("Uppercase headers"), type: "check" },
+		],
+	},
+	{
+		key: "dark",
+		label: __("Dark Mode"),
+		note: __("Leave a colour empty to derive it from the palette."),
+		fields: [
+			{
+				fieldname: "default_appearance",
+				label: __("Default appearance"),
+				type: "select",
+				options: ["Light", "Dark", "System"],
+			},
+			{ fieldname: "dark_background_color", label: __("Background"), type: "color", optional: true },
+			{ fieldname: "dark_surface_color", label: __("Surface"), type: "color", optional: true },
+			{ fieldname: "dark_text_color", label: __("Text"), type: "color", optional: true },
+			{ fieldname: "dark_border_color", label: __("Border"), type: "color", optional: true },
 		],
 	},
 	{
@@ -189,6 +265,22 @@ class ThemeBuilder {
 								<span class="myrmex-preview__btn danger">${__("Cancel")}</span>
 								<span class="myrmex-preview__input"></span>
 							</div>
+							<div class="myrmex-preview__tablewrap">
+								<table class="myrmex-preview__table">
+									<thead>
+										<tr>
+											<th>${__("Customer")}</th>
+											<th>${__("Status")}</th>
+											<th>${__("Date")}</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr><td>ABC Company</td><td>${__("Active")}</td><td>${__("Today")}</td></tr>
+										<tr><td>XYZ Company</td><td>${__("Pending")}</td><td>${__("Yesterday")}</td></tr>
+										<tr><td>Acme Traders</td><td>${__("Active")}</td><td>${__("Last week")}</td></tr>
+									</tbody>
+								</table>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -231,6 +323,10 @@ class ThemeBuilder {
 				.toggleClass("is-active", group.key === this.activeGroup)
 				.appendTo(host);
 
+			if (group.note) {
+				$('<p class="myrmex-builder__note"></p>').text(group.note).appendTo(section);
+			}
+
 			group.fields.forEach((field) => section.append(this.render_field(field)));
 		});
 	}
@@ -243,16 +339,24 @@ class ThemeBuilder {
 
 		if (field.type === "color") {
 			const swatch = $('<input type="color" class="myrmex-builder__swatch">').val(value || "#000000");
-			const hex = $('<input type="text" class="form-control input-sm myrmex-builder__hex">').val(value || "");
+			const hex = $('<input type="text" class="form-control input-sm myrmex-builder__hex">')
+				.val(value || "")
+				.attr("placeholder", field.optional ? __("derived") : "");
 
 			swatch.on("input", () => {
 				hex.val(swatch.val().toUpperCase());
 				this.set_value(field.fieldname, swatch.val().toUpperCase());
 			});
 			hex.on("change", () => {
+				// An optional colour may be emptied, which means "derive it".
+				if (field.optional && !hex.val().trim()) {
+					this.set_value(field.fieldname, "");
+					return;
+				}
+
 				const cleaned = this.normalise_hex(hex.val());
 				if (!cleaned) {
-					hex.val(this.settings[field.fieldname]);
+					hex.val(this.settings[field.fieldname] || "");
 					frappe.show_alert({ message: __("Enter a hex colour like #1DA1F2"), indicator: "orange" });
 					return;
 				}
@@ -262,6 +366,15 @@ class ThemeBuilder {
 			});
 
 			control.append(swatch, hex);
+
+			if (field.optional) {
+				const clear = $('<button class="btn btn-xs btn-default"></button>').text(__("Clear"));
+				clear.on("click", () => {
+					hex.val("");
+					this.set_value(field.fieldname, "");
+				});
+				control.append(clear);
+			}
 		} else if (field.type === "number") {
 			const input = $('<input type="number" class="form-control input-sm myrmex-builder__number">')
 				.attr({ min: field.min, max: field.max })
@@ -303,6 +416,15 @@ class ThemeBuilder {
 			return row;
 		}
 
+		if (field.note) {
+			const wrapper = $('<div class="myrmex-builder__field-wrap"></div>');
+			wrapper.append(row);
+			$('<p class="myrmex-builder__note myrmex-builder__note--field"></p>')
+				.text(field.note)
+				.appendTo(wrapper);
+			return wrapper;
+		}
+
 		return row;
 	}
 
@@ -336,6 +458,19 @@ class ThemeBuilder {
 				for (const [name, value] of Object.entries(vars)) {
 					preview.style.setProperty(name, value);
 				}
+
+				// The class-driven settings (border style, stripes, sticky and
+				// uppercase headers) are mirrored onto the preview so the sample
+				// table shows them without touching the Desk around it.
+				const message = r.message;
+				for (const option of ["all", "horizontal", "none"]) {
+					preview.classList.toggle(
+						`myrmex-preview--borders-${option}`,
+						(message.table_border_style || "horizontal") === option
+					);
+				}
+				preview.classList.toggle("myrmex-preview--zebra", !!message.zebra_tables);
+				preview.classList.toggle("myrmex-preview--upper", !!message.table_header_uppercase);
 			},
 		});
 	}

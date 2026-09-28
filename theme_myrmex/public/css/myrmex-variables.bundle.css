@@ -48,6 +48,22 @@
 	--myrmex-navbar-search-background: #f3f4f6;
 	--myrmex-navbar-height: 60px;
 
+	/* Tables. Overridden at runtime from the Tables tab. */
+	--myrmex-table-header-bg: #fbfbfc;
+	--myrmex-table-header-text: #6b7280;
+	--myrmex-table-border: #e5e7eb;
+	--myrmex-table-row-hover: #f7f7f9;
+	--myrmex-table-stripe: #fafafb;
+	--myrmex-table-row-height: 42px;
+	--myrmex-table-cell-padding: 12px;
+	--myrmex-table-header-size: 12px;
+
+	/* Controls */
+	--myrmex-button-height: 32px;
+	--myrmex-button-weight: 500;
+	--myrmex-input-height: 32px;
+	--myrmex-form-section-gap: 16px;
+
 	/* Shape */
 	--myrmex-radius-sm: 6px;
 	--myrmex-radius-md: 10px;
@@ -69,7 +85,6 @@
 	--myrmex-space-4: 16px;
 	--myrmex-space-5: 24px;
 	--myrmex-space-6: 32px;
-	--myrmex-row-height: 42px;
 
 	/* Motion */
 	--myrmex-transition: 150ms ease;
@@ -81,7 +96,9 @@
 	--myrmex-card-padding: 14px;
 	--myrmex-space-5: 18px;
 	--myrmex-space-6: 24px;
-	--myrmex-row-height: 36px;
+	/* Table row height is deliberately NOT touched here: it is an explicit
+	 * setting on the Tables tab, and silently overriding it would make that
+	 * setting look broken. Density adjusts surrounding spacing only. */
 }
 
 /* ---------------------------------------------------------------------------
@@ -114,7 +131,7 @@
 
 	--border-color: var(--myrmex-border);
 	--dark-border-color: var(--myrmex-border);
-	--table-border-color: var(--myrmex-border);
+	--table-border-color: var(--myrmex-table-border);
 
 	--green-avatar-color: var(--myrmex-success);
 	--alert-text-danger: var(--myrmex-error);

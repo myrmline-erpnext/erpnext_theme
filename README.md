@@ -26,11 +26,11 @@ left exactly as they are.
 | Workspaces | Card-based dashboard look for widgets, shortcuts, number cards, charts |
 | Forms | Cleaner sections, labels, inputs, tabs, sidebar, comments, attachments |
 | List views | Restyled header, filters, rows, status pills, pagination, bulk actions |
-| Tables & grids | Better headers, row spacing, hover, optional zebra, horizontal scroll |
+| Tables & grids | Fully configurable: header colours, borders (all / horizontal / none), row height, cell padding, stripes, sticky headers — applied to list views, report tables, child tables and datatables alike |
 | Components | Buttons, inputs, selects, dropdowns, dialogs, tabs, badges |
-| Theming | ~30 configurable colors/sizes as CSS custom properties |
+| Theming | ~50 configurable colours and sizes as CSS custom properties |
 | Dark mode | Light / Dark / System, derived automatically from your palette |
-| Theme Builder | Visual editor with live preview, presets, save and reset |
+| Theme Builder | Visual editor with live preview, presets, save and reset — ten tabs: General, Colours, Sidebar, Navbar, Cards, Buttons, Forms, Tables, Dark Mode, Advanced |
 
 ### What it deliberately does **not** do
 
@@ -238,6 +238,46 @@ values, useful for scripting or `bench --site … set-config`-style automation.
 **Presets** — Myrmex Default, Myrmex Blue, Myrmex Dark, Myrmex Minimal,
 Myrmex Enterprise.
 
+### Table styles
+
+The **Tables** tab drives every table the Desk renders — list views, report
+view (DataTable), plain tables and the child-table grid on a form — so they
+stay consistent instead of each being themed separately.
+
+| Setting | What it does |
+|---|---|
+| Header background / text | Header row colours |
+| Border | Rule colour, shared by all four table kinds |
+| Row hover | Highlight under the pointer |
+| Stripe + Striped rows | Alternating row colour, off by default |
+| Borders | `All` (every cell outlined), `Horizontal` (row separators only, the default), `None` |
+| Row height / Cell padding | Row rhythm, in px |
+| Header font size | In px |
+| Keep header visible | Sticky header while the body scrolls — offset for the v15 navbar, flush to the top on v16 |
+| Uppercase headers | Off by default |
+
+Colours, sizes and font size are CSS custom properties
+(`--myrmex-table-*`). The last three are not single values — border style is
+three mutually exclusive rule sets, the others are switches — so they are
+applied as classes on `<html>` (`myrmex-table-borders-*`,
+`myrmex-table-sticky`, `myrmex-table-upper`) and the rule sets live in
+`myrmex-lists.bundle.css`.
+
+Table colours are **not** carried into dark mode: a pale header on a dark table
+is unreadable, so the dark equivalents are re-derived from the resolved dark
+surfaces. Density `Compact` deliberately leaves the table row height alone —
+it is an explicit setting, and silently overriding it would make the Tables tab
+look broken.
+
+### Dark mode colours
+
+The **Dark Mode** tab sets the appearance default and, optionally, overrides the
+four dark surfaces (background, surface, text, border). Leave one empty and it
+is derived from your palette; the placeholder reads *derived*, and each has a
+**Clear** button to go back to that. Accent colours (primary, secondary, status)
+always carry over from the main palette, so a brand colour stays recognisable in
+dark mode.
+
 **Dark mode** — Myrmex piggybacks on Frappe's own theme switcher
 (`data-theme="dark"` on `<html>`), so the user menu → *Toggle theme* keeps
 working. Dark values are derived from your palette automatically; your accent
@@ -267,7 +307,15 @@ Run through this after installing or after changing colours.
 - [ ] Form: save, submit, cancel, amend; grid row expand dialog
 - [ ] Dialogs, dropdowns, awesomplete suggestions, date picker, multiselect
 - [ ] Dark mode across every screen above; contrast is readable
-- [ ] Theme Builder: preset, live preview, save, reset
+- [ ] Theme Builder: all ten tabs open, preset, live preview, save, reset
+- [ ] Tables tab: change header colour, borders, row height, stripes —
+      the sample table reacts immediately, and the Desk only after saving
+- [ ] After saving, the same table styling appears on a list view, a report
+      view, a child table on a form, and a datatable
+- [ ] Sticky header: scroll a long list — the header stays put and clears the
+      navbar on v15
+- [ ] Dark Mode tab: clear a colour (placeholder reads "derived") and confirm
+      it falls back to the palette
 - [ ] Colour change reflected in another open browser tab without reload
 - [ ] Responsive: desktop, tablet (compact sidebar), mobile (drawer)
 - [ ] Permissions: log in as a limited user — no extra links or actions appear
@@ -371,6 +419,8 @@ works.
 ```bash
 npm install jsdom
 node theme_myrmex/tests/js/logout.test.js
+node theme_myrmex/tests/js/compat.test.js
+node theme_myrmex/tests/js/theme_builder.test.js
 ```
 
 The suite drives the module against the real v15 navbar dropdown and the real
