@@ -15,16 +15,6 @@ views, tables, dialogs — without touching a single line of Frappe or ERPNext
 source code. All business logic, permissions and the native ERPNext icon set are
 left exactly as they are.
 
-
-<p align="center">
-  <img src="screens/screen1.png" alt="Theme Myrmex: workspace and sidebar" width="49%">
-  &nbsp;
-  <img src="screens/screen2.png" alt="Theme Myrmex: Myrmex Assistant panel" width="49%">
-</p>
-<p align="center">
-  <em>Left: the restyled Desk. Right: Myrmex Assistant.</em>
-</p>
-
 ---
 
 ## 1. What it does
@@ -36,11 +26,12 @@ left exactly as they are.
 | Workspaces | Card-based dashboard look for widgets, shortcuts, number cards, charts |
 | Forms | Cleaner sections, labels, inputs, tabs, sidebar, comments, attachments |
 | List views | Restyled header, filters, rows, status pills, pagination, bulk actions |
-| Tables & grids | Better headers, row spacing, hover, optional zebra, horizontal scroll |
+| Tables & grids | Fully configurable: header colours, borders (all / horizontal / none), row height, cell padding, stripes, sticky headers — applied to list views, report tables, child tables and datatables alike |
 | Components | Buttons, inputs, selects, dropdowns, dialogs, tabs, badges |
-| Theming | ~30 configurable colors/sizes as CSS custom properties |
+| Theming | ~50 configurable colours and sizes as CSS custom properties |
 | Dark mode | Light / Dark / System, derived automatically from your palette |
-| Theme Builder | Visual editor with live preview, presets, save and reset |
+| Theme Builder | Visual editor with live preview, presets, save and reset — ten tabs: General, Colours, Sidebar, Navbar, Cards, Buttons, Forms, Tables, Dark Mode, Advanced |
+| Languages | English, French and Arabic ship translated; Arabic is verified right-to-left |
 
 ### What it deliberately does **not** do
 
@@ -142,7 +133,10 @@ theme_myrmex/
     ├── patches.txt
     ├── templates/
     ├── compat.py                    # the v15/v16 delta, in one place
-    ├── tests/js/                    # run the JS against both Desks' real markup
+    ├── translations/                # en.csv, fr.csv, ar.csv
+    ├── tests/
+    │   ├── check_translations.py    # CSV coverage + placeholder check (no bench)
+    │   └── js/                      # run the JS against both Desks' real markup
     ├── public/
     │   ├── css/                         # each file is its own esbuild bundle,
     │   │   │                            # ordered by app_include_css in hooks.py
@@ -156,6 +150,7 @@ theme_myrmex/
     │   │   ├── myrmex-lists.bundle.css
     │   │   ├── myrmex-dark.bundle.css
     │   │   ├── myrmex-responsive.bundle.css
+    │   │   ├── myrmex-rtl.bundle.css         # what rtlcss cannot infer
     │   │   └── myrmex-login.bundle.css       # login / website only
     │   └── js/
     │       ├── myrmex.bundle.js         # desk bundle entry
@@ -248,6 +243,46 @@ values, useful for scripting or `bench --site … set-config`-style automation.
 **Presets** — Myrmex Default, Myrmex Blue, Myrmex Dark, Myrmex Minimal,
 Myrmex Enterprise.
 
+### Table styles
+
+The **Tables** tab drives every table the Desk renders — list views, report
+view (DataTable), plain tables and the child-table grid on a form — so they
+stay consistent instead of each being themed separately.
+
+| Setting | What it does |
+|---|---|
+| Header background / text | Header row colours |
+| Border | Rule colour, shared by all four table kinds |
+| Row hover | Highlight under the pointer |
+| Stripe + Striped rows | Alternating row colour, off by default |
+| Borders | `All` (every cell outlined), `Horizontal` (row separators only, the default), `None` |
+| Row height / Cell padding | Row rhythm, in px |
+| Header font size | In px |
+| Keep header visible | Sticky header while the body scrolls — offset for the v15 navbar, flush to the top on v16 |
+| Uppercase headers | Off by default |
+
+Colours, sizes and font size are CSS custom properties
+(`--myrmex-table-*`). The last three are not single values — border style is
+three mutually exclusive rule sets, the others are switches — so they are
+applied as classes on `<html>` (`myrmex-table-borders-*`,
+`myrmex-table-sticky`, `myrmex-table-upper`) and the rule sets live in
+`myrmex-lists.bundle.css`.
+
+Table colours are **not** carried into dark mode: a pale header on a dark table
+is unreadable, so the dark equivalents are re-derived from the resolved dark
+surfaces. Density `Compact` deliberately leaves the table row height alone —
+it is an explicit setting, and silently overriding it would make the Tables tab
+look broken.
+
+### Dark mode colours
+
+The **Dark Mode** tab sets the appearance default and, optionally, overrides the
+four dark surfaces (background, surface, text, border). Leave one empty and it
+is derived from your palette; the placeholder reads *derived*, and each has a
+**Clear** button to go back to that. Accent colours (primary, secondary, status)
+always carry over from the main palette, so a brand colour stays recognisable in
+dark mode.
+
 **Dark mode** — Myrmex piggybacks on Frappe's own theme switcher
 (`data-theme="dark"` on `<html>`), so the user menu → *Toggle theme* keeps
 working. Dark values are derived from your palette automatically; your accent
@@ -277,10 +312,25 @@ Run through this after installing or after changing colours.
 - [ ] Form: save, submit, cancel, amend; grid row expand dialog
 - [ ] Dialogs, dropdowns, awesomplete suggestions, date picker, multiselect
 - [ ] Dark mode across every screen above; contrast is readable
-- [ ] Theme Builder: preset, live preview, save, reset
+- [ ] Theme Builder: all ten tabs open, preset, live preview, save, reset
+- [ ] Tables tab: change header colour, borders, row height, stripes —
+      the sample table reacts immediately, and the Desk only after saving
+- [ ] After saving, the same table styling appears on a list view, a report
+      view, a child table on a form, and a datatable
+- [ ] Sticky header: scroll a long list — the header stays put and clears the
+      navbar on v15
+- [ ] Dark Mode tab: clear a colour (placeholder reads "derived") and confirm
+      it falls back to the palette
 - [ ] Colour change reflected in another open browser tab without reload
 - [ ] Responsive: desktop, tablet (compact sidebar), mobile (drawer)
 - [ ] Permissions: log in as a limited user — no extra links or actions appear
+- [ ] Set a user's language to Français: Desk, Theme Builder and Theme Settings
+      are all translated
+- [ ] Set it to العربية: the whole Desk mirrors, the sidebar moves to the right,
+      and Arabic words render joined (no gaps between letters)
+- [ ] In Arabic, figures and hex colours still read left-to-right
+- [ ] In Arabic, the Theme Builder panel sits on the right and its table sample
+      is right-aligned
 - [ ] Standard ERPNext flows: Sales Order → Delivery Note → Sales Invoice
 - [ ] **Log out** from the user menu (v15) / sidebar header menu (v16):
       confirm dialog appears, one `/api/method/logout` request, lands on `/login`
@@ -308,7 +358,88 @@ Run through this after installing or after changing colours.
   it is scoped to one container, guarded against double-init and disconnected on
   route change (see `myrmex-utils.js`).
 
-## 8. The logout fix
+## 8. Languages and right-to-left
+
+Three languages ship translated, in `theme_myrmex/translations/`:
+
+| File | Language | Notes |
+|---|---|---|
+| `en.csv` | English | The source strings, mapped to themselves — the canonical list, and the place to reword the English without touching code |
+| `fr.csv` | Français | |
+| `ar.csv` | العربية | Right-to-left; see below |
+
+Each file is `source,translation` — the format
+`frappe.translate.get_translation_dict_from_file` reads (2 or 3 columns, UTF-8,
+LF). Frappe picks them up automatically for every app on the bench: no hook, no
+registration. A user's language comes from their User record or
+System Settings, and applies to the Desk, the Theme Builder and the Theme
+Settings form alike.
+
+Brand names (`Myrmex Default`, `Myrmex Blue`, …) and CSS values (`400`, `500`,
+`600`, `700`) are identical in every file on purpose: they are product names and
+font weights, not prose.
+
+### Right-to-left
+
+Arabic is one of the four languages Frappe treats as RTL (`ar`, `he`, `fa`,
+`ps`). Frappe does the mechanical half by itself: it runs **every**
+`*.bundle.css` through `rtlcss` at build time and serves `rtl_<bundle>.css` to
+those languages — that is why `bench build` processes each stylesheet twice.
+Left/right, padding, margins, border sides, border-radius corners and
+`translateX` all flip without the theme doing anything.
+
+Two things it cannot do, which `myrmex-rtl.bundle.css` handles:
+
+* **Letter-spacing.** Arabic is cursive — its letters join. Tracking pulls the
+  joins apart and the word stops reading as a word; the negative tracking used
+  to tighten Latin headings is worse. Every tracked selector in this theme is
+  reset to `normal` under `[dir="rtl"]`. (`rtlcss` leaves `[dir="rtl"]`
+  selectors untouched, so one file is correct in both builds.)
+* **Numbers and codes.** Figures, hex colours and pixel values are forced back
+  to `direction: ltr`, so `#1DA1F2` and `1,245` are not reordered inside an
+  RTL paragraph.
+
+The Theme Builder page is a special case: Frappe injects
+`theme_builder.css` inline through `Page.load_assets()`, so unlike the bundles
+it never passes through `rtlcss`. That file therefore uses **logical
+properties** (`border-inline-end`, `text-align: start`, `padding-inline-end`)
+and needs no `[dir]` duplicates.
+
+Translated labels also run longer than English ones — "Reset to default" is
+"Réinitialiser aux valeurs par défaut" — so the builder's buttons and field rows
+wrap instead of crushing their text.
+
+### Adding or editing a language
+
+1. Copy `en.csv` to `<lang>.csv` (the code Frappe uses, e.g. `es`, `de`,
+   `ar-SA`) and translate the second column. Leave the first column untouched:
+   it is the lookup key.
+2. Keep every `{0}` / `{1}` placeholder exactly as it appears in the source.
+3. Run the check below, then `bench --site <site> clear-cache` — translations
+   are cached per language.
+
+To pull new strings after changing the code, Frappe's own tool works on this
+app like any other:
+
+```bash
+bench get-untranslated fr untranslated_fr.txt --app theme_myrmex
+```
+
+### Checking the translations
+
+```bash
+python3 theme_myrmex/tests/check_translations.py
+```
+
+No bench required. It re-extracts every translatable string from the app — `__()`
+and `this.t()` in JS, `_()` in Python, DocType labels, descriptions and Select
+options, the Page title — and fails if any string is missing from a CSV, if a
+CSV still translates a string that no longer exists, if a translation is empty,
+if the three files disagree on the key set, or if a `{0}` placeholder was lost
+in translation. That last one is the dangerous case: a dropped placeholder
+either crashes `.format()` or silently swallows the value.
+
+## 9. The logout fix
 
 ### What Frappe actually does
 
@@ -381,6 +512,8 @@ works.
 ```bash
 npm install jsdom
 node theme_myrmex/tests/js/logout.test.js
+node theme_myrmex/tests/js/compat.test.js
+node theme_myrmex/tests/js/theme_builder.test.js
 ```
 
 The suite drives the module against the real v15 navbar dropdown and the real
@@ -393,6 +526,6 @@ In the browser: open the console, click **Log out**, and you should see one
 request to `/api/method/logout` followed by a load of `/login`. If instead you
 see a CSP violation, cause 1 above is yours and this fix resolves it.
 
-## 9. Licence
+## 10. Licence
 
 MIT — see `license.txt`.

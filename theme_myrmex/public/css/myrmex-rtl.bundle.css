@@ -1,0 +1,102 @@
+/* ---------------------------------------------------------------------------
+ * Right-to-left refinements (Arabic, Hebrew, Persian, Pashto)
+ * ---------------------------------------------------------------------------
+ * Frappe already does the mechanical half of RTL: every *.bundle.css is run
+ * through rtlcss at build time into assets-rtl.json, and `rtl_<bundle>.css` is
+ * served whenever the user's language is one of ar / he / fa / ps. That handles
+ * left/right, padding, margins, border sides, border-radius corners and
+ * translateX — verified against rtlcss, not assumed.
+ *
+ * What rtlcss cannot know is typography. Two of this theme's Latin habits are
+ * actively wrong in Arabic script:
+ *
+ *   letter-spacing  Arabic is cursive: letters join. Adding tracking pulls the
+ *                   joins apart and the word stops reading as a word. Negative
+ *                   tracking, used here to tighten Latin headings, is worse.
+ *
+ *   text-transform  Arabic has no letter case, so uppercase is a no-op on the
+ *                   text itself — but it is usually paired with tracking, which
+ *                   is not. The setting is left alone; only the tracking goes.
+ *
+ * `dir` and the theme class both sit on <html>, hence the compound selector.
+ * rtlcss passes [dir="rtl"] selectors through untouched (also verified), so
+ * this file is correct in both the LTR and RTL builds: in the LTR build the
+ * rules simply never match.
+ * ------------------------------------------------------------------------- */
+
+.myrmex-enabled[dir="rtl"] h1,
+.myrmex-enabled[dir="rtl"] h2,
+.myrmex-enabled[dir="rtl"] h3,
+.myrmex-enabled[dir="rtl"] h4,
+.myrmex-enabled[dir="rtl"] h5,
+.myrmex-enabled[dir="rtl"] h6,
+.myrmex-enabled[dir="rtl"] .page-title .title-text,
+.myrmex-enabled[dir="rtl"] .workspace-title,
+.myrmex-enabled[dir="rtl"] .page-head .title-area .title-text,
+.myrmex-enabled[dir="rtl"] .number-widget-box .widget-content .number,
+.myrmex-enabled[dir="rtl"] .modal-title,
+.myrmex-enabled[dir="rtl"] .sidebar-header .header-title,
+.myrmex-enabled[dir="rtl"] .myrmex-sidebar-brand,
+.myrmex-enabled[dir="rtl"] .btn,
+.myrmex-enabled[dir="rtl"] .indicator-pill,
+.myrmex-enabled[dir="rtl"] .myrmex-badge {
+	letter-spacing: normal;
+}
+
+/* Labels and section headings: the eyebrow tracking that reads as "quiet
+ * heading" in Latin reads as broken words in Arabic. */
+.myrmex-enabled[dir="rtl"] .standard-sidebar-label,
+.myrmex-enabled[dir="rtl"] .sidebar-item-label,
+.myrmex-enabled[dir="rtl"] .body-sidebar .sidebar-label,
+.myrmex-enabled[dir="rtl"] .layout-side-section .sidebar-label,
+.myrmex-enabled[dir="rtl"] .form-sidebar .sidebar-label,
+.myrmex-enabled[dir="rtl"] .form-page .section-head,
+.myrmex-enabled[dir="rtl"] .layout-main-section .widget-group .widget-group-head,
+.myrmex-enabled[dir="rtl"] .layout-main-section .section-head,
+.myrmex-enabled[dir="rtl"] .sidebar-items .section-item .item-anchor.section-break .sidebar-item-label {
+	letter-spacing: normal;
+}
+
+/* Tables, including the "Uppercase headers" option: the case change is kept,
+ * the tracking that comes with it is not. */
+.myrmex-enabled[dir="rtl"] .list-row-head,
+.myrmex-enabled[dir="rtl"] table.table thead th,
+.myrmex-enabled[dir="rtl"] .datatable .dt-header,
+.myrmex-enabled[dir="rtl"] .datatable .dt-row-header,
+.myrmex-enabled[dir="rtl"] .form-grid .grid-heading-row,
+.myrmex-table-upper.myrmex-enabled[dir="rtl"] .list-row-head,
+.myrmex-table-upper.myrmex-enabled[dir="rtl"] table.table thead th,
+.myrmex-table-upper.myrmex-enabled[dir="rtl"] .datatable .dt-header,
+.myrmex-table-upper.myrmex-enabled[dir="rtl"] .form-grid .grid-heading-row {
+	letter-spacing: normal;
+}
+
+/* The collapsed-rail tooltip is positioned by rtlcss, but its text alignment
+ * has to follow the reading direction. */
+.myrmex-sidebar-collapsed.myrmex-enabled[dir="rtl"] .sidebar-item-container[data-myrmex-label]:hover::after {
+	text-align: right;
+}
+
+/* Frappe renders numbers, currency and dates left-to-right inside an RTL page.
+ * Keep the theme's number treatments from inheriting the paragraph direction so
+ * a figure never renders with its minus sign or decimals reordered. */
+.myrmex-enabled[dir="rtl"] .number-widget-box .widget-content .number,
+.myrmex-enabled[dir="rtl"] .myrmex-builder__hex,
+.myrmex-enabled[dir="rtl"] .myrmex-builder__number {
+	direction: ltr;
+	unicode-bidi: plaintext;
+}
+
+/* The search shortcut hint ("Ctrl+G") is a Latin key name: keep it LTR so the
+ * modifier stays in front of the key. */
+.myrmex-enabled[dir="rtl"] #navbar-search::placeholder {
+	direction: rtl;
+}
+
+/* Login and portal pages use the .myrmex-web root instead of .myrmex-enabled. */
+.myrmex-web[dir="rtl"] .login-content .page-card-head h4,
+.myrmex-web[dir="rtl"] .for-login h4,
+.myrmex-web[dir="rtl"] .btn-primary,
+.myrmex-web[dir="rtl"] .btn-login {
+	letter-spacing: normal;
+}

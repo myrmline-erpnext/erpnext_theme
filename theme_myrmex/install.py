@@ -17,10 +17,9 @@ def check_version():
 
 	if not is_supported():
 		frappe.msgprint(
-			frappe._(
-				"Theme Myrmex supports Frappe v15 and v16. This site reports v{0}, "
-				"so the theme may not match the Desk."
-			).format(major),
+			# Kept on one line: a string split across lines is invisible to the
+			# translation extractor, which only ever sees the first fragment.
+			frappe._("Theme Myrmex supports Frappe v15 and v16. This site reports v{0}, so the theme may not match the Desk.").format(major),
 			indicator="orange",
 			title=frappe._("Unsupported Frappe version"),
 		)
