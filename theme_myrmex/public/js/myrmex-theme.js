@@ -12,6 +12,10 @@ myrmex.theme = {
 
 	/** Read the boot payload and apply everything it describes. */
 	init() {
+		// Which shell we are in decides which selectors exist at all, so this
+		// is settled before anything is painted or mounted.
+		myrmex.compat.detect();
+
 		const payload = (frappe.boot && frappe.boot.myrmex_theme) || null;
 		this.apply(payload);
 
@@ -40,11 +44,6 @@ myrmex.theme = {
 		myrmex.ROOT.classList.add("myrmex-enabled");
 		myrmex.ROOT.dataset.myrmexDensity = (payload.density || "Comfortable").toLowerCase();
 		myrmex.ROOT.classList.toggle("myrmex-zebra", !!payload.zebra_tables);
-		// Table hover and pagination need a selector rather than a variable,
-		// so they travel as attributes on <html>.
-		const table = payload.table || {};
-		myrmex.ROOT.dataset.myrmexTableHover = table.hover || "tint";
-		myrmex.ROOT.dataset.myrmexTablePaging = table.pagination || "pills";
 		this.writeVariables(payload);
 		this.applyDefaultAppearance(payload.appearance);
 	},
@@ -87,20 +86,14 @@ myrmex.theme = {
 		const target = { Light: "light", Dark: "dark", System: "automatic" }[appearance];
 		if (!target) return;
 
-		// Frappe v15 stores "Light" for everyone who never opened the theme
-		// switcher, so only a different value is treated as a deliberate choice.
 		const userChoice = frappe.boot && frappe.boot.user && frappe.boot.user.desk_theme;
-		if (userChoice && userChoice !== "Light") {
+		if (userChoice) {
 			myrmex.storage.set("appearance-applied", true);
 			return;
 		}
 
-		// Frappe v15's set_theme(theme) writes its argument straight into
-		// data-theme, so passing "automatic" would leave the page with neither a
-		// light nor a dark palette. Set the mode, then let Frappe resolve it.
-		myrmex.ROOT.setAttribute("data-theme-mode", target);
 		if (frappe.ui && typeof frappe.ui.set_theme === "function") {
-			frappe.ui.set_theme();
+			frappe.ui.set_theme(target);
 		} else {
 			myrmex.ROOT.setAttribute("data-theme", target === "automatic" ? this.systemTheme() : target);
 		}

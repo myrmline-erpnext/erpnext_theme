@@ -1,5 +1,4 @@
-/* Base layer: page canvas, page header, typography, breadcrumbs, icons,
- * focus, scrollbars, motion preferences.
+/* Base layer: page canvas, typography, focus, scrollbars, icons.
  * Everything is scoped under .myrmex-enabled, a class myrmex-theme.js puts on
  * <html>. Turning the theme off in Theme Settings removes the class and the
  * Desk returns to stock without an uninstall. */
@@ -9,17 +8,7 @@
 	color: var(--myrmex-text);
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	text-rendering: optimizeLegibility;
 }
-
-.myrmex-enabled ::selection {
-	background-color: color-mix(in srgb, var(--myrmex-primary) 22%, transparent);
-	color: inherit;
-}
-
-/* Page header ------------------------------------------------------------
- * v15 keeps .page-head sticky under the navbar. It sits on the canvas colour
- * and gains a hairline and shadow once content scrolls beneath it. */
 
 .myrmex-enabled .page-head {
 	background-color: var(--myrmex-background);
@@ -29,50 +18,14 @@
 
 .myrmex-enabled .page-head.myrmex-stuck {
 	border-bottom-color: var(--myrmex-border);
-	box-shadow: 0 1px 0 var(--myrmex-border), 0 6px 12px -10px rgba(16, 24, 40, 0.18);
-}
-
-.myrmex-enabled .page-head .page-title {
-	gap: var(--myrmex-space-2);
+	box-shadow: var(--myrmex-shadow);
 }
 
 .myrmex-enabled .page-title .title-text {
-	font-size: var(--myrmex-text-xl);
-	font-weight: var(--myrmex-weight-bold);
-	letter-spacing: var(--myrmex-tracking-tight);
-	line-height: var(--myrmex-leading-tight);
+	font-weight: 650;
+	letter-spacing: -0.015em;
 	color: var(--myrmex-text);
 }
-
-.myrmex-enabled .page-title .sub-heading {
-	font-size: var(--myrmex-text-sm);
-	color: var(--myrmex-muted);
-	margin-top: 2px;
-}
-
-.myrmex-enabled .page-head .title-area .indicator-pill {
-	margin-inline-start: var(--myrmex-space-2);
-	align-self: center;
-}
-
-/* Frappe's own sidebar toggle in the page header. */
-.myrmex-enabled .page-head .sidebar-toggle-btn {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: var(--myrmex-control-height);
-	height: var(--myrmex-control-height);
-	border-radius: var(--myrmex-button-radius);
-	color: var(--myrmex-muted);
-	transition: background-color var(--myrmex-transition), color var(--myrmex-transition);
-}
-
-.myrmex-enabled .page-head .sidebar-toggle-btn:hover {
-	background-color: var(--myrmex-sidebar-hover);
-	color: var(--myrmex-text);
-}
-
-/* Headings and links ----------------------------------------------------- */
 
 .myrmex-enabled h1,
 .myrmex-enabled h2,
@@ -93,62 +46,43 @@
 	color: var(--myrmex-secondary);
 }
 
-/* Links that Frappe renders as plain text-coloured anchors stay that way. */
-.myrmex-enabled .list-row a,
-.myrmex-enabled .item-anchor,
-.myrmex-enabled .dropdown-item,
-.myrmex-enabled .link-item,
-.myrmex-enabled .navbar-brand {
-	color: inherit;
+/* Breadcrumbs ------------------------------------------------------------- */
+
+.myrmex-enabled .navbar .breadcrumb-container .breadcrumb {
+	background: transparent;
+	gap: var(--myrmex-space-1);
 }
 
-/* Breadcrumbs ------------------------------------------------------------
- * v15: ul#navbar-breadcrumbs > li > a, next to the logo in the navbar. */
-
-.myrmex-enabled #navbar-breadcrumbs {
-	align-items: center;
-	gap: 2px;
-	min-width: 0;
-}
-
-.myrmex-enabled #navbar-breadcrumbs li {
-	min-width: 0;
-}
-
-.myrmex-enabled #navbar-breadcrumbs li a {
-	display: inline-block;
-	max-width: 22ch;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	vertical-align: middle;
-	padding: 4px 8px;
-	border-radius: var(--myrmex-radius-sm);
+.myrmex-enabled .breadcrumb .breadcrumb-item a {
 	color: var(--myrmex-muted);
-	font-size: var(--myrmex-text-base);
-	font-weight: var(--myrmex-weight-medium);
-	text-decoration: none;
+	font-weight: 500;
+	border-radius: var(--myrmex-radius-sm);
+	padding: 2px 6px;
 	transition: background-color var(--myrmex-transition), color var(--myrmex-transition);
 }
 
-.myrmex-enabled #navbar-breadcrumbs li a:hover {
+.myrmex-enabled .breadcrumb .breadcrumb-item a:hover {
 	background-color: var(--myrmex-sidebar-hover);
 	color: var(--myrmex-text);
 }
 
-.myrmex-enabled #navbar-breadcrumbs li:last-child a {
+.myrmex-enabled .breadcrumb .breadcrumb-item:last-child a {
 	color: var(--myrmex-text);
 }
 
-/* Icons ------------------------------------------------------------------
- * The native Frappe/ERPNext SVG sprites (icon-* and es-*) are kept exactly as
- * they are. Only colour, size and alignment are adjusted. */
+/* Icons -------------------------------------------------------------------
+ * The native Frappe/ERPNext SVG sprite is kept exactly as it is. Only colour,
+ * size and alignment are adjusted — the sprite itself is never swapped out. */
 
-.myrmex-enabled .icon,
-.myrmex-enabled .es-icon {
+.myrmex-enabled .icon {
 	vertical-align: middle;
 	transition: stroke var(--myrmex-transition), fill var(--myrmex-transition),
 		opacity var(--myrmex-transition), transform var(--myrmex-transition);
+}
+
+.myrmex-enabled .icon use {
+	/* Inherit, so an icon takes the colour of whatever it sits in. */
+	stroke: currentColor;
 }
 
 .myrmex-enabled .icon.icon-xs {
@@ -171,78 +105,20 @@
 	height: 20px;
 }
 
-/* The brand mark, shared by the sidebar and the assistant. */
-.myrmex-enabled .myrmex-mark {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 28px;
-	height: 28px;
-	flex: 0 0 28px;
-	border-radius: var(--myrmex-radius-sm);
-	background-color: var(--myrmex-primary);
-	color: var(--myrmex-primary-contrast);
-	font-size: var(--myrmex-text-md);
-	font-weight: var(--myrmex-weight-bold);
-	line-height: 1;
-	box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.12);
-}
-
-/* Focus ------------------------------------------------------------------ */
+/* Focus ------------------------------------------------------------------- */
 
 .myrmex-enabled :focus-visible {
 	outline: 2px solid var(--myrmex-primary);
 	outline-offset: 2px;
+	border-radius: var(--myrmex-radius-sm);
 }
 
 .myrmex-enabled .btn:focus,
 .myrmex-enabled .form-control:focus {
-	box-shadow: var(--myrmex-focus-ring);
+	box-shadow: 0 0 0 3px var(--myrmex-primary-soft);
 }
 
-.myrmex-enabled .btn:focus:not(:focus-visible) {
-	box-shadow: none;
-}
-
-/* Screen-reader only (Frappe ships .sr-only through Bootstrap; this keeps the
- * assistant correct even if a site removes it). */
-.myrmex-enabled .myrmex-chat .sr-only {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	padding: 0;
-	margin: -1px;
-	overflow: hidden;
-	clip: rect(0, 0, 0, 0);
-	white-space: nowrap;
-	border: 0;
-}
-
-/* Tooltip used by the collapsed sidebar rail. */
-.myrmex-enabled .myrmex-tooltip {
-	position: fixed;
-	z-index: var(--myrmex-z-tooltip);
-	transform: translateY(-50%);
-	padding: 6px 10px;
-	border-radius: var(--myrmex-radius-sm);
-	background-color: var(--myrmex-text);
-	color: var(--myrmex-surface);
-	font-size: var(--myrmex-text-sm);
-	font-weight: var(--myrmex-weight-medium);
-	white-space: nowrap;
-	box-shadow: var(--myrmex-shadow-hover);
-	pointer-events: none;
-}
-
-.myrmex-enabled .myrmex-tooltip[hidden] {
-	display: none;
-}
-
-/* Scrollbars ------------------------------------------------------------- */
-
-.myrmex-enabled * {
-	scrollbar-color: var(--myrmex-border-strong) transparent;
-}
+/* Scrollbars -------------------------------------------------------------- */
 
 .myrmex-enabled ::-webkit-scrollbar {
 	width: 10px;
@@ -264,7 +140,7 @@
 	background-color: var(--myrmex-muted);
 }
 
-/* Motion preferences ----------------------------------------------------- */
+/* Motion preferences ------------------------------------------------------ */
 
 @media (prefers-reduced-motion: reduce) {
 	.myrmex-enabled *,

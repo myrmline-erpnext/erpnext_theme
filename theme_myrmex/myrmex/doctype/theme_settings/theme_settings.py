@@ -10,7 +10,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 
-from theme_myrmex.presets import CHOICE_FIELDS, COLOR_VARIABLE_MAP, DEFAULTS, NUMBER_BOUNDS
+from theme_myrmex.presets import COLOR_VARIABLE_MAP, DEFAULTS
 
 
 class ThemeSettings(Document):
@@ -40,7 +40,15 @@ class ThemeSettings(Document):
 
 	def apply_sensible_bounds(self):
 		"""Keep sizes inside a range that still produces a usable Desk."""
-		for field, (low, high) in NUMBER_BOUNDS.items():
+		bounds = {
+			"sidebar_width": (180, 380),
+			"navbar_height": (48, 88),
+			"card_radius": (0, 32),
+			"button_radius": (0, 32),
+			"input_radius": (0, 32),
+			"card_padding": (8, 40),
+		}
+		for field, (low, high) in bounds.items():
 			value = frappe.utils.cint(self.get(field)) or frappe.utils.cint(DEFAULTS.get(field))
 			self.set(field, max(low, min(high, value)))
 
@@ -52,7 +60,15 @@ class ThemeSettings(Document):
 		if not preset:
 			return
 
-		tracked = list(COLOR_VARIABLE_MAP) + list(NUMBER_BOUNDS) + list(CHOICE_FIELDS)
+		tracked = list(COLOR_VARIABLE_MAP.keys()) + [
+			"card_radius",
+			"button_radius",
+			"input_radius",
+			"card_padding",
+			"shadow_size",
+			"sidebar_width",
+			"navbar_height",
+		]
 		for field in tracked:
 			stored = self.get(field)
 			expected = preset.get(field)
