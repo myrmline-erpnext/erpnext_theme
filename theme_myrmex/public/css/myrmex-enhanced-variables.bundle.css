@@ -161,3 +161,45 @@
 	--navbar-height:            var(--myrmex-navbar-height);
 	--table-border-color:       var(--myrmex-table-border);
 }
+
+/* ---------------------------------------------------------------------------
+ * Layout — eliminate left/right margins for a full-width feel
+ * ---------------------------------------------------------------------------*/
+
+/* Main content area: remove horizontal padding/margin */
+.myrmex-enabled .layout-main-section-wrapper,
+.myrmex-enabled .layout-main {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}
+
+/* Page container inner padding */
+.myrmex-enabled .page-container,
+.myrmex-enabled .page-head {
+	padding-left: 12px !important;
+	padding-right: 12px !important;
+}
+
+/* Main section card: no outer horizontal margin */
+.myrmex-enabled .layout-main-section {
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}
+
+/* Frappe's row/container inside pages */
+.myrmex-enabled .frappe-card {
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}
+
+/* Row padding inside forms/lists — keep a small breathing room */
+.myrmex-enabled .page-body .container,
+.myrmex-enabled .page-body .row {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	max-width: 100% !important;
+}
