@@ -196,13 +196,17 @@
 /* ── Bootstrap container / row reset ─────────────────────────────────────── */
 .myrmex-enabled .page-body .container,
 .myrmex-enabled .page-body .container-fluid,
+.myrmex-enabled .page-body .container-sm,
+.myrmex-enabled .page-body .container-md,
+.myrmex-enabled .page-body .container-lg,
+.myrmex-enabled .page-body .container-xl,
 .myrmex-enabled .page-body > .row,
 .myrmex-enabled .frappe-card,
 .myrmex-enabled .page-body .frappe-card {
 	padding-left: 0 !important;
 	padding-right: 0 !important;
-	margin-left: 0 !important;
-	margin-right: 0 !important;
+	margin-left: 0 !important;   /* never auto — pin to left edge */
+	margin-right: 0 !important;  /* never auto — pin to right edge */
 	max-width: 100% !important;
 	width: 100% !important;
 }
