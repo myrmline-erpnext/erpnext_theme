@@ -1,0 +1,139 @@
+/* ---------------------------------------------------------------------------
+ * Enhanced Forms — richer form cards, section headings, timeline, grids
+ * ---------------------------------------------------------------------------*/
+
+/* ── Form card ──────────────────────────────────────────────────────────── */
+
+.myrmex-enabled .std-form-layout > .form-layout > .form-page {
+	border-radius: var(--myrmex-card-radius) !important;
+	border: 1px solid var(--myrmex-border) !important;
+	box-shadow: 0 1px 3px rgba(15,23,42,0.06), 0 1px 2px rgba(15,23,42,0.04) !important;
+}
+
+/* ── Section headings ───────────────────────────────────────────────────── */
+
+.myrmex-enabled .form-section .section-head {
+	font-size: 13px !important;
+	font-weight: 700 !important;
+	letter-spacing: 0.04em !important;
+	text-transform: uppercase !important;
+	color: var(--myrmex-muted) !important;
+	padding: var(--myrmex-space-3) var(--myrmex-space-4) 0 !important;
+	margin-bottom: var(--myrmex-space-2) !important;
+}
+
+/* ── Document status / workflow badges ──────────────────────────────────── */
+
+.myrmex-enabled .form-dashboard .form-links .count {
+	background: var(--myrmex-primary-soft) !important;
+	color: var(--myrmex-primary) !important;
+	border-radius: 999px !important;
+	font-weight: 700 !important;
+	font-size: 11px !important;
+	padding: 2px 8px !important;
+}
+
+/* ── Child tables (grid) ────────────────────────────────────────────────── */
+
+.myrmex-enabled .form-grid {
+	border-radius: var(--myrmex-table-radius) !important;
+	border: 1px solid var(--myrmex-table-border) !important;
+	overflow: hidden !important;
+}
+
+.myrmex-enabled .form-grid .grid-heading-row {
+	background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%) !important;
+	border-bottom: 1px solid var(--myrmex-table-border) !important;
+}
+
+.myrmex-enabled .form-grid .grid-heading-row .col {
+	font-size: 11px !important;
+	font-weight: 700 !important;
+	letter-spacing: 0.04em !important;
+	text-transform: uppercase !important;
+	color: var(--myrmex-muted) !important;
+}
+
+.myrmex-enabled .form-grid .grid-row:hover .data-row {
+	background-color: rgba(99, 102, 241, 0.04) !important;
+}
+
+.myrmex-enabled .form-grid .grid-row.grid-row-check .data-row {
+	background-color: rgba(99, 102, 241, 0.08) !important;
+}
+
+/* Add row button */
+.myrmex-enabled .form-grid .grid-add-row .btn {
+	color: var(--myrmex-primary) !important;
+	font-weight: 600 !important;
+}
+
+.myrmex-enabled .form-grid .grid-add-row .btn:hover {
+	background: var(--myrmex-primary-soft) !important;
+}
+
+/* ── Form tabs ──────────────────────────────────────────────────────────── */
+
+.myrmex-enabled .form-tabs-list {
+	border-radius: var(--myrmex-card-radius) var(--myrmex-card-radius) 0 0 !important;
+}
+
+.myrmex-enabled .form-tabs-list .form-tabs .nav-link.active {
+	color: var(--myrmex-primary) !important;
+	font-weight: 700 !important;
+	border-bottom-color: var(--myrmex-primary) !important;
+}
+
+/* ── Timeline (document activity) ──────────────────────────────────────── */
+
+.myrmex-enabled .timeline-item {
+	position: relative !important;
+}
+
+.myrmex-enabled .timeline-item::before {
+	background-color: var(--myrmex-border) !important;
+}
+
+.myrmex-enabled .timeline-item .timeline-icon {
+	background: var(--myrmex-primary-soft) !important;
+	border: 2px solid var(--myrmex-primary) !important;
+	color: var(--myrmex-primary) !important;
+}
+
+.myrmex-enabled .timeline-item.timeline-comment .timeline-icon {
+	background: rgba(16, 185, 129, 0.12) !important;
+	border-color: var(--myrmex-success) !important;
+	color: var(--myrmex-success) !important;
+}
+
+/* ── Form sidebar (form meta) ───────────────────────────────────────────── */
+
+.myrmex-enabled .form-sidebar .sidebar-label {
+	font-size: 11px !important;
+	font-weight: 700 !important;
+	letter-spacing: 0.05em !important;
+	text-transform: uppercase !important;
+	color: var(--myrmex-muted) !important;
+	margin-bottom: var(--myrmex-space-1) !important;
+}
+
+.myrmex-enabled .form-sidebar .attachment-row:hover {
+	background-color: var(--myrmex-primary-soft) !important;
+	border-radius: var(--myrmex-radius-sm) !important;
+}
+
+/* ── Mandatory field marker ─────────────────────────────────────────────── */
+
+.myrmex-enabled .control-label.reqd::after {
+	color: var(--myrmex-error) !important;
+	font-size: 13px !important;
+}
+
+/* ── Read-only / Disabled fields ────────────────────────────────────────── */
+
+.myrmex-enabled .form-control[disabled],
+.myrmex-enabled .form-control[readonly] {
+	background-color: #f8fafc !important;
+	color: var(--myrmex-muted) !important;
+	border-style: dashed !important;
+}

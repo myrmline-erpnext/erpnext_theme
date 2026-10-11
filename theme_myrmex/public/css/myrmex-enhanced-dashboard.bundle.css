@@ -1,0 +1,224 @@
+/* ---------------------------------------------------------------------------
+ * Enhanced Dashboard & Workspace — colorful KPI cards, rich widgets
+ * ---------------------------------------------------------------------------*/
+
+/* ── Workspace canvas ───────────────────────────────────────────────────── */
+
+.myrmex-enabled [data-page-route="Workspaces"] .layout-main-section {
+	background-color: var(--myrmex-surface) !important;
+	border: 1px solid var(--myrmex-border) !important;
+	border-radius: var(--myrmex-card-radius) !important;
+	padding: var(--myrmex-space-5) !important;
+}
+
+/* ── All widgets — base card ────────────────────────────────────────────── */
+
+.myrmex-enabled .layout-main-section .widget {
+	border-radius: var(--myrmex-card-radius) !important;
+	box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+	transition: box-shadow 180ms ease, transform 180ms ease !important;
+	border: 1px solid var(--myrmex-border) !important;
+	overflow: hidden !important;
+}
+
+.myrmex-enabled .layout-main-section .widget:hover {
+	box-shadow: 0 8px 24px rgba(15, 23, 42, 0.10) !important;
+}
+
+/* ── Number / KPI cards — rotating accent palette ───────────────────────
+ *  Uses CSS :nth-of-type to cycle through accent colours automatically.
+ *  The coloured header strip gives instant visual scan at a glance.
+ * ---------------------------------------------------------------------- */
+
+.myrmex-enabled .number-widget-box {
+	position: relative;
+	padding-top: 0 !important;
+}
+
+/* Coloured top accent bar */
+.myrmex-enabled .number-widget-box::before {
+	content: "";
+	display: block;
+	height: 4px;
+	width: 100%;
+	border-radius: var(--myrmex-card-radius) var(--myrmex-card-radius) 0 0;
+}
+
+/* Cycle through 8 accent colours */
+.myrmex-enabled .number-widget-box:nth-of-type(8n+1)::before { background: var(--mx-gradient-primary); }
+.myrmex-enabled .number-widget-box:nth-of-type(8n+2)::before { background: var(--mx-gradient-sky); }
+.myrmex-enabled .number-widget-box:nth-of-type(8n+3)::before { background: var(--mx-gradient-emerald); }
+.myrmex-enabled .number-widget-box:nth-of-type(8n+4)::before { background: var(--mx-gradient-amber); }
+.myrmex-enabled .number-widget-box:nth-of-type(8n+5)::before { background: var(--mx-gradient-rose); }
+.myrmex-enabled .number-widget-box:nth-of-type(8n+6)::before { background: linear-gradient(135deg, var(--mx-accent-teal) 0%, var(--mx-accent-sky) 100%); }
+.myrmex-enabled .number-widget-box:nth-of-type(8n+7)::before { background: linear-gradient(135deg, var(--mx-accent-purple) 0%, var(--mx-accent-fuchsia) 100%); }
+.myrmex-enabled .number-widget-box:nth-of-type(8n+0)::before { background: linear-gradient(135deg, var(--mx-accent-orange) 0%, var(--mx-accent-amber) 100%); }
+
+/* KPI number — larger, bolder */
+.myrmex-enabled .number-widget-box .widget-content .number {
+	font-size: 36px !important;
+	font-weight: 800 !important;
+	letter-spacing: -0.03em !important;
+	line-height: 1.1 !important;
+	color: var(--myrmex-text) !important;
+}
+
+/* Title label */
+.myrmex-enabled .number-widget-box .widget-head .widget-title {
+	font-size: 12px !important;
+	font-weight: 600 !important;
+	letter-spacing: 0.04em !important;
+	text-transform: uppercase !important;
+	color: var(--myrmex-muted) !important;
+	margin-top: var(--myrmex-space-3) !important;
+}
+
+/* Percentage delta badge */
+.myrmex-enabled .number-widget-box .percentage-stat-area {
+	display: inline-flex !important;
+	align-items: center !important;
+	gap: 2px !important;
+	padding: 3px 8px !important;
+	border-radius: 999px !important;
+	font-size: 12px !important;
+	font-weight: 700 !important;
+}
+
+.myrmex-enabled .number-widget-box .percentage-stat-area:has(.green) {
+	background-color: rgba(16, 185, 129, 0.12) !important;
+	color: #065f46 !important;
+}
+
+.myrmex-enabled .number-widget-box .percentage-stat-area:has(.red) {
+	background-color: rgba(239, 68, 68, 0.10) !important;
+	color: #991b1b !important;
+}
+
+/* ── Shortcut widgets ───────────────────────────────────────────────────── */
+
+.myrmex-enabled .shortcut-widget-box {
+	cursor: pointer !important;
+	transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease !important;
+}
+
+.myrmex-enabled .shortcut-widget-box:hover {
+	transform: translateY(-3px) !important;
+	box-shadow: 0 12px 28px rgba(99, 102, 241, 0.15) !important;
+	border-color: rgba(99, 102, 241, 0.30) !important;
+}
+
+.myrmex-enabled .shortcut-widget-box:hover .widget-title {
+	color: var(--myrmex-primary) !important;
+}
+
+/* Icon inside shortcut — give it a coloured soft background */
+.myrmex-enabled .shortcut-widget-box .widget-icon {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	width: 40px !important;
+	height: 40px !important;
+	border-radius: var(--myrmex-radius-md) !important;
+	background: var(--myrmex-primary-soft) !important;
+	color: var(--myrmex-primary) !important;
+	transition: background 180ms ease !important;
+}
+
+.myrmex-enabled .shortcut-widget-box:hover .widget-icon {
+	background: var(--myrmex-primary) !important;
+	color: #ffffff !important;
+}
+
+/* ── Links widget ───────────────────────────────────────────────────────── */
+
+.myrmex-enabled .links-widget-box .link-item {
+	padding: 8px 10px !important;
+	border-radius: var(--myrmex-radius-md) !important;
+	color: var(--myrmex-text) !important;
+	transition: background-color 150ms ease, color 150ms ease, transform 150ms ease !important;
+}
+
+.myrmex-enabled .links-widget-box .link-item:hover {
+	background-color: var(--myrmex-primary-soft) !important;
+	color: var(--myrmex-primary) !important;
+	transform: translateX(3px) !important;
+}
+
+/* ── Chart widgets ──────────────────────────────────────────────────────── */
+
+.myrmex-enabled .dashboard-widget-box .widget-head {
+	padding-bottom: var(--myrmex-space-2) !important;
+	border-bottom: 1px solid var(--myrmex-border) !important;
+	margin-bottom: var(--myrmex-space-3) !important;
+}
+
+/* Frappe charts — axis lines and labels */
+.myrmex-enabled .frappe-chart .axis line,
+.myrmex-enabled .frappe-chart .y-markers line {
+	stroke: var(--myrmex-border) !important;
+}
+
+.myrmex-enabled .frappe-chart text,
+.myrmex-enabled .frappe-chart .chart-label {
+	fill: var(--myrmex-muted) !important;
+	font-size: 11px !important;
+}
+
+/* ── List widget ────────────────────────────────────────────────────────── */
+
+.myrmex-enabled .list-widget-box .list-item {
+	border-radius: var(--myrmex-radius-sm) !important;
+	transition: background-color 150ms ease !important;
+}
+
+.myrmex-enabled .list-widget-box .list-item:hover {
+	background-color: var(--myrmex-primary-soft) !important;
+}
+
+/* ── Onboarding widget ──────────────────────────────────────────────────── */
+
+.myrmex-enabled .onboarding-widget-box {
+	background: linear-gradient(135deg, rgba(99,102,241,0.04) 0%, rgba(139,92,246,0.06) 100%) !important;
+	border-color: rgba(99, 102, 241, 0.20) !important;
+}
+
+/* ── Widget group headings ──────────────────────────────────────────────── */
+
+.myrmex-enabled .layout-main-section .widget-group-title,
+.myrmex-enabled .layout-main-section .widget-group-head {
+	font-size: var(--myrmex-text-md) !important;
+	font-weight: 700 !important;
+	letter-spacing: -0.01em !important;
+	color: var(--myrmex-text) !important;
+	margin-bottom: var(--myrmex-space-3) !important;
+	padding-bottom: var(--myrmex-space-2) !important;
+	border-bottom: 2px solid var(--myrmex-border) !important;
+}
+
+/* ── Page title area ────────────────────────────────────────────────────── */
+
+.myrmex-enabled .page-title .title-text {
+	font-size: 22px !important;
+	font-weight: 800 !important;
+	letter-spacing: -0.025em !important;
+	background: var(--mx-gradient-primary) !important;
+	-webkit-background-clip: text !important;
+	-webkit-text-fill-color: transparent !important;
+	background-clip: text !important;
+}
+
+/* Fallback for browsers without gradient text */
+@supports not (-webkit-background-clip: text) {
+	.myrmex-enabled .page-title .title-text {
+		color: var(--myrmex-primary) !important;
+		background: none !important;
+	}
+}
+
+/* ── Dashboard report section ───────────────────────────────────────────── */
+
+.myrmex-enabled .dashboard-section {
+	border-radius: var(--myrmex-card-radius) !important;
+	border: 1px solid var(--myrmex-border) !important;
+	box-shadow: var(--myrmex-shadow) !important;
+}

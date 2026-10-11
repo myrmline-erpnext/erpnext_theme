@@ -1,0 +1,150 @@
+/* ---------------------------------------------------------------------------
+ * Enhanced Dark Mode — rich dark palette with vibrant accents
+ * Piggybacks on Frappe's data-theme="dark" attribute (same as myrmex-dark).
+ * ---------------------------------------------------------------------------*/
+
+.myrmex-enabled[data-theme="dark"] {
+	/* Surfaces */
+	--myrmex-background:     #09090b;   /* zinc-950 */
+	--myrmex-surface:        #18181b;   /* zinc-900 */
+	--myrmex-surface-alt:    #1f1f23;   /* zinc-850 */
+
+	/* Text */
+	--myrmex-text:           #fafafa;   /* zinc-50  */
+	--myrmex-muted:          #a1a1aa;   /* zinc-400 */
+	--myrmex-border:         #27272a;   /* zinc-800 */
+	--myrmex-border-strong:  #3f3f46;   /* zinc-700 */
+
+	/* Brand stays vivid */
+	--myrmex-primary:        #818cf8;   /* indigo-400 */
+	--myrmex-secondary:      #a78bfa;   /* violet-400 */
+	--myrmex-primary-soft:   rgba(129, 140, 248, 0.12);
+
+	/* Sidebar — even darker */
+	--myrmex-sidebar-background: #0f0e1a;
+	--myrmex-sidebar-text:        #c7d2fe;
+	--myrmex-sidebar-active:      #818cf8;
+	--myrmex-sidebar-hover:       rgba(129, 140, 248, 0.12);
+	--myrmex-sidebar-icon:        #6366f1;
+
+	/* Navbar */
+	--myrmex-navbar-background:        #111113;
+	--myrmex-navbar-text:              #fafafa;
+	--myrmex-navbar-border:            #27272a;
+	--myrmex-navbar-search-background: #1f1f23;
+
+	/* Table */
+	--myrmex-table-header-bg:    #1f1f23;
+	--myrmex-table-header-text:  #a1a1aa;
+	--myrmex-table-row-bg:       #18181b;
+	--myrmex-table-row-text:     #fafafa;
+	--myrmex-table-stripe-bg:    #1f1f23;
+	--myrmex-table-hover-bg:     #2d2d35;
+	--myrmex-table-selected-bg:  rgba(129, 140, 248, 0.15);
+	--myrmex-table-border:       #27272a;
+
+	/* Status text */
+	--myrmex-success-text:   #34d399;
+	--myrmex-warning-text:   #fbbf24;
+	--myrmex-error-text:     #f87171;
+	--myrmex-success-soft:   rgba(52, 211, 153, 0.14);
+	--myrmex-warning-soft:   rgba(251, 191, 36, 0.14);
+	--myrmex-error-soft:     rgba(248, 113, 113, 0.12);
+
+	/* Shadows fade on dark; borders carry depth */
+	--myrmex-shadow:         0 1px 2px rgba(0,0,0,0.5);
+	--myrmex-shadow-hover:   0 8px 24px rgba(0,0,0,0.60);
+	--myrmex-shadow-lg:      0 24px 56px rgba(0,0,0,0.70);
+
+	/* Gradients adjusted for dark */
+	--mx-gradient-primary:   linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+	--mx-gradient-sidebar:   linear-gradient(180deg, #0f0e1a 0%, #1a1730 100%);
+
+	color-scheme: dark;
+}
+
+/* Page title gradient works on dark too */
+.myrmex-enabled[data-theme="dark"] .page-title .title-text {
+	background: linear-gradient(135deg, #818cf8 0%, #a78bfa 100%) !important;
+	-webkit-background-clip: text !important;
+	-webkit-text-fill-color: transparent !important;
+	background-clip: text !important;
+}
+
+/* Navbar accent line stays vivid */
+.myrmex-enabled[data-theme="dark"] header.navbar::after {
+	background: linear-gradient(90deg, #6366f1 0%, #a78bfa 100%) !important;
+}
+
+/* Scrolled navbar */
+.myrmex-enabled[data-theme="dark"] header.navbar.myrmex-scrolled,
+.myrmex-enabled[data-theme="dark"] .page-head.myrmex-stuck {
+	box-shadow: 0 1px 0 var(--myrmex-border) !important;
+}
+
+/* Dark modal */
+.myrmex-enabled[data-theme="dark"] .modal-content {
+	background-color: var(--myrmex-surface) !important;
+	border-color: var(--myrmex-border) !important;
+}
+
+.myrmex-enabled[data-theme="dark"] .modal-header {
+	background: linear-gradient(135deg, #1f1f23 0%, #1a1730 100%) !important;
+}
+
+.myrmex-enabled[data-theme="dark"] .modal-footer {
+	background-color: #1f1f23 !important;
+}
+
+/* Dark backdrop */
+.myrmex-enabled[data-theme="dark"] .modal-backdrop.show {
+	background-color: #000 !important;
+	opacity: 0.70 !important;
+}
+
+/* Table header stays a step above row */
+.myrmex-enabled[data-theme="dark"] .list-row-head,
+.myrmex-enabled[data-theme="dark"] .datatable .dt-header .dt-cell {
+	background: linear-gradient(180deg, #1f1f23 0%, #18181b 100%) !important;
+}
+
+/* Filter bar */
+.myrmex-enabled[data-theme="dark"] .frappe-card .page-form {
+	background: linear-gradient(180deg, #1f1f23 0%, #18181b 100%) !important;
+}
+
+/* Sidebar rail tooltip in dark */
+.myrmex-enabled[data-theme="dark"] .myrmex-tooltip {
+	background-color: #27272a !important;
+	color: #fafafa !important;
+	border-color: #3f3f46 !important;
+}
+
+/* Skeleton shimmer on dark */
+.myrmex-enabled[data-theme="dark"] .myrmex-skeleton,
+.myrmex-enabled[data-theme="dark"] .workspace-skeleton .skeleton-card,
+.myrmex-enabled[data-theme="dark"] .list-skeleton-box {
+	background-image: linear-gradient(100deg, transparent 20%, rgba(255,255,255,0.04) 50%, transparent 80%) !important;
+}
+
+/* Images slightly dimmed */
+.myrmex-enabled[data-theme="dark"] .widget img:not([src$=".svg"]),
+.myrmex-enabled[data-theme="dark"] .msg-box img:not([src$=".svg"]) {
+	filter: brightness(0.85) !important;
+}
+
+/* Kanban on dark */
+.myrmex-enabled[data-theme="dark"] .kanban-column {
+	background-color: #1f1f23 !important;
+	border-color: #27272a !important;
+}
+
+.myrmex-enabled[data-theme="dark"] .kanban-card {
+	background-color: #27272a !important;
+	border-color: #3f3f46 !important;
+}
+
+/* Number widget accent bar stays bright in dark */
+.myrmex-enabled[data-theme="dark"] .number-widget-box .widget-content .number {
+	color: #fafafa !important;
+}

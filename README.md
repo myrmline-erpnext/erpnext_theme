@@ -10,14 +10,6 @@ to see. No line of Frappe or ERPNext source is modified. Business logic,
 permissions and the native icon set stay exactly as they are.
 
 Version **1.2.0**. See [CHANGELOG.md](CHANGELOG.md) for the history.
-<p align="center">
-  <img src="screens/screen1.png" alt="Theme Myrmex: workspace and sidebar" width="49%">
-  &nbsp;
-  <img src="screens/screen2.png" alt="Theme Myrmex: Myrmex Assistant panel" width="49%">
-</p>
-<p align="center">
-  <em>Left: the restyled Desk. Right: Myrmex Assistant.</em>
-</p>
 
 ---
 
@@ -577,4 +569,3 @@ does not clear them; wait for expiry or flush the keys prefixed
 ## Licence
 
 MIT, see `license.txt`.
-# erpnext_theme

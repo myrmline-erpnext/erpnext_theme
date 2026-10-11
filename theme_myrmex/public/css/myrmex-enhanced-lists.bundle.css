@@ -1,0 +1,176 @@
+/* ---------------------------------------------------------------------------
+ * Enhanced Lists & Tables — modern table with coloured accents, row hover
+ * ---------------------------------------------------------------------------*/
+
+/* ── Outer card ─────────────────────────────────────────────────────────── */
+
+.myrmex-enabled .layout-main-section.frappe-card {
+	border-radius: var(--myrmex-card-radius) !important;
+	border: 1px solid var(--myrmex-border) !important;
+	box-shadow: 0 1px 3px rgba(15,23,42,0.06), 0 1px 2px rgba(15,23,42,0.04) !important;
+	overflow: hidden !important;
+}
+
+/* ── Filter bar ─────────────────────────────────────────────────────────── */
+
+.myrmex-enabled .frappe-card .page-form {
+	background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%) !important;
+	border-bottom: 1px solid var(--myrmex-border) !important;
+}
+
+.myrmex-enabled .filter-selector .btn,
+.myrmex-enabled .sort-selector .btn,
+.myrmex-enabled .filter-button {
+	border-radius: 8px !important;
+	font-size: 12px !important;
+	font-weight: 500 !important;
+}
+
+.myrmex-enabled .filter-button.btn-primary-light {
+	background: rgba(99, 102, 241, 0.10) !important;
+	border-color: rgba(99, 102, 241, 0.25) !important;
+	color: #4338ca !important;
+}
+
+/* ── Table header ───────────────────────────────────────────────────────── */
+
+.myrmex-enabled .list-row-head {
+	background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%) !important;
+	border-bottom: 1px solid var(--myrmex-table-border) !important;
+	font-size: 11px !important;
+	font-weight: 700 !important;
+	letter-spacing: 0.05em !important;
+	text-transform: uppercase !important;
+	color: var(--myrmex-muted) !important;
+}
+
+/* ── Row ────────────────────────────────────────────────────────────────── */
+
+.myrmex-enabled .list-row {
+	border-bottom: 1px solid #f1f5f9 !important;
+	transition: background-color 120ms ease !important;
+}
+
+.myrmex-enabled .list-row:hover {
+	background-color: #f8f7ff !important;
+}
+
+.myrmex-enabled .list-row.list-row-checked {
+	background-color: rgba(99, 102, 241, 0.06) !important;
+	border-left: 3px solid var(--myrmex-primary) !important;
+}
+
+/* Subject link in list */
+.myrmex-enabled .list-row .list-subject .bold {
+	font-weight: 600 !important;
+	color: var(--myrmex-text) !important;
+	transition: color 120ms ease !important;
+}
+
+.myrmex-enabled .list-row:hover .list-subject .bold {
+	color: var(--myrmex-primary) !important;
+}
+
+/* ── Report / DataTable ─────────────────────────────────────────────────── */
+
+.myrmex-enabled .datatable .dt-header .dt-cell {
+	background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%) !important;
+	font-size: 11px !important;
+	font-weight: 700 !important;
+	letter-spacing: 0.04em !important;
+	text-transform: uppercase !important;
+	color: var(--myrmex-muted) !important;
+}
+
+.myrmex-enabled .datatable .dt-row:hover .dt-cell {
+	background-color: #f8f7ff !important;
+}
+
+.myrmex-enabled .datatable .dt-row.dt-row-highlight .dt-cell {
+	background-color: rgba(99, 102, 241, 0.06) !important;
+}
+
+/* Sorting arrow indicator */
+.myrmex-enabled .datatable .dt-header .sort-indicator-icon use,
+.myrmex-enabled .datatable .dt-header .sort-indicator-icon path {
+	fill: var(--myrmex-primary) !important;
+}
+
+/* ── Pagination ─────────────────────────────────────────────────────────── */
+
+.myrmex-enabled .list-paging-area {
+	background-color: #f8fafc !important;
+	border-top: 1px solid var(--myrmex-border) !important;
+	padding: 10px 16px !important;
+}
+
+.myrmex-enabled .list-paging-area .btn-paging.active,
+.myrmex-enabled .list-paging-area .btn.active-paging {
+	background: var(--mx-gradient-primary) !important;
+	border-color: transparent !important;
+	color: #ffffff !important;
+	font-weight: 600 !important;
+	border-radius: 8px !important;
+}
+
+/* ── Report chart area ──────────────────────────────────────────────────── */
+
+.myrmex-enabled .report-chart {
+	border-radius: var(--myrmex-card-radius) !important;
+	border: 1px solid var(--myrmex-border) !important;
+	box-shadow: var(--myrmex-shadow) !important;
+	padding: var(--myrmex-card-padding) !important;
+	margin-bottom: var(--myrmex-space-4) !important;
+}
+
+/* ── Kanban board ───────────────────────────────────────────────────────── */
+
+.myrmex-enabled .kanban-column {
+	background-color: var(--myrmex-surface-alt) !important;
+	border: 1px solid var(--myrmex-border) !important;
+	border-radius: var(--myrmex-card-radius) !important;
+}
+
+.myrmex-enabled .kanban-column .kanban-column-header {
+	font-weight: 700 !important;
+	font-size: 13px !important;
+	color: var(--myrmex-text) !important;
+	padding: 12px 16px !important;
+	border-bottom: 2px solid var(--myrmex-primary) !important;
+}
+
+.myrmex-enabled .kanban-card {
+	background-color: var(--myrmex-surface) !important;
+	border: 1px solid var(--myrmex-border) !important;
+	border-radius: var(--myrmex-radius-md) !important;
+	box-shadow: 0 1px 3px rgba(15,23,42,0.06) !important;
+	transition: box-shadow 150ms ease, transform 150ms ease !important;
+}
+
+.myrmex-enabled .kanban-card:hover {
+	box-shadow: 0 4px 12px rgba(15,23,42,0.10) !important;
+	transform: translateY(-1px) !important;
+}
+
+/* ── Calendar ───────────────────────────────────────────────────────────── */
+
+.myrmex-enabled .fc-toolbar-title {
+	font-weight: 700 !important;
+	color: var(--myrmex-text) !important;
+}
+
+.myrmex-enabled .fc-button-primary {
+	background: var(--mx-gradient-primary) !important;
+	border-color: transparent !important;
+	border-radius: 8px !important;
+}
+
+.myrmex-enabled .fc-button-primary:hover {
+	background: linear-gradient(135deg, #4f46e5, #7c3aed) !important;
+}
+
+.myrmex-enabled .fc-daygrid-event {
+	border-radius: 6px !important;
+	font-size: 11px !important;
+	font-weight: 600 !important;
+}

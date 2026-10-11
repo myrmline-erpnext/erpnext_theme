@@ -1,0 +1,324 @@
+/* ---------------------------------------------------------------------------
+ * Enhanced Components — richer buttons, badges, inputs, dialogs, dropdowns
+ * ---------------------------------------------------------------------------*/
+
+/* ── Buttons ────────────────────────────────────────────────────────────── */
+
+/* Primary — gradient instead of flat */
+.myrmex-enabled .btn-primary {
+	background: var(--mx-gradient-primary) !important;
+	border-color: transparent !important;
+	color: #ffffff !important;
+	font-weight: 600 !important;
+	letter-spacing: 0.01em !important;
+	box-shadow: 0 2px 8px rgba(99, 102, 241, 0.30) !important;
+}
+
+.myrmex-enabled .btn-primary:hover,
+.myrmex-enabled .btn-primary:focus,
+.myrmex-enabled .btn-primary:not(:disabled):not(.disabled):active {
+	background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+	border-color: transparent !important;
+	box-shadow: 0 4px 14px rgba(99, 102, 241, 0.45) !important;
+	color: #ffffff !important;
+	transform: translateY(-1px);
+}
+
+.myrmex-enabled .btn-primary:active:not(:disabled) {
+	transform: translateY(1px) !important;
+}
+
+/* Default / Secondary */
+.myrmex-enabled .btn-default,
+.myrmex-enabled .btn-secondary {
+	background-color: #ffffff !important;
+	border: 1px solid var(--myrmex-border) !important;
+	color: var(--myrmex-text) !important;
+	font-weight: 500 !important;
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05) !important;
+}
+
+.myrmex-enabled .btn-default:hover,
+.myrmex-enabled .btn-secondary:hover {
+	background-color: #f8fafc !important;
+	border-color: var(--myrmex-border-strong) !important;
+	box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08) !important;
+}
+
+/* Success */
+.myrmex-enabled .btn-success {
+	background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%) !important;
+	border-color: transparent !important;
+	box-shadow: 0 2px 8px rgba(16, 185, 129, 0.30) !important;
+}
+
+/* Danger */
+.myrmex-enabled .btn-danger {
+	background: linear-gradient(135deg, #ef4444 0%, #f43f5e 100%) !important;
+	border-color: transparent !important;
+	box-shadow: 0 2px 8px rgba(239, 68, 68, 0.28) !important;
+}
+
+/* Warning */
+.myrmex-enabled .btn-warning {
+	background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%) !important;
+	border-color: transparent !important;
+	color: #ffffff !important;
+	box-shadow: 0 2px 8px rgba(245, 158, 11, 0.28) !important;
+}
+
+/* ── Inputs ─────────────────────────────────────────────────────────────── */
+
+.myrmex-enabled .form-control,
+.myrmex-enabled .input-with-feedback,
+.myrmex-enabled select.form-control,
+.myrmex-enabled textarea.form-control {
+	background-color: #ffffff !important;
+	border-color: #e2e8f0 !important;
+	border-radius: var(--myrmex-input-radius) !important;
+	transition: border-color 150ms ease, box-shadow 150ms ease !important;
+}
+
+.myrmex-enabled .form-control:focus {
+	border-color: var(--myrmex-primary) !important;
+	box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18) !important;
+	background-color: #ffffff !important;
+}
+
+/* Control labels */
+.myrmex-enabled .control-label {
+	color: #475569 !important;
+	font-size: 12px !important;
+	font-weight: 600 !important;
+	letter-spacing: 0.02em !important;
+}
+
+/* ── Badges & Indicators ────────────────────────────────────────────────── */
+
+/* Make indicator pills more vivid */
+.myrmex-enabled .indicator-pill {
+	padding: 3px 10px !important;
+	font-size: 11px !important;
+	font-weight: 600 !important;
+	border-radius: 999px !important;
+	letter-spacing: 0.02em !important;
+}
+
+.myrmex-enabled .indicator-pill.blue,
+.myrmex-enabled .indicator-pill[data-color="Blue"] {
+	background-color: rgba(99, 102, 241, 0.12) !important;
+	color: #4338ca !important;
+}
+
+.myrmex-enabled .indicator-pill.green,
+.myrmex-enabled .indicator-pill[data-color="Green"] {
+	background-color: rgba(16, 185, 129, 0.12) !important;
+	color: #065f46 !important;
+}
+
+.myrmex-enabled .indicator-pill.red,
+.myrmex-enabled .indicator-pill[data-color="Red"] {
+	background-color: rgba(239, 68, 68, 0.12) !important;
+	color: #991b1b !important;
+}
+
+.myrmex-enabled .indicator-pill.orange,
+.myrmex-enabled .indicator-pill[data-color="Orange"] {
+	background-color: rgba(249, 115, 22, 0.12) !important;
+	color: #9a3412 !important;
+}
+
+.myrmex-enabled .indicator-pill.yellow,
+.myrmex-enabled .indicator-pill[data-color="Yellow"] {
+	background-color: rgba(245, 158, 11, 0.14) !important;
+	color: #92400e !important;
+}
+
+.myrmex-enabled .indicator-pill.purple,
+.myrmex-enabled .indicator-pill[data-color="Purple"] {
+	background-color: rgba(168, 85, 247, 0.12) !important;
+	color: #6b21a8 !important;
+}
+
+.myrmex-enabled .indicator-pill.pink,
+.myrmex-enabled .indicator-pill[data-color="Pink"] {
+	background-color: rgba(244, 63, 94, 0.12) !important;
+	color: #9f1239 !important;
+}
+
+.myrmex-enabled .indicator-pill.cyan,
+.myrmex-enabled .indicator-pill[data-color="Cyan"] {
+	background-color: rgba(14, 165, 233, 0.12) !important;
+	color: #0c4a6e !important;
+}
+
+.myrmex-enabled .indicator-pill.gray,
+.myrmex-enabled .indicator-pill.grey,
+.myrmex-enabled .indicator-pill[data-color="Gray"],
+.myrmex-enabled .indicator-pill[data-color="Grey"] {
+	background-color: rgba(100, 116, 139, 0.12) !important;
+	color: #475569 !important;
+}
+
+/* ── Dropdowns ──────────────────────────────────────────────────────────── */
+
+.myrmex-enabled .dropdown-menu {
+	border: 1px solid var(--myrmex-border) !important;
+	border-radius: var(--myrmex-radius-lg) !important;
+	box-shadow: 0 10px 28px rgba(15, 23, 42, 0.12), 0 2px 6px rgba(15, 23, 42, 0.06) !important;
+	padding: 6px !important;
+}
+
+.myrmex-enabled .dropdown-item {
+	border-radius: var(--myrmex-radius-md) !important;
+	padding: 8px 12px !important;
+	font-size: var(--myrmex-text-base) !important;
+	color: var(--myrmex-text) !important;
+	transition: background-color 120ms ease, color 120ms ease !important;
+}
+
+.myrmex-enabled .dropdown-item:hover {
+	background-color: var(--myrmex-primary-soft) !important;
+	color: var(--myrmex-primary) !important;
+}
+
+.myrmex-enabled .dropdown-item.active,
+.myrmex-enabled .dropdown-item:active {
+	background: var(--mx-gradient-primary) !important;
+	color: #ffffff !important;
+}
+
+.myrmex-enabled .dropdown-divider {
+	border-color: var(--myrmex-border) !important;
+	margin: 4px 0 !important;
+}
+
+/* ── Modals / Dialogs ───────────────────────────────────────────────────── */
+
+.myrmex-enabled .modal-content {
+	border: 1px solid var(--myrmex-border) !important;
+	border-radius: var(--myrmex-card-radius) !important;
+	box-shadow: 0 24px 64px rgba(15, 23, 42, 0.22) !important;
+	overflow: hidden !important;
+}
+
+.myrmex-enabled .modal-header {
+	background: linear-gradient(135deg, #f8fafc 0%, #f0f4ff 100%) !important;
+	border-bottom: 1px solid var(--myrmex-border) !important;
+	padding: 20px 24px !important;
+}
+
+.myrmex-enabled .modal-title {
+	font-size: var(--myrmex-text-lg) !important;
+	font-weight: 700 !important;
+	color: var(--myrmex-text) !important;
+	letter-spacing: -0.01em !important;
+}
+
+.myrmex-enabled .modal-footer {
+	border-top: 1px solid var(--myrmex-border) !important;
+	background-color: #f8fafc !important;
+	padding: 16px 24px !important;
+	gap: var(--myrmex-space-2) !important;
+}
+
+.myrmex-enabled .modal-backdrop.show {
+	background-color: rgba(15, 23, 42, 0.5) !important;
+}
+
+/* ── Tabs ───────────────────────────────────────────────────────────────── */
+
+.myrmex-enabled .nav-tabs .nav-link {
+	color: var(--myrmex-muted) !important;
+	border-bottom: 2px solid transparent !important;
+	font-weight: 500 !important;
+	border-radius: 0 !important;
+	transition: color 150ms ease, border-color 150ms ease !important;
+}
+
+.myrmex-enabled .nav-tabs .nav-link:hover {
+	color: var(--myrmex-text) !important;
+}
+
+.myrmex-enabled .nav-tabs .nav-link.active {
+	color: var(--myrmex-primary) !important;
+	font-weight: 600 !important;
+	border-bottom-color: var(--myrmex-primary) !important;
+}
+
+/* ── Cards ──────────────────────────────────────────────────────────────── */
+
+.myrmex-enabled .myrmex-card,
+.myrmex-enabled .form-section .section-body .frappe-card,
+.myrmex-enabled .dashboard-section {
+	border-radius: var(--myrmex-card-radius) !important;
+	box-shadow: 0 1px 3px rgba(15,23,42,0.06), 0 1px 2px rgba(15,23,42,0.04) !important;
+	transition: box-shadow 150ms ease, transform 150ms ease !important;
+}
+
+/* ── Toasts / Alerts ────────────────────────────────────────────────────── */
+
+.myrmex-enabled .alert {
+	border-radius: var(--myrmex-radius-md) !important;
+	border-left: 4px solid transparent !important;
+	font-size: var(--myrmex-text-base) !important;
+}
+
+.myrmex-enabled .alert-success {
+	background-color: rgba(16, 185, 129, 0.08) !important;
+	border-color: var(--myrmex-success) !important;
+	color: #065f46 !important;
+}
+
+.myrmex-enabled .alert-warning {
+	background-color: rgba(245, 158, 11, 0.10) !important;
+	border-color: var(--myrmex-warning) !important;
+	color: #92400e !important;
+}
+
+.myrmex-enabled .alert-danger,
+.myrmex-enabled .alert-error {
+	background-color: rgba(239, 68, 68, 0.08) !important;
+	border-color: var(--myrmex-error) !important;
+	color: #991b1b !important;
+}
+
+.myrmex-enabled .alert-info {
+	background-color: rgba(99, 102, 241, 0.08) !important;
+	border-color: var(--myrmex-primary) !important;
+	color: #3730a3 !important;
+}
+
+/* ── Progress ───────────────────────────────────────────────────────────── */
+
+.myrmex-enabled .progress {
+	border-radius: 999px !important;
+	background-color: var(--myrmex-border) !important;
+	overflow: hidden !important;
+}
+
+.myrmex-enabled .progress-bar {
+	background: var(--mx-gradient-primary) !important;
+	border-radius: 999px !important;
+}
+
+/* ── Tags / Pills from filter area ─────────────────────────────────────── */
+
+.myrmex-enabled .tag-filters-area .filter-pill,
+.myrmex-enabled .filter-area .filter-pill {
+	background: rgba(99, 102, 241, 0.10) !important;
+	color: #4338ca !important;
+	border: 1px solid rgba(99, 102, 241, 0.20) !important;
+	border-radius: 999px !important;
+	font-weight: 500 !important;
+}
+
+/* ── Tooltips ───────────────────────────────────────────────────────────── */
+
+.myrmex-enabled [data-toggle="tooltip"] + .tooltip .tooltip-inner,
+.myrmex-enabled .tooltip-inner {
+	border-radius: var(--myrmex-radius-md) !important;
+	font-size: 12px !important;
+	font-weight: 500 !important;
+	padding: 6px 10px !important;
+}

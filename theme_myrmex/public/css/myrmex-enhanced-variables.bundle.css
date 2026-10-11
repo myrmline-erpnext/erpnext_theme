@@ -1,0 +1,163 @@
+/* ---------------------------------------------------------------------------
+ * Enhanced Variables — Tailwind-inspired richer palette
+ * Loaded AFTER myrmex-variables.bundle.css to override the defaults.
+ * All tokens stay on the same CSS custom-property names so every existing
+ * component picks up the new palette automatically.
+ * ---------------------------------------------------------------------------*/
+
+:root {
+	/* Brand — vivid indigo/violet instead of Twitter blue */
+	--myrmex-primary:        #6366f1;   /* indigo-500 */
+	--myrmex-secondary:      #8b5cf6;   /* violet-500 */
+	--myrmex-primary-soft:   rgba(99, 102, 241, 0.10);
+	--myrmex-primary-contrast: #ffffff;
+
+	/* Accent palette — used by coloured KPI cards & badges */
+	--mx-accent-sky:         #0ea5e9;   /* sky-500     */
+	--mx-accent-emerald:     #10b981;   /* emerald-500 */
+	--mx-accent-amber:       #f59e0b;   /* amber-500   */
+	--mx-accent-rose:        #f43f5e;   /* rose-500    */
+	--mx-accent-fuchsia:     #d946ef;   /* fuchsia-500 */
+	--mx-accent-teal:        #14b8a6;   /* teal-500    */
+	--mx-accent-orange:      #f97316;   /* orange-500  */
+	--mx-accent-purple:      #a855f7;   /* purple-500  */
+
+	/* Soft backgrounds for each accent (10-12 % opacity) */
+	--mx-sky-soft:           rgba(14, 165, 233, 0.10);
+	--mx-emerald-soft:       rgba(16, 185, 129, 0.10);
+	--mx-amber-soft:         rgba(245, 158, 11, 0.12);
+	--mx-rose-soft:          rgba(244, 63, 94, 0.10);
+	--mx-fuchsia-soft:       rgba(217, 70, 239, 0.10);
+	--mx-teal-soft:          rgba(20, 184, 166, 0.10);
+	--mx-orange-soft:        rgba(249, 115, 22, 0.10);
+	--mx-purple-soft:        rgba(168, 85, 247, 0.10);
+
+	/* Surfaces — slightly cooler white for depth */
+	--myrmex-background:     #f1f5f9;   /* slate-100   */
+	--myrmex-surface:        #ffffff;
+	--myrmex-surface-alt:    #f8fafc;   /* slate-50    */
+
+	/* Text */
+	--myrmex-text:           #0f172a;   /* slate-900   */
+	--myrmex-muted:          #64748b;   /* slate-500   */
+	--myrmex-border:         #e2e8f0;   /* slate-200   */
+	--myrmex-border-strong:  #cbd5e1;   /* slate-300   */
+
+	/* Status — brighter, more distinct */
+	--myrmex-success:        #10b981;
+	--myrmex-warning:        #f59e0b;
+	--myrmex-error:          #ef4444;
+
+	/* Sidebar — dark indigo rail (inspired by Tailwind UI sidebars) */
+	--myrmex-sidebar-background: #1e1b4b; /* indigo-950 */
+	--myrmex-sidebar-text:        #c7d2fe; /* indigo-200 */
+	--myrmex-sidebar-active:      #818cf8; /* indigo-400 */
+	--myrmex-sidebar-hover:       rgba(99, 102, 241, 0.15);
+	--myrmex-sidebar-icon:        #818cf8; /* indigo-400 */
+	--myrmex-sidebar-width:       260px;
+
+	/* Navbar — clean white with a subtle indigo accent line */
+	--myrmex-navbar-background:        #ffffff;
+	--myrmex-navbar-text:              #0f172a;
+	--myrmex-navbar-border:            #e2e8f0;
+	--myrmex-navbar-search-background: #f1f5f9;
+	--myrmex-navbar-height:            60px;
+
+	/* Shape — slightly larger radius for the modern look */
+	--myrmex-card-radius:   16px;
+	--myrmex-button-radius: 10px;
+	--myrmex-input-radius:  8px;
+	--myrmex-card-padding:  22px;
+	--myrmex-radius-xs:     min(4px,  var(--myrmex-card-radius));
+	--myrmex-radius-sm:     min(6px,  var(--myrmex-card-radius));
+	--myrmex-radius-md:     min(10px, var(--myrmex-card-radius));
+	--myrmex-radius-lg:     var(--myrmex-card-radius);
+	--myrmex-radius-pill:   999px;
+
+	/* Elevation — richer shadows */
+	--myrmex-shadow:       0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+	--myrmex-shadow-hover: 0 8px 24px rgba(15, 23, 42, 0.12);
+	--myrmex-shadow-lg:    0 20px 48px rgba(15, 23, 42, 0.18);
+	--myrmex-focus-ring:   0 0 0 3px rgba(99, 102, 241, 0.25);
+
+	/* Table */
+	--myrmex-table-header-bg:     #f8fafc;
+	--myrmex-table-header-text:   #64748b;
+	--myrmex-table-row-bg:        #ffffff;
+	--myrmex-table-row-text:      #0f172a;
+	--myrmex-table-stripe-bg:     #f8fafc;
+	--myrmex-table-hover-bg:      #f0f4ff;
+	--myrmex-table-selected-bg:   #ede9fe;
+	--myrmex-table-border:        #e2e8f0;
+	--myrmex-table-radius:        12px;
+	--myrmex-table-row-height:    44px;
+	--myrmex-table-cell-padding:  14px;
+
+	/* Gradient helpers */
+	--mx-gradient-primary:   linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+	--mx-gradient-sky:       linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+	--mx-gradient-emerald:   linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
+	--mx-gradient-amber:     linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+	--mx-gradient-rose:      linear-gradient(135deg, #f43f5e 0%, #d946ef 100%);
+	--mx-gradient-sidebar:   linear-gradient(180deg, #1e1b4b 0%, #312e81 100%);
+}
+
+/* Compact density override */
+:root[data-myrmex-density="compact"] {
+	--myrmex-card-padding:  14px;
+	--myrmex-space-5:       18px;
+	--myrmex-space-6:       24px;
+	--myrmex-row-height:    36px;
+	--myrmex-control-height:30px;
+}
+
+/* Re-point Frappe v15 tokens at the new palette */
+.myrmex-enabled {
+	--primary:                  var(--myrmex-primary);
+	--primary-color:            var(--myrmex-primary);
+	--text-on-primary:          var(--myrmex-primary-contrast);
+	--btn-primary:              var(--myrmex-primary);
+
+	--bg-color:                 var(--myrmex-background);
+	--fg-color:                 var(--myrmex-surface);
+	--card-bg:                  var(--myrmex-surface);
+	--subtle-fg:                var(--myrmex-surface-alt);
+	--subtle-accent:            var(--myrmex-surface-alt);
+	--control-bg:               var(--myrmex-surface);
+	--control-bg-on-gray:       var(--myrmex-surface-alt);
+	--disabled-control-bg:      var(--myrmex-surface-alt);
+	--modal-bg:                 var(--myrmex-surface);
+	--popover-bg:               var(--myrmex-surface);
+	--toast-bg:                 var(--myrmex-surface);
+	--awesomplete-hover-bg:     var(--myrmex-primary-soft);
+	--skeleton-bg:              color-mix(in srgb, var(--myrmex-border) 60%, var(--myrmex-surface));
+
+	--text-color:               var(--myrmex-text);
+	--heading-color:            var(--myrmex-text);
+	--text-muted:               var(--myrmex-muted);
+	--text-light:               var(--myrmex-muted);
+	--invert-neutral:           var(--myrmex-text);
+
+	--border-color:             var(--myrmex-border);
+	--dark-border-color:        var(--myrmex-border-strong);
+
+	--green-avatar-color:       var(--myrmex-success);
+	--alert-text-danger:        var(--myrmex-error-text);
+	--alert-text-warning:       var(--myrmex-warning-text);
+	--alert-text-success:       var(--myrmex-success-text);
+
+	--border-radius:            var(--myrmex-radius-sm);
+	--border-radius-sm:         var(--myrmex-radius-sm);
+	--border-radius-md:         var(--myrmex-radius-md);
+	--border-radius-lg:         var(--myrmex-radius-lg);
+	--border-radius-full:       var(--myrmex-radius-pill);
+
+	--shadow-base:              var(--myrmex-shadow);
+	--shadow-sm:                var(--myrmex-shadow);
+	--shadow-md:                var(--myrmex-shadow-hover);
+	--shadow-lg:                var(--myrmex-shadow-lg);
+	--focus-default:            var(--myrmex-focus-ring);
+
+	--navbar-height:            var(--myrmex-navbar-height);
+	--table-border-color:       var(--myrmex-table-border);
+}

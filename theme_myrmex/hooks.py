@@ -23,6 +23,7 @@ app_license = "mit"
 # after the core ones so the theme wins on equal specificity.
 
 app_include_css = [
+	# ── Foundation (original Myrmex bundles) ─────────────────────────────────
 	"myrmex-variables.bundle.css",
 	"myrmex-base.bundle.css",
 	"myrmex-navbar.bundle.css",
@@ -35,6 +36,17 @@ app_include_css = [
 	"myrmex-chatbot.bundle.css",
 	"myrmex-dark.bundle.css",
 	"myrmex-responsive.bundle.css",
+	# ── Enhanced layer — Tailwind-inspired richer palette & modern UI ────────
+	# Loaded last so they win on equal specificity without !important wars.
+	# Remove any of these to roll back an individual enhancement.
+	"myrmex-enhanced-variables.bundle.css",   # richer token palette
+	"myrmex-enhanced-sidebar.bundle.css",     # dark-indigo sidebar
+	"myrmex-enhanced-navbar.bundle.css",      # gradient accent line + refinements
+	"myrmex-enhanced-components.bundle.css",  # gradient buttons, vivid badges, dropdowns
+	"myrmex-enhanced-dashboard.bundle.css",   # coloured KPI cards, widget polish
+	"myrmex-enhanced-forms.bundle.css",       # section heads, grids, timeline
+	"myrmex-enhanced-lists.bundle.css",       # table headers, rows, kanban, calendar
+	"myrmex-enhanced-dark.bundle.css",        # zinc-950 dark surfaces + bright accents
 ]
 
 app_include_js = "myrmex.bundle.js"
