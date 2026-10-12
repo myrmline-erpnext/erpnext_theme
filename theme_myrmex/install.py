@@ -126,6 +126,10 @@ def after_migrate():
 	clear_theme_cache()
 
 
-def after_app_install(app_name=None):
-	"""Another app was installed; drop the cached payload so assets re-resolve."""
+def after_app_install(app_name=None, site=None):
+	"""Another app was installed; drop the cached payload so assets re-resolve.
+
+	Frappe v16 passes ``site`` as a second positional argument; accepting it here
+	(and ignoring it) keeps the hook callable on both v15 and v16.
+	"""
 	clear_theme_cache()

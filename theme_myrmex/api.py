@@ -8,6 +8,7 @@ touches an ERPNext document.
 import frappe
 from frappe import _
 
+from theme_myrmex.compat import get_cache
 from theme_myrmex.presets import (
 	COLOR_VARIABLE_MAP,
 	DARK_SURFACES,
@@ -164,18 +165,18 @@ def _table_vars(settings: dict) -> dict:
 
 def get_theme_payload() -> dict:
 	"""Cached payload used by boot and by the website context."""
-	cached = frappe.cache().get_value(CACHE_KEY)
+	cached = get_cache().get_value(CACHE_KEY)
 	if cached:
 		return cached
 
 	payload = build_payload()
-	frappe.cache().set_value(CACHE_KEY, payload)
+	get_cache().set_value(CACHE_KEY, payload)
 	return payload
 
 
 def clear_theme_cache(doc=None, method=None):
 	"""Drop the cache and push the new palette to every open session."""
-	frappe.cache().delete_value(CACHE_KEY)
+	get_cache().delete_value(CACHE_KEY)
 	frappe.clear_cache(doctype="Theme Settings")
 
 	try:

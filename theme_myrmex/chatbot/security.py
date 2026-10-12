@@ -11,6 +11,8 @@ import frappe
 from frappe import _
 from frappe.utils import cint
 
+from theme_myrmex.compat import get_cache
+
 SETTINGS_DOCTYPE = "Chatbot Settings"
 
 # Hard ceilings that apply whatever an administrator configures.
@@ -115,7 +117,7 @@ def check_rate_limit(settings, user: str | None = None):
 		("day", 86400, configured["rate_limit_per_day"]),
 	)
 
-	cache = frappe.cache()
+	cache = get_cache()
 	for label, seconds, allowed in windows:
 		key = cache.make_key(f"myrmex_chatbot_rate:{label}:{user}")
 		count = cache.incr(key)

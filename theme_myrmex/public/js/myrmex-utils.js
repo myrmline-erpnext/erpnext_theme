@@ -53,22 +53,34 @@ myrmex.bindRouting = function () {
 	if (myrmex._routingBound) return;
 	myrmex._routingBound = true;
 
-	// frappe.router is the canonical signal in v15.
-	if (frappe.router && frappe.router.on) {
+	// frappe.router.on("change", ...) is the canonical signal in Frappe v15.
+	// Frappe v16 uses frappe.router.on as well, but falls back to the
+	// document-level events if the router is not yet initialised.
+	if (frappe.router && typeof frappe.router.on === "function") {
 		frappe.router.on("change", () => {
 			disconnectScoped();
 			runRouteHandlers();
 		});
+	} else if (frappe.router && typeof frappe.router.on === "undefined") {
+		// v16 edge case: router exists but uses a different event API.
+		// Fall through to document-level events below.
 	}
 
-	// page-change covers the cases the router does not emit for (first paint of
-	// a page object, workspace switches inside the same route).
+	// page-change is the Frappe-emitted jQuery event that fires on every
+	// view transition and still works across both v15 and v16.
 	$(document).on("page-change", () => {
 		disconnectScoped();
 		runRouteHandlers();
 	});
 
+	// Additional signals: form reload and list refresh may not fire page-change.
 	$(document).on("form-refresh list-view-refresh", () => runRouteHandlers());
+
+	// Frappe v16: the router may emit a native CustomEvent on the document.
+	document.addEventListener("frappe:route-change", () => {
+		disconnectScoped();
+		runRouteHandlers();
+	});
 };
 
 // --- scoped mutation observers --------------------------------------------
