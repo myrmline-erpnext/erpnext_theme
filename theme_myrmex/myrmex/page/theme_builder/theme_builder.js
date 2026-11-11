@@ -847,9 +847,8 @@ class BrandingManager {
 		formData.append("file", file, file.name);
 		formData.append("is_private", "0");
 		formData.append("folder", "Home");
-		formData.append("doctype", "Branding Settings");
-		formData.append("docname", "Branding Settings");
-		formData.append("fieldname", key);
+		// Do NOT pass doctype/docname — Frappe tries to create a linked comment
+		// for Single DocTypes and fails link validation because no named row exists.
 
 		const csrfToken = frappe.csrf_token || $('meta[name="csrf-token"]').attr("content") || "";
 
