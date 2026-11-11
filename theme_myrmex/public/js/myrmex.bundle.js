@@ -8,6 +8,7 @@
 
 import "./myrmex-utils.js";
 import "./myrmex-theme.js";
+import "./myrmex-branding.js";
 import "./myrmex-sidebar.js";
 import "./myrmex-navbar.js";
 import "./myrmex-workspace.js";

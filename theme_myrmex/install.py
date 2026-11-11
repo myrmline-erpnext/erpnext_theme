@@ -63,7 +63,12 @@ def ensure_theme_settings():
 	if not frappe.db.exists("DocType", "Theme Settings"):
 		return
 
-	doc = frappe.get_single("Theme Settings")
+	has_record = frappe.db.exists("Theme Settings", "Theme Settings")
+	try:
+		doc = frappe.get_single("Theme Settings") if has_record else frappe.new_doc("Theme Settings")
+	except frappe.DoesNotExistError:
+		doc = frappe.new_doc("Theme Settings")
+
 	changed = False
 	for field, value in DEFAULTS.items():
 		if doc.get(field) in (None, ""):
@@ -72,6 +77,7 @@ def ensure_theme_settings():
 
 	if changed:
 		doc.flags.ignore_permissions = True
+		doc.flags.ignore_mandatory = True
 		doc.save()
 		frappe.db.commit()
 
@@ -114,18 +120,65 @@ def ensure_chatbot_settings():
 	frappe.db.commit()
 
 
+def ensure_branding_settings():
+	"""Create the Branding Settings Single doc with safe defaults if missing.
+
+	frappe.get_single() raises DoesNotExistError when the Single has never been
+	saved (no row yet in tabSingles). We fall back to frappe.new_doc() so the
+	patch is safe on a fresh install and on an upgrade.
+	"""
+	if not frappe.db.exists("DocType", "Branding Settings"):
+		return
+
+	# Check whether a row already exists in tabSingles
+	has_record = frappe.db.exists("Branding Settings", "Branding Settings")
+	if has_record:
+		try:
+			doc = frappe.get_single("Branding Settings")
+		except frappe.DoesNotExistError:
+			doc = frappe.new_doc("Branding Settings")
+	else:
+		doc = frappe.new_doc("Branding Settings")
+
+	defaults = {
+		"logo_max_height": 32,
+		"login_bg_overlay_color": "#1e1b4b",
+		"login_bg_overlay_opacity": 0.5,
+		"loader_bg_color": "#ffffff",
+		"loader_spinner_color": "#6366f1",
+	}
+
+	changed = False
+	for field, value in defaults.items():
+		if doc.get(field) in (None, ""):
+			doc.set(field, value)
+			changed = True
+
+	if changed:
+		doc.flags.ignore_permissions = True
+		doc.flags.ignore_mandatory = True
+		doc.save()
+		frappe.db.commit()
+
+
 def after_install():
 	ensure_theme_settings()
 	ensure_chatbot_settings()
+	ensure_branding_settings()
 	clear_theme_cache()
 
 
 def after_migrate():
 	ensure_theme_settings()
 	ensure_chatbot_settings()
+	ensure_branding_settings()
 	clear_theme_cache()
 
 
-def after_app_install(app_name=None):
-	"""Another app was installed; drop the cached payload so assets re-resolve."""
+def after_app_install(app_name=None, site=None):
+	"""Another app was installed; drop the cached payload so assets re-resolve.
+
+	Frappe v16 passes ``site`` as a second positional argument; accepting it here
+	(and ignoring it) keeps the hook callable on both v15 and v16.
+	"""
 	clear_theme_cache()

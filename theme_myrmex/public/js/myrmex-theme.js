@@ -80,6 +80,12 @@ myrmex.theme = {
 	 * Apply the configured default appearance the first time a user opens the
 	 * Desk. Frappe stores the user's own choice; that always wins afterwards,
 	 * and the native theme switcher in the user menu keeps working.
+	 *
+	 * Compatible with Frappe v15 and v16:
+	 * - v15: desk_theme lives at frappe.boot.user.desk_theme
+	 * - v16: desk_theme may live at frappe.boot.user.desk_theme or
+	 *        frappe.boot.user_info.desk_theme; frappe.ui.set_theme accepts
+	 *        "light" | "dark" | "automatic" directly.
 	 */
 	applyDefaultAppearance(appearance) {
 		if (!appearance || myrmex.storage.get("appearance-applied", false)) return;
@@ -87,20 +93,28 @@ myrmex.theme = {
 		const target = { Light: "light", Dark: "dark", System: "automatic" }[appearance];
 		if (!target) return;
 
-		// Frappe v15 stores "Light" for everyone who never opened the theme
-		// switcher, so only a different value is treated as a deliberate choice.
-		const userChoice = frappe.boot && frappe.boot.user && frappe.boot.user.desk_theme;
+		// Read desk_theme from wherever the running version puts it.
+		const user = (frappe.boot && frappe.boot.user) || {};
+		const userInfo = (frappe.boot && frappe.boot.user_info) || {};
+		const userChoice = user.desk_theme || userInfo.desk_theme;
+
+		// Frappe stores "Light" for users who never picked a theme; treat that as
+		// "no deliberate choice", so the admin's default can be applied.
 		if (userChoice && userChoice !== "Light") {
 			myrmex.storage.set("appearance-applied", true);
 			return;
 		}
 
-		// Frappe v15's set_theme(theme) writes its argument straight into
-		// data-theme, so passing "automatic" would leave the page with neither a
-		// light nor a dark palette. Set the mode, then let Frappe resolve it.
+		// Apply the theme via Frappe's own API so its internal state stays in sync.
 		myrmex.ROOT.setAttribute("data-theme-mode", target);
 		if (frappe.ui && typeof frappe.ui.set_theme === "function") {
-			frappe.ui.set_theme();
+			// v16 accepts the mode string directly; v15 reads data-theme-mode.
+			try {
+				frappe.ui.set_theme(target);
+			} catch (_) {
+				// Older v15 build: set_theme() reads data-theme-mode itself.
+				frappe.ui.set_theme();
+			}
 		} else {
 			myrmex.ROOT.setAttribute("data-theme", target === "automatic" ? this.systemTheme() : target);
 		}

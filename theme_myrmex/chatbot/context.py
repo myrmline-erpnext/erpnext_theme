@@ -17,8 +17,20 @@ never told that something exists but is restricted.
 from __future__ import annotations
 
 import frappe
-from frappe.model import no_value_fields
 from frappe.utils import cint, strip_html
+
+# Frappe v16 moved no_value_fields; try both import paths.
+try:
+	from frappe.model import no_value_fields
+except ImportError:
+	try:
+		from frappe.model.base_document import no_value_fields  # type: ignore[no-redef]
+	except ImportError:
+		# Absolute fallback — these field types never carry a database value.
+		no_value_fields = [  # type: ignore[assignment]
+			"Section Break", "Column Break", "HTML", "Tab Break",
+			"Button", "Fold", "Heading", "Image", "Separator",
+		]
 
 from theme_myrmex.chatbot.utils import sanitize_route, truncate
 
@@ -210,7 +222,11 @@ def describe_document(doctype: str, docname: str, max_fields: int = 40) -> dict 
 		return None
 
 	# Strip values this user's permlevels do not cover, before reading anything.
-	doc.apply_fieldlevel_read_permissions()
+	# Method was renamed in Frappe v16; try both names.
+	if hasattr(doc, "apply_fieldlevel_read_permissions"):
+		doc.apply_fieldlevel_read_permissions()
+	elif hasattr(doc, "apply_field_level_read_permissions"):
+		doc.apply_field_level_read_permissions()
 	meta = doc.meta
 
 	fields: dict = {}

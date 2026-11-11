@@ -47,6 +47,8 @@ app_include_css = [
 	"myrmex-enhanced-forms.bundle.css",       # section heads, grids, timeline
 	"myrmex-enhanced-lists.bundle.css",       # table headers, rows, kanban, calendar
 	"myrmex-enhanced-dark.bundle.css",        # zinc-950 dark surfaces + bright accents
+	"myrmex-enhanced-overlays.bundle.css",    # z-index hierarchy, dropdowns, modals, tooltips, multi-selects
+	"myrmex-branding.bundle.css",             # dynamic branding (logo, favicon injection point)
 ]
 
 app_include_js = "myrmex.bundle.js"
@@ -85,6 +87,9 @@ after_app_install = "theme_myrmex.install.after_app_install"
 doc_events = {
 	"Theme Settings": {
 		"on_update": "theme_myrmex.api.clear_theme_cache",
+	},
+	"Branding Settings": {
+		"on_update": "theme_myrmex.branding.clear_branding_cache",
 	},
 	"User": {
 		# Runs before Frappe's link check, so a user who used the assistant can

@@ -14,6 +14,14 @@ def boot_session(bootinfo):
 		frappe.log_error(title="Theme Myrmex: bootinfo failed")
 
 	try:
+		from theme_myrmex.branding import get_branding_payload
+
+		bootinfo.myrmex_branding = get_branding_payload()
+	except Exception:
+		bootinfo.myrmex_branding = {}
+		frappe.log_error(title="Theme Myrmex: branding bootinfo failed")
+
+	try:
 		from theme_myrmex.chatbot.service import public_config
 
 		# Filtered per user; contains no provider details or secrets.
@@ -24,9 +32,17 @@ def boot_session(bootinfo):
 
 
 def update_website_context(context):
-	"""Make the palette available to portal and login templates."""
+	"""Make the palette and branding available to portal and login templates."""
 	try:
 		context.myrmex_theme = get_theme_payload()
 	except Exception:
 		context.myrmex_theme = None
+
+	try:
+		from theme_myrmex.branding import get_branding_payload
+
+		context.myrmex_branding = get_branding_payload()
+	except Exception:
+		context.myrmex_branding = {}
+
 	return context

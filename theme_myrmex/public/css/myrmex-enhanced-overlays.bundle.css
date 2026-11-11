@@ -1,0 +1,777 @@
+/* ---------------------------------------------------------------------------
+ * Enhanced Overlays — z-index hierarchy, popups, dropdowns, tooltips,
+ * multi-selects, date pickers, modals. Fixes visibility and stacking issues.
+ * ---------------------------------------------------------------------------
+ *
+ * Z-index ladder (never overlap without intent):
+ *   1   base content
+ *   10  sticky headers / sidebars
+ *   50  floating elements (tooltips, small dropdowns)
+ *   100 dropdowns / autocomplete
+ *   200 date pickers / color pickers
+ *   300 select2 / awesomplete results
+ *   500 modals / dialogs
+ *   600 modal backdrops
+ *   700 toast notifications
+ *   800 popover / confirmation dialogs
+ *   900 chatbot panel
+ *  1000 fullscreen overlays
+ * ---------------------------------------------------------------------------*/
+
+/* ===========================================================================
+   1. STACKING CONTEXT — reset transforms that create unwanted local contexts
+   =========================================================================== */
+
+/*
+ * Frappe sets transform on some layout containers which creates a new
+ * stacking context, causing z-indexed children to be trapped inside it.
+ * We explicitly disable transform on the sidebar and navbar when the theme
+ * is active, restoring the global stacking context for overlays.
+ */
+.myrmex-enabled .layout-side-section,
+.myrmex-enabled .navbar {
+	/* Do NOT use transform here — it would trap z-indexed children */
+	transform: none !important;
+}
+
+/* ===========================================================================
+   2. DROPDOWN MENUS
+   =========================================================================== */
+
+.myrmex-enabled .dropdown-menu,
+.myrmex-enabled .dropdown-menu.show {
+	z-index: 1050 !important;
+	position: absolute !important;
+	transform: none !important;         /* avoid stacking-context trap */
+	will-change: auto !important;
+	overflow: visible !important;
+	border: 1px solid var(--myrmex-border) !important;
+	border-radius: var(--myrmex-radius-lg) !important;
+	background-color: var(--myrmex-surface) !important;
+	box-shadow: 0 10px 36px rgba(15, 23, 42, 0.14), 0 3px 8px rgba(15, 23, 42, 0.07) !important;
+	padding: 6px !important;
+	min-width: 160px !important;
+	animation: mx-dropdown-in 120ms ease forwards !important;
+}
+
+@keyframes mx-dropdown-in {
+	from { opacity: 0; transform: translateY(-6px); }
+	to   { opacity: 1; transform: translateY(0); }
+}
+
+.myrmex-enabled .dropdown-item {
+	border-radius: var(--myrmex-radius-md) !important;
+	padding: 8px 12px !important;
+	font-size: 13px !important;
+	color: var(--myrmex-text) !important;
+	display: flex !important;
+	align-items: center !important;
+	gap: 8px !important;
+	transition: background-color 100ms ease, color 100ms ease !important;
+	white-space: nowrap !important;
+}
+
+.myrmex-enabled .dropdown-item:hover,
+.myrmex-enabled .dropdown-item:focus {
+	background-color: var(--myrmex-primary-soft) !important;
+	color: var(--myrmex-primary) !important;
+	outline: none !important;
+}
+
+.myrmex-enabled .dropdown-item.active,
+.myrmex-enabled .dropdown-item:active {
+	background: var(--mx-gradient-primary) !important;
+	color: #ffffff !important;
+}
+
+/* Page actions / navbar dropdowns */
+.myrmex-enabled .page-head .dropdown-menu,
+.myrmex-enabled .navbar .dropdown-menu {
+	top: calc(100% + 8px) !important;
+}
+
+/* ===========================================================================
+   3. AWESOMPLETE / LINK FIELD AUTOCOMPLETE
+   =========================================================================== */
+
+.myrmex-enabled .awesomplete {
+	position: relative !important;
+}
+
+.myrmex-enabled .awesomplete > ul,
+.myrmex-enabled ul[class~="awesomplete"],
+.myrmex-enabled [data-id].awesomplete ul {
+	z-index: 1100 !important;
+	position: absolute !important;
+	top: calc(100% + 4px) !important;
+	left: 0 !important;
+	min-width: 100% !important;
+	max-width: 420px !important;
+	max-height: 320px !important;
+	overflow-y: auto !important;
+	overflow-x: hidden !important;
+	background: var(--myrmex-surface) !important;
+	border: 1px solid var(--myrmex-border) !important;
+	border-radius: var(--myrmex-radius-lg) !important;
+	box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16), 0 3px 8px rgba(15, 23, 42, 0.08) !important;
+	padding: 6px !important;
+	margin: 0 !important;
+	list-style: none !important;
+	animation: mx-dropdown-in 120ms ease forwards !important;
+}
+
+.myrmex-enabled .awesomplete > ul > li,
+.myrmex-enabled ul[class~="awesomplete"] > li {
+	border-radius: var(--myrmex-radius-md) !important;
+	padding: 8px 12px !important;
+	font-size: 13px !important;
+	color: var(--myrmex-text) !important;
+	cursor: pointer !important;
+	display: flex !important;
+	align-items: center !important;
+	gap: 8px !important;
+	transition: background-color 100ms ease, color 100ms ease !important;
+}
+
+.myrmex-enabled .awesomplete > ul > li:hover,
+.myrmex-enabled .awesomplete > ul > li[aria-selected="true"] {
+	background-color: var(--myrmex-primary-soft) !important;
+	color: var(--myrmex-primary) !important;
+}
+
+.myrmex-enabled .awesomplete mark {
+	background: transparent !important;
+	color: var(--myrmex-primary) !important;
+	font-weight: 700 !important;
+}
+
+/* ===========================================================================
+   4. MULTI-SELECT / SELECT2 / MULTI-CHECK
+   =========================================================================== */
+
+/* Frappe's Multi-Select tags container */
+.myrmex-enabled .multi-select-wrapper,
+.myrmex-enabled .input-wrap .multi-select-wrapper {
+	position: relative !important;
+	min-height: 36px !important;
+	background: var(--myrmex-surface) !important;
+	border: 1px solid var(--myrmex-border) !important;
+	border-radius: var(--myrmex-input-radius) !important;
+	padding: 4px 6px !important;
+	display: flex !important;
+	flex-wrap: wrap !important;
+	gap: 4px !important;
+	align-items: center !important;
+	cursor: text !important;
+	transition: border-color 150ms ease, box-shadow 150ms ease !important;
+}
+
+.myrmex-enabled .multi-select-wrapper:focus-within {
+	border-color: var(--myrmex-primary) !important;
+	box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18) !important;
+}
+
+/* Individual selected tags */
+.myrmex-enabled .multi-select-wrapper .btn-xs,
+.myrmex-enabled .multi-select-wrapper .multi-select-tag {
+	background-color: var(--myrmex-primary-soft) !important;
+	color: var(--myrmex-primary) !important;
+	border: 1px solid rgba(99, 102, 241, 0.25) !important;
+	border-radius: 999px !important;
+	padding: 2px 8px !important;
+	font-size: 12px !important;
+	font-weight: 500 !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	gap: 4px !important;
+	white-space: nowrap !important;
+	max-width: 200px !important;
+}
+
+.myrmex-enabled .multi-select-wrapper .btn-xs .icon,
+.myrmex-enabled .multi-select-wrapper .multi-select-tag .remove {
+	opacity: 0.6 !important;
+	cursor: pointer !important;
+}
+
+.myrmex-enabled .multi-select-wrapper .btn-xs:hover .icon,
+.myrmex-enabled .multi-select-wrapper .multi-select-tag .remove:hover {
+	opacity: 1 !important;
+}
+
+/* The input inside the multi-select wrapper */
+.myrmex-enabled .multi-select-wrapper input {
+	border: none !important;
+	outline: none !important;
+	box-shadow: none !important;
+	background: transparent !important;
+	min-width: 80px !important;
+	flex: 1 !important;
+	padding: 2px 4px !important;
+	font-size: 13px !important;
+}
+
+/* Dropdown list from multi-select */
+.myrmex-enabled .multi-select-list,
+.myrmex-enabled .multi-select-dropdown {
+	z-index: 1100 !important;
+	position: absolute !important;
+	background: var(--myrmex-surface) !important;
+	border: 1px solid var(--myrmex-border) !important;
+	border-radius: var(--myrmex-radius-lg) !important;
+	box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16) !important;
+	padding: 6px !important;
+	max-height: 280px !important;
+	overflow-y: auto !important;
+	min-width: 200px !important;
+	animation: mx-dropdown-in 120ms ease forwards !important;
+}
+
+.myrmex-enabled .multi-select-list .list-item,
+.myrmex-enabled .multi-select-dropdown .list-item {
+	border-radius: var(--myrmex-radius-md) !important;
+	padding: 8px 12px !important;
+	font-size: 13px !important;
+	cursor: pointer !important;
+	display: flex !important;
+	align-items: center !important;
+	gap: 8px !important;
+	color: var(--myrmex-text) !important;
+	transition: background-color 100ms ease !important;
+}
+
+.myrmex-enabled .multi-select-list .list-item:hover {
+	background-color: var(--myrmex-primary-soft) !important;
+	color: var(--myrmex-primary) !important;
+}
+
+.myrmex-enabled .multi-select-list .list-item.active,
+.myrmex-enabled .multi-select-list .list-item[data-selected="true"] {
+	background-color: rgba(99, 102, 241, 0.12) !important;
+	color: var(--myrmex-primary) !important;
+}
+
+/* Table multi-select cell editor */
+.myrmex-enabled .grid-row-open .multi-select-wrapper {
+	overflow: visible !important;
+}
+
+/* ===========================================================================
+   5. SELECT / OPTION FIELDS
+   =========================================================================== */
+
+.myrmex-enabled select.form-control,
+.myrmex-enabled .form-select {
+	-webkit-appearance: none !important;
+	appearance: none !important;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+	background-repeat: no-repeat !important;
+	background-position: right 10px center !important;
+	padding-right: 32px !important;
+	cursor: pointer !important;
+}
+
+.myrmex-enabled select.form-control:focus {
+	border-color: var(--myrmex-primary) !important;
+	box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18) !important;
+	outline: none !important;
+}
+
+/* ===========================================================================
+   6. DATE PICKERS / TIMEPICKER
+   =========================================================================== */
+
+/* Bootstrap Datepicker */
+.myrmex-enabled .datepicker,
+.myrmex-enabled .datepicker.datepicker-dropdown {
+	z-index: 1200 !important;
+	position: absolute !important;
+	background: var(--myrmex-surface) !important;
+	border: 1px solid var(--myrmex-border) !important;
+	border-radius: var(--myrmex-card-radius) !important;
+	box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18), 0 4px 10px rgba(15, 23, 42, 0.08) !important;
+	padding: 12px !important;
+	font-family: inherit !important;
+	animation: mx-dropdown-in 120ms ease forwards !important;
+}
+
+.myrmex-enabled .datepicker table {
+	width: 100% !important;
+}
+
+.myrmex-enabled .datepicker td,
+.myrmex-enabled .datepicker th {
+	border-radius: var(--myrmex-radius-md) !important;
+	padding: 6px !important;
+	text-align: center !important;
+	cursor: pointer !important;
+	font-size: 13px !important;
+	transition: background-color 100ms ease, color 100ms ease !important;
+}
+
+.myrmex-enabled .datepicker td.day:hover,
+.myrmex-enabled .datepicker td.hour:hover,
+.myrmex-enabled .datepicker td.minute:hover {
+	background-color: var(--myrmex-primary-soft) !important;
+	color: var(--myrmex-primary) !important;
+}
+
+.myrmex-enabled .datepicker td.active,
+.myrmex-enabled .datepicker td.active:hover,
+.myrmex-enabled .datepicker td.active.active {
+	background: var(--mx-gradient-primary) !important;
+	color: #ffffff !important;
+	border-radius: var(--myrmex-radius-md) !important;
+}
+
+.myrmex-enabled .datepicker td.today {
+	background-color: var(--myrmex-primary-soft) !important;
+	color: var(--myrmex-primary) !important;
+	font-weight: 700 !important;
+}
+
+.myrmex-enabled .datepicker td.disabled,
+.myrmex-enabled .datepicker td.old,
+.myrmex-enabled .datepicker td.new {
+	color: var(--myrmex-muted) !important;
+	opacity: 0.4 !important;
+}
+
+.myrmex-enabled .datepicker th.prev,
+.myrmex-enabled .datepicker th.next,
+.myrmex-enabled .datepicker th.datepicker-switch {
+	font-weight: 600 !important;
+	color: var(--myrmex-text) !important;
+}
+
+.myrmex-enabled .datepicker th.prev:hover,
+.myrmex-enabled .datepicker th.next:hover,
+.myrmex-enabled .datepicker th.datepicker-switch:hover {
+	background-color: var(--myrmex-primary-soft) !important;
+	color: var(--myrmex-primary) !important;
+}
+
+.myrmex-enabled .datepicker .datepicker-days th.dow {
+	color: var(--myrmex-muted) !important;
+	font-size: 11px !important;
+	font-weight: 600 !important;
+	letter-spacing: 0.04em !important;
+	text-transform: uppercase !important;
+}
+
+/* Timepicker */
+.myrmex-enabled .bootstrap-timepicker-widget,
+.myrmex-enabled .timepicker-widget {
+	z-index: 1200 !important;
+	background: var(--myrmex-surface) !important;
+	border: 1px solid var(--myrmex-border) !important;
+	border-radius: var(--myrmex-card-radius) !important;
+	box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18) !important;
+	padding: 12px !important;
+}
+
+/* ===========================================================================
+   7. MODALS / DIALOGS
+   =========================================================================== */
+
+/* Ensure modal backdrop is below the modal itself */
+.myrmex-enabled .modal-backdrop,
+.modal-backdrop {
+	z-index: 1040 !important;
+	background-color: rgba(15, 23, 42, 0.5) !important;
+}
+
+.myrmex-enabled .modal,
+.modal {
+	z-index: 1050 !important;
+}
+
+/* Modal content polish */
+.myrmex-enabled .modal-content {
+	border: 1px solid var(--myrmex-border) !important;
+	border-radius: var(--myrmex-card-radius) !important;
+	box-shadow: 0 24px 72px rgba(15, 23, 42, 0.26), 0 8px 20px rgba(15, 23, 42, 0.12) !important;
+	overflow: hidden !important;
+	background: var(--myrmex-surface) !important;
+}
+
+.myrmex-enabled .modal-header {
+	background: linear-gradient(135deg, #f8fafc 0%, #f0f4ff 100%) !important;
+	border-bottom: 1px solid var(--myrmex-border) !important;
+	padding: 20px 24px !important;
+	align-items: center !important;
+}
+
+.myrmex-enabled .modal-header .close,
+.myrmex-enabled .modal-header [data-dismiss="modal"] {
+	width: 30px !important;
+	height: 30px !important;
+	border-radius: var(--myrmex-radius-sm) !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	opacity: 0.7 !important;
+	transition: opacity 150ms ease, background-color 150ms ease !important;
+	background: none !important;
+	border: none !important;
+	cursor: pointer !important;
+}
+
+.myrmex-enabled .modal-header .close:hover,
+.myrmex-enabled .modal-header [data-dismiss="modal"]:hover {
+	opacity: 1 !important;
+	background-color: rgba(15, 23, 42, 0.07) !important;
+}
+
+.myrmex-enabled .modal-body {
+	padding: 24px !important;
+	overflow-y: auto !important;
+	max-height: calc(90vh - 200px) !important;
+}
+
+.myrmex-enabled .modal-footer {
+	border-top: 1px solid var(--myrmex-border) !important;
+	background-color: #f8fafc !important;
+	padding: 16px 24px !important;
+	display: flex !important;
+	align-items: center !important;
+	gap: 8px !important;
+	justify-content: flex-end !important;
+}
+
+/* Frappe dialog (extends modal) */
+.myrmex-enabled .frappe-dialog {
+	z-index: 1050 !important;
+}
+
+.myrmex-enabled .frappe-dialog .modal-body {
+	overflow-y: auto !important;
+}
+
+/* Nested modals / dialogs on top of modals */
+.myrmex-enabled .modal.second-modal {
+	z-index: 1070 !important;
+}
+
+/* ===========================================================================
+   8. TOOLTIPS
+   =========================================================================== */
+
+/* Bootstrap Tooltip */
+.myrmex-enabled .tooltip,
+.tooltip {
+	z-index: 1300 !important;
+	pointer-events: none !important;
+}
+
+.myrmex-enabled .tooltip .tooltip-inner,
+.myrmex-enabled .tooltip-inner {
+	background: #1e293b !important;
+	color: #f1f5f9 !important;
+	border-radius: var(--myrmex-radius-md) !important;
+	font-size: 12px !important;
+	font-weight: 500 !important;
+	padding: 6px 10px !important;
+	max-width: 240px !important;
+	text-align: left !important;
+	box-shadow: 0 4px 12px rgba(15, 23, 42, 0.18) !important;
+	line-height: 1.4 !important;
+}
+
+.myrmex-enabled .tooltip .arrow::before,
+.myrmex-enabled .tooltip.bs-tooltip-top .arrow::before {
+	border-top-color: #1e293b !important;
+}
+
+.myrmex-enabled .tooltip.bs-tooltip-bottom .arrow::before {
+	border-bottom-color: #1e293b !important;
+}
+
+.myrmex-enabled .tooltip.bs-tooltip-left .arrow::before {
+	border-left-color: #1e293b !important;
+}
+
+.myrmex-enabled .tooltip.bs-tooltip-right .arrow::before {
+	border-right-color: #1e293b !important;
+}
+
+/* Frappe inline tooltip on icons */
+.myrmex-enabled .help-box,
+.myrmex-enabled [data-original-title] {
+	position: relative !important;
+}
+
+/* ===========================================================================
+   9. POPOVERS
+   =========================================================================== */
+
+.myrmex-enabled .popover {
+	z-index: 1200 !important;
+	border: 1px solid var(--myrmex-border) !important;
+	border-radius: var(--myrmex-card-radius) !important;
+	box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16) !important;
+	background: var(--myrmex-surface) !important;
+	max-width: 320px !important;
+}
+
+.myrmex-enabled .popover-header {
+	background: linear-gradient(135deg, #f8fafc 0%, #f0f4ff 100%) !important;
+	border-bottom: 1px solid var(--myrmex-border) !important;
+	border-radius: var(--myrmex-card-radius) var(--myrmex-card-radius) 0 0 !important;
+	font-weight: 600 !important;
+	font-size: 13px !important;
+	padding: 10px 14px !important;
+}
+
+.myrmex-enabled .popover-body {
+	font-size: 13px !important;
+	color: var(--myrmex-text) !important;
+	padding: 12px 14px !important;
+}
+
+/* Confirmation dialog / popover */
+.myrmex-enabled .confirmation-dialog,
+.myrmex-enabled [class*="confirm"] .popover {
+	z-index: 1250 !important;
+}
+
+/* ===========================================================================
+   10. FILTERS / FILTER BUILDER
+   =========================================================================== */
+
+/* Filter row operator dropdown */
+.myrmex-enabled .filter-box .dropdown-menu,
+.myrmex-enabled .filter-row .dropdown-menu {
+	z-index: 1100 !important;
+}
+
+/* Date range picker in list filters */
+.myrmex-enabled .daterange-picker-wrapper,
+.myrmex-enabled .daterangepicker {
+	z-index: 1200 !important;
+	background: var(--myrmex-surface) !important;
+	border: 1px solid var(--myrmex-border) !important;
+	border-radius: var(--myrmex-card-radius) !important;
+	box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18) !important;
+}
+
+/* ===========================================================================
+   11. COLOR PICKER
+   =========================================================================== */
+
+.myrmex-enabled .color-picker-wrapper,
+.myrmex-enabled .pickr,
+.myrmex-enabled .pcr-app {
+	z-index: 1300 !important;
+}
+
+.myrmex-enabled .pickr .pcr-button {
+	border-radius: var(--myrmex-radius-md) !important;
+	border: 2px solid var(--myrmex-border) !important;
+	transition: border-color 150ms ease !important;
+}
+
+.myrmex-enabled .pickr .pcr-button:focus,
+.myrmex-enabled .pickr .pcr-button:hover {
+	border-color: var(--myrmex-primary) !important;
+}
+
+/* ===========================================================================
+   12. SEARCH / QUICK ACCESS
+   =========================================================================== */
+
+/* Global search results */
+.myrmex-enabled .search-results,
+.myrmex-enabled .navbar-search .search-widget,
+.myrmex-enabled [class*="search"] .dropdown-menu {
+	z-index: 1100 !important;
+}
+
+/* ===========================================================================
+   13. GRID / TABLE INLINE EDIT OVERLAYS
+   =========================================================================== */
+
+/* Grid column context menu */
+.myrmex-enabled .grid-heading-row .dropdown-menu,
+.myrmex-enabled .grid-row .dropdown-menu {
+	z-index: 1100 !important;
+}
+
+/* Grid row expanded form shouldn't clip its children */
+.myrmex-enabled .form-grid .grid-row.show,
+.myrmex-enabled .grid-row-open {
+	overflow: visible !important;
+	position: relative !important;
+	z-index: auto !important;
+}
+
+.myrmex-enabled .form-grid {
+	overflow: visible !important;
+}
+
+/* ===========================================================================
+   14. DESK SIDEBAR DOESN'T CLIP TOOLTIPS
+   =========================================================================== */
+
+.myrmex-enabled .desk-sidebar {
+	overflow: visible !important;
+}
+
+.myrmex-enabled .desk-sidebar .sidebar-item-container {
+	overflow: visible !important;
+}
+
+/* ===========================================================================
+   15. NOTIFICATIONS / TOASTS
+   =========================================================================== */
+
+.myrmex-enabled .toast-container,
+.myrmex-enabled #alert-container,
+.myrmex-enabled .alert-animate {
+	z-index: 1400 !important;
+}
+
+.myrmex-enabled .desk-alert,
+.myrmex-enabled .alert-animate {
+	border-radius: var(--myrmex-radius-md) !important;
+	box-shadow: 0 8px 24px rgba(15, 23, 42, 0.16) !important;
+	border: 1px solid var(--myrmex-border) !important;
+}
+
+/* ===========================================================================
+   16. CHAT / ASSISTANT PANEL (stays on top of everything except modals)
+   =========================================================================== */
+
+.myrmex-enabled .myrmex-chatbot-panel {
+	z-index: 900 !important;
+}
+
+/* ===========================================================================
+   17. FORM FIELD HELP ICONS AND INLINE COMPONENTS
+   =========================================================================== */
+
+/* Help text popover */
+.myrmex-enabled .help-box .popover {
+	z-index: 1300 !important;
+}
+
+/* Required star */
+.myrmex-enabled .reqd-star {
+	color: var(--myrmex-error) !important;
+	font-weight: 700 !important;
+}
+
+/* Field description */
+.myrmex-enabled .help-box p {
+	color: var(--myrmex-muted) !important;
+	font-size: 11px !important;
+	margin: 0 !important;
+}
+
+/* ===========================================================================
+   18. SCROLLBAR STYLING (uniform across components)
+   =========================================================================== */
+
+.myrmex-enabled .dropdown-menu::-webkit-scrollbar,
+.myrmex-enabled .awesomplete > ul::-webkit-scrollbar,
+.myrmex-enabled .multi-select-list::-webkit-scrollbar,
+.myrmex-enabled .modal-body::-webkit-scrollbar {
+	width: 6px !important;
+}
+
+.myrmex-enabled .dropdown-menu::-webkit-scrollbar-thumb,
+.myrmex-enabled .awesomplete > ul::-webkit-scrollbar-thumb,
+.myrmex-enabled .multi-select-list::-webkit-scrollbar-thumb,
+.myrmex-enabled .modal-body::-webkit-scrollbar-thumb {
+	background-color: var(--myrmex-border-strong) !important;
+	border-radius: 3px !important;
+}
+
+.myrmex-enabled .dropdown-menu::-webkit-scrollbar-track,
+.myrmex-enabled .awesomplete > ul::-webkit-scrollbar-track,
+.myrmex-enabled .multi-select-list::-webkit-scrollbar-track,
+.myrmex-enabled .modal-body::-webkit-scrollbar-track {
+	background: transparent !important;
+}
+
+/* ===========================================================================
+   19. DARK MODE OVERRIDES
+   =========================================================================== */
+
+[data-theme="dark"] .myrmex-enabled .dropdown-menu,
+[data-theme="dark"].myrmex-enabled .dropdown-menu {
+	background-color: var(--myrmex-surface) !important;
+	border-color: var(--myrmex-border) !important;
+	color: var(--myrmex-text) !important;
+}
+
+[data-theme="dark"] .myrmex-enabled .datepicker,
+[data-theme="dark"].myrmex-enabled .datepicker {
+	background-color: var(--myrmex-surface) !important;
+	border-color: var(--myrmex-border) !important;
+	color: var(--myrmex-text) !important;
+}
+
+[data-theme="dark"] .myrmex-enabled .modal-content,
+[data-theme="dark"].myrmex-enabled .modal-content {
+	background-color: var(--myrmex-surface) !important;
+}
+
+[data-theme="dark"] .myrmex-enabled .modal-header,
+[data-theme="dark"].myrmex-enabled .modal-header {
+	background: linear-gradient(135deg, #1e2235 0%, #1a1f35 100%) !important;
+}
+
+[data-theme="dark"] .myrmex-enabled .modal-footer,
+[data-theme="dark"].myrmex-enabled .modal-footer {
+	background-color: var(--myrmex-surface) !important;
+}
+
+[data-theme="dark"] .myrmex-enabled .tooltip-inner,
+[data-theme="dark"].myrmex-enabled .tooltip-inner {
+	background: #334155 !important;
+}
+
+[data-theme="dark"] .myrmex-enabled .popover,
+[data-theme="dark"].myrmex-enabled .popover {
+	background-color: var(--myrmex-surface) !important;
+}
+
+[data-theme="dark"] .myrmex-enabled .multi-select-wrapper,
+[data-theme="dark"].myrmex-enabled .multi-select-wrapper {
+	background: var(--myrmex-surface) !important;
+	border-color: var(--myrmex-border) !important;
+}
+
+/* ===========================================================================
+   20. RESPONSIVE FIXES
+   =========================================================================== */
+
+@media (max-width: 991px) {
+	/* On mobile, dropdowns should not overflow their container */
+	.myrmex-enabled .dropdown-menu {
+		max-width: calc(100vw - 20px) !important;
+	}
+
+	/* Modal takes full width on mobile */
+	.myrmex-enabled .modal-dialog {
+		margin: 10px !important;
+		max-width: calc(100vw - 20px) !important;
+	}
+
+	/* Date picker fits screen */
+	.myrmex-enabled .datepicker {
+		max-width: calc(100vw - 20px) !important;
+	}
+}
+
+@media (max-width: 576px) {
+	.myrmex-enabled .modal-body {
+		padding: 16px !important;
+	}
+
+	.myrmex-enabled .modal-header,
+	.myrmex-enabled .modal-footer {
+		padding: 14px 16px !important;
+	}
+}
