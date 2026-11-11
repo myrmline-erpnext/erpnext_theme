@@ -40,8 +40,13 @@
 
 /* ── Base rule — light mode ─────────────────────────────────────────────── */
 .dropdown-list {
-	/* Escape ancestor stacking contexts and overflow:hidden traps */
-	position: fixed !important;
+	/*
+	 * position: absolute — keeps the dropdown anchored directly below / beside
+	 * its trigger element (not relocated to the viewport top).
+	 * The ancestor stacking-context problems are solved below by resetting
+	 * transform + overflow on the guilty ancestors, not by changing position here.
+	 */
+	position: absolute !important;
 	z-index: 999999 !important;
 
 	/* Theme colours (light defaults) */
@@ -210,7 +215,15 @@ html[data-theme="dark"] .dropdown-list ul::-webkit-scrollbar-thumb {
 	to   { opacity: 1; transform: translateY(0)   scale(1);    }
 }
 
-/* ── Utility: JS can add .myrmex-dropdown-fixed to any rogue dropdown ───── */
+/*
+ * ── Utility: .myrmex-dropdown-fixed ─────────────────────────────────────────
+ * Emergency escape hatch for a third-party dropdown that cannot be fixed by
+ * resetting its ancestor's transform. Add this class via JS:
+ *   el.classList.add('myrmex-dropdown-fixed');
+ *   // then set el.style.top / el.style.left from getBoundingClientRect()
+ *   //   of the trigger, so it still looks anchored to its input.
+ * Only use when position: absolute (the normal case) is insufficient.
+ */
 .myrmex-dropdown-fixed {
 	position: fixed !important;
 	z-index: 999999 !important;
