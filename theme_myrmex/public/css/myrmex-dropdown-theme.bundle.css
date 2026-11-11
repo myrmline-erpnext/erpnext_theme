@@ -14,6 +14,212 @@
  *     even if the variable chain is broken.
  * ---------------------------------------------------------------------------*/
 
+
+/* ===========================================================================
+   .dropdown-list — ALWAYS ON TOP
+   Frappe's generic .dropdown-list (used by Link fields, select controls,
+   the navbar quick-add menu, and many custom components) must float above
+   every surface: maps, tables, sidebars, modals, sticky headers, and
+   Bootstrap portals.
+
+   Root causes of burial:
+     1. Ancestor has transform / filter / perspective → creates a new stacking
+        context that caps the child's z-index to that ancestor's layer.
+     2. Ancestor has overflow: hidden → clips the dropdown.
+     3. z-index not high enough to beat modals (z 1050+) or Bootstrap portals.
+
+   Fix strategy:
+     • position: fixed escapes ALL ancestor stacking contexts and overflow clamps.
+     • z-index: 999999 — above every Frappe / Bootstrap layer.
+     • Coordinates are managed by JS (Frappe already does this via
+       frappe.ui.setup_dropdown_header / Popper); we don't hard-code top/left.
+     • For cases where JS doesn't reposition (plain CSS dropdown-list children),
+       position: absolute with a very high z-index is kept as fallback so the
+       dropdown at minimum escapes within its nearest positioned ancestor.
+   =========================================================================== */
+
+/* ── Base rule — light mode ─────────────────────────────────────────────── */
+.dropdown-list {
+	/* Escape ancestor stacking contexts and overflow:hidden traps */
+	position: fixed !important;
+	z-index: 999999 !important;
+
+	/* Theme colours (light defaults) */
+	background-color: var(--myrmex-surface, #ffffff) !important;
+	border: 1px solid var(--myrmex-border, #e2e8f0) !important;
+	color: var(--myrmex-text, #1e293b) !important;
+	box-shadow:
+		0 12px 36px rgba(15, 23, 42, 0.14),
+		0 4px 10px  rgba(15, 23, 42, 0.07) !important;
+	border-radius: 10px !important;
+
+	/* Never let the list itself clip children */
+	overflow: visible !important;
+
+	/* Smooth entrance */
+	animation: myrmex-dropdown-in 0.12s ease-out both !important;
+}
+
+/* Inner scroll container — clip only the list items, not the whole box */
+.dropdown-list .dropdown-list-scroller,
+.dropdown-list ul,
+.dropdown-list ol {
+	overflow-y: auto !important;
+	max-height: 320px !important;
+	overscroll-behavior: contain !important;
+}
+
+/* Items */
+.dropdown-list .dropdown-item,
+.dropdown-list li,
+.dropdown-list li > a {
+	color: var(--myrmex-text, #1e293b) !important;
+	background-color: transparent !important;
+	display: flex !important;
+	align-items: center !important;
+	gap: 8px !important;
+	padding: 8px 14px !important;
+	border-radius: 6px !important;
+	cursor: pointer !important;
+	transition: background-color 0.1s ease, color 0.1s ease !important;
+}
+
+.dropdown-list .dropdown-item:hover,
+.dropdown-list li:hover,
+.dropdown-list li > a:hover,
+.dropdown-list .dropdown-item:focus {
+	background-color: var(--myrmex-primary-soft, #eef2ff) !important;
+	color: var(--myrmex-primary, #6366f1) !important;
+}
+
+.dropdown-list .dropdown-item.active,
+.dropdown-list li.active,
+.dropdown-list li.active > a {
+	background-color: var(--myrmex-primary, #6366f1) !important;
+	color: #ffffff !important;
+}
+
+/* Section dividers */
+.dropdown-list .dropdown-divider,
+.dropdown-list hr {
+	border-color: var(--myrmex-border, #e2e8f0) !important;
+	margin: 4px 0 !important;
+}
+
+/* Section headers */
+.dropdown-list .dropdown-header {
+	color: var(--myrmex-muted, #94a3b8) !important;
+	font-size: 11px !important;
+	text-transform: uppercase !important;
+	letter-spacing: 0.06em !important;
+	padding: 8px 14px 4px !important;
+}
+
+/* Scroll thumb */
+.dropdown-list::-webkit-scrollbar,
+.dropdown-list .dropdown-list-scroller::-webkit-scrollbar,
+.dropdown-list ul::-webkit-scrollbar {
+	width: 5px !important;
+}
+.dropdown-list::-webkit-scrollbar-thumb,
+.dropdown-list .dropdown-list-scroller::-webkit-scrollbar-thumb,
+.dropdown-list ul::-webkit-scrollbar-thumb {
+	background-color: var(--myrmex-border, #e2e8f0) !important;
+	border-radius: 999px !important;
+}
+
+/* ── Ancestor stacking-context neutralisers ──────────────────────────────
+   Elements that commonly generate a local stacking context (transform,
+   filter, will-change: transform) and clip or bury child dropdowns.
+   We cannot remove their transform outright (layout would break), but we
+   can reset transform on the ancestors that Frappe controls.          */
+
+/* Sidebar nav — Frappe slide-in transition */
+.myrmex-enabled .desk-sidebar,
+.myrmex-enabled .layout-side-section {
+	transform: none !important;
+}
+
+/* Page body wrapper animated on route change */
+.myrmex-enabled .page-container,
+.myrmex-enabled .layout-main-section {
+	transform: none !important;
+	overflow: visible !important;   /* only needed during dropdown open */
+}
+
+/* Frappe modal stacking — modal itself is z 1050; dropdown must beat it */
+.myrmex-enabled .modal-content,
+body .modal-content {
+	overflow: visible !important;   /* stop modal from clipping inner dropdowns */
+}
+
+/* Table / data-grid rows */
+.myrmex-enabled .datatable .dt-cell,
+.myrmex-enabled .frappe-list .list-row,
+.myrmex-enabled .result {
+	overflow: visible !important;
+}
+
+/* ── Dark mode ──────────────────────────────────────────────────────────── */
+html[data-theme="dark"] .dropdown-list {
+	background-color: #18181b !important;
+	border-color: #27272a !important;
+	color: #fafafa !important;
+	box-shadow:
+		0 12px 36px rgba(0, 0, 0, 0.60),
+		0 4px 10px  rgba(0, 0, 0, 0.40) !important;
+}
+
+html[data-theme="dark"] .dropdown-list .dropdown-item,
+html[data-theme="dark"] .dropdown-list li,
+html[data-theme="dark"] .dropdown-list li > a {
+	color: #fafafa !important;
+}
+
+html[data-theme="dark"] .dropdown-list .dropdown-item:hover,
+html[data-theme="dark"] .dropdown-list li:hover,
+html[data-theme="dark"] .dropdown-list li > a:hover {
+	background-color: rgba(129, 140, 248, 0.14) !important;
+	color: #818cf8 !important;
+}
+
+html[data-theme="dark"] .dropdown-list .dropdown-item.active,
+html[data-theme="dark"] .dropdown-list li.active > a {
+	background-color: #6366f1 !important;
+	color: #ffffff !important;
+}
+
+html[data-theme="dark"] .dropdown-list .dropdown-divider,
+html[data-theme="dark"] .dropdown-list hr {
+	border-color: #27272a !important;
+}
+
+html[data-theme="dark"] .dropdown-list .dropdown-header {
+	color: #71717a !important;
+}
+
+html[data-theme="dark"] .dropdown-list::-webkit-scrollbar-thumb,
+html[data-theme="dark"] .dropdown-list .dropdown-list-scroller::-webkit-scrollbar-thumb,
+html[data-theme="dark"] .dropdown-list ul::-webkit-scrollbar-thumb {
+	background-color: #3f3f46 !important;
+}
+
+/* ── Entrance animation ─────────────────────────────────────────────────── */
+@keyframes myrmex-dropdown-in {
+	from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+	to   { opacity: 1; transform: translateY(0)   scale(1);    }
+}
+
+/* ── Utility: JS can add .myrmex-dropdown-fixed to any rogue dropdown ───── */
+.myrmex-dropdown-fixed {
+	position: fixed !important;
+	z-index: 999999 !important;
+}
+
+/* ============================================================================
+   END .dropdown-list block
+   ============================================================================ */
+
 /* ===========================================================================
    SHARED LIGHT-MODE BASE — all dropdown surfaces
    (tokens resolve to light values by default)
