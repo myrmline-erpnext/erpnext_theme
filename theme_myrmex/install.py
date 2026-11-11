@@ -63,10 +63,13 @@ def ensure_theme_settings():
 	if not frappe.db.exists("DocType", "Theme Settings"):
 		return
 
-	has_record = frappe.db.exists("Theme Settings", "Theme Settings")
+	has_row = frappe.db.sql(
+		"SELECT 1 FROM `tabSingles` WHERE doctype = %s LIMIT 1",
+		("Theme Settings",),
+	)
 	try:
-		doc = frappe.get_single("Theme Settings") if has_record else frappe.new_doc("Theme Settings")
-	except frappe.DoesNotExistError:
+		doc = frappe.get_single("Theme Settings") if has_row else frappe.new_doc("Theme Settings")
+	except Exception:
 		doc = frappe.new_doc("Theme Settings")
 
 	changed = False
@@ -123,19 +126,25 @@ def ensure_chatbot_settings():
 def ensure_branding_settings():
 	"""Create the Branding Settings Single doc with safe defaults if missing.
 
-	frappe.get_single() raises DoesNotExistError when the Single has never been
-	saved (no row yet in tabSingles). We fall back to frappe.new_doc() so the
-	patch is safe on a fresh install and on an upgrade.
+	frappe.db.exists("Branding Settings", "Branding Settings") always returns a
+	truthy value on a Single DocType in Frappe v15 — it matches the DocType name,
+	not an actual row in tabSingles.  We therefore query tabSingles directly to
+	know whether any row has been saved yet, and always wrap get_single() in a
+	try/except so a fresh install never crashes.
 	"""
 	if not frappe.db.exists("DocType", "Branding Settings"):
 		return
 
-	# Check whether a row already exists in tabSingles
-	has_record = frappe.db.exists("Branding Settings", "Branding Settings")
-	if has_record:
+	# Direct tabSingles probe — the only reliable way on v15/v16
+	has_row = frappe.db.sql(
+		"SELECT 1 FROM `tabSingles` WHERE doctype = %s LIMIT 1",
+		("Branding Settings",),
+	)
+
+	if has_row:
 		try:
 			doc = frappe.get_single("Branding Settings")
-		except frappe.DoesNotExistError:
+		except Exception:
 			doc = frappe.new_doc("Branding Settings")
 	else:
 		doc = frappe.new_doc("Branding Settings")
