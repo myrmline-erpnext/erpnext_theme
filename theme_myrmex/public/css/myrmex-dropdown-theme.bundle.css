@@ -16,37 +16,19 @@
 
 
 /* ===========================================================================
-   .dropdown-list — ALWAYS ON TOP
-   Frappe's generic .dropdown-list (used by Link fields, select controls,
-   the navbar quick-add menu, and many custom components) must float above
-   every surface: maps, tables, sidebars, modals, sticky headers, and
-   Bootstrap portals.
-
-   Root causes of burial:
-     1. Ancestor has transform / filter / perspective → creates a new stacking
-        context that caps the child's z-index to that ancestor's layer.
-     2. Ancestor has overflow: hidden → clips the dropdown.
-     3. z-index not high enough to beat modals (z 1050+) or Bootstrap portals.
-
-   Fix strategy:
-     • position: fixed escapes ALL ancestor stacking contexts and overflow clamps.
-     • z-index: 999999 — above every Frappe / Bootstrap layer.
-     • Coordinates are managed by JS (Frappe already does this via
-       frappe.ui.setup_dropdown_header / Popper); we don't hard-code top/left.
-     • For cases where JS doesn't reposition (plain CSS dropdown-list children),
-       position: absolute with a very high z-index is kept as fallback so the
-       dropdown at minimum escapes within its nearest positioned ancestor.
+   .dropdown-list — ALWAYS IN FRONT
+   position and alignment are intentionally left at their default values so
+   the dropdown stays anchored exactly where Frappe places it (directly below
+   / beside its trigger input). We only raise z-index and neutralise the two
+   CSS properties on ancestor elements that can bury it:
+     1. transform on a parent → creates a stacking context, capping z-index.
+     2. overflow: hidden on a parent → physically clips the dropdown.
    =========================================================================== */
 
 /* ── Base rule — light mode ─────────────────────────────────────────────── */
 .dropdown-list {
-	/*
-	 * position: absolute — keeps the dropdown anchored directly below / beside
-	 * its trigger element (not relocated to the viewport top).
-	 * The ancestor stacking-context problems are solved below by resetting
-	 * transform + overflow on the guilty ancestors, not by changing position here.
-	 */
-	position: absolute !important;
+	/* Do NOT set position here — keep whatever Frappe sets (absolute/relative).
+	 * Only the z-index is forced so the list floats above every other layer.  */
 	z-index: 999999 !important;
 
 	/* Theme colours (light defaults) */
@@ -149,7 +131,8 @@
 .myrmex-enabled .page-container,
 .myrmex-enabled .layout-main-section {
 	transform: none !important;
-	overflow: visible !important;   /* only needed during dropdown open */
+	/* Do NOT set overflow here — it would break the page's own scroll.
+	 * transform: none is enough to remove the stacking-context trap.    */
 }
 
 /* Frappe modal stacking — modal itself is z 1050; dropdown must beat it */
