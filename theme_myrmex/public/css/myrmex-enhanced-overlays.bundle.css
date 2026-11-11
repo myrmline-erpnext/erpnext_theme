@@ -934,3 +934,207 @@
 	border-color: var(--myrmex-border, #334155) !important;
 	color: var(--myrmex-muted, #94a3b8) !important;
 }
+
+/* ===========================================================================
+   Section 22 — CE-BLOCK / WORKSPACE WIDGET DROPDOWN LAYERING
+   ---------------------------------------------------------------------------
+   Problem: the workspace grid renders as sibling .ce-block columns. When the
+   .dropdown-list inside one block opens, it is clipped/buried by the next
+   sibling .ce-block because:
+     1. Bootstrap grid columns have no z-index by default — all siblings sit
+        on the same layer, so whichever comes later in the DOM paints on top.
+     2. .ce-block__content / .resizable / .widget all have overflow: hidden by
+        default, physically clipping the dropdown.
+     3. .widget-control has no stacking context, so the dropdown's z-index has
+        no effect relative to neighbouring columns.
+
+   Fix (no position or layout change):
+     • Give the full ancestor chain overflow: visible so the list escapes.
+     • Give .widget-control a stacking context (position + z-index) so the
+       dropdown's own z-index is evaluated in the right context.
+     • When the dropdown is open (the .dropdown-list loses .hidden), elevate
+       the entire .ce-block above its siblings using :has().  Browsers that
+       don't support :has() get a permanent mild elevation on .ce-block which
+       is harmless.
+     • Navbar equivalent (.navbar .dropdown-btn .dropdown-list) gets the same
+       treatment — the navbar already has z-index but its inner overflow can
+       clip the list.
+   =========================================================================== */
+
+/* ── 1. Unclip the whole ancestor chain ────────────────────────────────── */
+
+.myrmex-enabled .ce-block,
+.myrmex-enabled .ce-block__content,
+.myrmex-enabled .ce-block .resizable {
+	overflow: visible !important;
+}
+
+.myrmex-enabled .widget.shortcut,
+.myrmex-enabled .widget.shortcut .widget-head {
+	overflow: visible !important;
+}
+
+/* widget-body / widget-footer keep their own overflow so content still clips */
+.myrmex-enabled .widget.shortcut .widget-body,
+.myrmex-enabled .widget.shortcut .widget-footer {
+	overflow: hidden !important;
+}
+
+/* ── 2. Give .widget-control a proper stacking context ─────────────────── */
+
+.myrmex-enabled .widget-control {
+	position: relative !important;
+	z-index: 10 !important;         /* baseline — raised further when open */
+	overflow: visible !important;
+}
+
+.myrmex-enabled .widget-control .dropdown-btn {
+	position: relative !important;
+	overflow: visible !important;
+}
+
+/* ── 3. The dropdown list itself — absolute, highest z-index ───────────── */
+
+.myrmex-enabled .widget-control .dropdown-list {
+	position: absolute !important;
+	top: 100% !important;           /* directly below the trigger button */
+	right: 0 !important;            /* flush with the right edge */
+	left: auto !important;
+	z-index: 999999 !important;
+	overflow: visible !important;
+
+	/* Theme surface */
+	background-color: var(--myrmex-surface, #ffffff) !important;
+	border: 1px solid var(--myrmex-border, #e2e8f0) !important;
+	color: var(--myrmex-text, #1e293b) !important;
+	border-radius: 10px !important;
+	min-width: 160px !important;
+	box-shadow:
+		0 10px 32px rgba(15, 23, 42, 0.14),
+		0 3px 8px  rgba(15, 23, 42, 0.07) !important;
+	padding: 4px !important;
+}
+
+/* ── 4. Elevate the active .ce-block above siblings when dropdown is open ─
+   :has() — supported in all modern browsers (Chrome 105+, Firefox 121+,
+   Safari 15.4+). Browsers without :has() keep the default stacking order;
+   the dropdown is still on z-index 999999 so it usually wins anyway.    */
+
+.myrmex-enabled .ce-block:has(.dropdown-list:not(.hidden)) {
+	position: relative !important;
+	z-index: 9999 !important;       /* above sibling .ce-block elements */
+}
+
+/* Fallback for browsers without :has(): a mild static elevation so the
+   .widget-control stacking context (z 10) is at least in its own layer */
+.myrmex-enabled .ce-block {
+	position: relative !important;
+	/* z-index intentionally NOT set here — only raised by :has() above */
+}
+
+/* ── 5. Dropdown items ─────────────────────────────────────────────────── */
+
+.myrmex-enabled .widget-control .dropdown-list .dropdown-item {
+	display: flex !important;
+	align-items: center !important;
+	gap: 8px !important;
+	padding: 8px 12px !important;
+	border-radius: 6px !important;
+	cursor: pointer !important;
+	color: var(--myrmex-text, #1e293b) !important;
+	background: transparent !important;
+	transition: background 0.1s ease, color 0.1s ease !important;
+	white-space: nowrap !important;
+}
+
+.myrmex-enabled .widget-control .dropdown-list .dropdown-item:hover {
+	background-color: var(--myrmex-primary-soft, #eef2ff) !important;
+	color: var(--myrmex-primary, #6366f1) !important;
+}
+
+/* Delete item — always red */
+.myrmex-enabled .widget-control .dropdown-list .dropdown-item[title="Delete Block"],
+.myrmex-enabled .widget-control .dropdown-list .dropdown-item:first-child {
+	color: var(--myrmex-error, #ef4444) !important;
+}
+
+.myrmex-enabled .widget-control .dropdown-list .dropdown-item[title="Delete Block"]:hover,
+.myrmex-enabled .widget-control .dropdown-list .dropdown-item:first-child:hover {
+	background-color: rgba(239, 68, 68, 0.08) !important;
+	color: #dc2626 !important;
+}
+
+/* Icons inside items */
+.myrmex-enabled .widget-control .dropdown-list .dropdown-item-icon {
+	flex-shrink: 0 !important;
+	width: 18px !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+}
+
+/* ── 6. Dark mode ──────────────────────────────────────────────────────── */
+
+html[data-theme="dark"] .myrmex-enabled .widget-control .dropdown-list,
+html[data-theme="dark"].myrmex-enabled .widget-control .dropdown-list {
+	background-color: #18181b !important;
+	border-color: #27272a !important;
+	color: #fafafa !important;
+	box-shadow:
+		0 10px 32px rgba(0, 0, 0, 0.55),
+		0 3px 8px  rgba(0, 0, 0, 0.35) !important;
+}
+
+html[data-theme="dark"] .myrmex-enabled .widget-control .dropdown-list .dropdown-item {
+	color: #fafafa !important;
+}
+
+html[data-theme="dark"] .myrmex-enabled .widget-control .dropdown-list .dropdown-item:hover {
+	background-color: rgba(129, 140, 248, 0.14) !important;
+	color: #818cf8 !important;
+}
+
+html[data-theme="dark"] .myrmex-enabled .widget-control .dropdown-list .dropdown-item[title="Delete Block"],
+html[data-theme="dark"] .myrmex-enabled .widget-control .dropdown-list .dropdown-item:first-child {
+	color: #f87171 !important;
+}
+
+html[data-theme="dark"] .myrmex-enabled .widget-control .dropdown-list .dropdown-item[title="Delete Block"]:hover,
+html[data-theme="dark"] .myrmex-enabled .widget-control .dropdown-list .dropdown-item:first-child:hover {
+	background-color: rgba(248, 113, 113, 0.12) !important;
+	color: #fca5a5 !important;
+}
+
+/* ── 7. Navbar dropdown-btn / dropdown-list (same pattern) ────────────── */
+
+.myrmex-enabled .navbar .dropdown-btn {
+	position: relative !important;
+	overflow: visible !important;
+}
+
+.myrmex-enabled .navbar .dropdown-btn .dropdown-list {
+	position: absolute !important;
+	top: 100% !important;
+	right: 0 !important;
+	left: auto !important;
+	z-index: 999999 !important;
+	overflow: visible !important;
+	background-color: var(--myrmex-surface, #ffffff) !important;
+	border: 1px solid var(--myrmex-border, #e2e8f0) !important;
+	border-radius: 10px !important;
+	box-shadow:
+		0 10px 32px rgba(15, 23, 42, 0.14),
+		0 3px 8px  rgba(15, 23, 42, 0.07) !important;
+	min-width: 180px !important;
+	padding: 4px !important;
+}
+
+html[data-theme="dark"] .myrmex-enabled .navbar .dropdown-btn .dropdown-list {
+	background-color: #18181b !important;
+	border-color: #27272a !important;
+	box-shadow:
+		0 10px 32px rgba(0, 0, 0, 0.55),
+		0 3px 8px  rgba(0, 0, 0, 0.35) !important;
+}
+
+/* END Section 22 ============================================================ */
