@@ -775,3 +775,162 @@
 		padding: 14px 16px !important;
 	}
 }
+
+/* ===========================================================================
+   21. WORKSPACE WIDGET CARDS — action buttons & context dropdown
+   ===========================================================================
+   Frappe workspace shortcut cards (.widget.shortcut-widget-box) clip their
+   children with overflow:hidden by default. We switch to overflow:visible
+   on hover so the action-button dropdown can escape the card boundary.
+   The .widget-control dropdown must sit above neighbouring cards (z-index
+   raised above the card stack at ~10).
+   =========================================================================== */
+
+/* Allow the card to show its dropdown outside its own bounds on hover */
+.myrmex-enabled .widget.shortcut-widget-box,
+.myrmex-enabled .widget.links-widget-box,
+.myrmex-enabled .widget.number-widget-box,
+.myrmex-enabled .widget.chart-widget-box,
+.myrmex-enabled .widget.onboarding-widget-box,
+.myrmex-enabled .widget {
+	overflow: visible !important;
+	position: relative !important;
+}
+
+/* Keep the inner visual box clipped so card content doesn't spill,
+   but let only the control toolbar overflow */
+.myrmex-enabled .widget .widget-body,
+.myrmex-enabled .widget .widget-content,
+.myrmex-enabled .widget .shortcut-widget-box-content {
+	overflow: hidden !important;
+	border-radius: inherit !important;
+}
+
+/* The control toolbar (pencil / drag / three-dot) */
+.myrmex-enabled .widget .widget-control {
+	position: absolute !important;
+	top: 6px !important;
+	right: 6px !important;
+	display: flex !important;
+	align-items: center !important;
+	gap: 2px !important;
+	z-index: 20 !important;
+	overflow: visible !important;
+}
+
+/* Individual control buttons */
+.myrmex-enabled .widget .widget-control .btn,
+.myrmex-enabled .widget .widget-control button {
+	width: 28px !important;
+	height: 28px !important;
+	padding: 0 !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	border-radius: 6px !important;
+	background: var(--myrmex-surface, #fff) !important;
+	border: 1px solid var(--myrmex-border, #e2e8f0) !important;
+	color: var(--myrmex-muted, #64748b) !important;
+	font-size: 13px !important;
+	line-height: 1 !important;
+	cursor: pointer !important;
+	transition: background 120ms ease, color 120ms ease, border-color 120ms ease !important;
+	box-shadow: 0 1px 3px rgba(15, 23, 42, 0.07) !important;
+}
+
+.myrmex-enabled .widget .widget-control .btn:hover,
+.myrmex-enabled .widget .widget-control button:hover {
+	background: var(--myrmex-primary-soft, #eef2ff) !important;
+	color: var(--myrmex-primary, #6366f1) !important;
+	border-color: var(--myrmex-primary, #6366f1) !important;
+}
+
+/* The "⋮" / three-dot dropdown toggle */
+.myrmex-enabled .widget .widget-control .dropdown {
+	position: relative !important;
+	overflow: visible !important;
+}
+
+/* Dropdown menu that appears from widget control */
+.myrmex-enabled .widget .widget-control .dropdown-menu,
+.myrmex-enabled .widget .widget-control .dropdown-menu.show {
+	position: absolute !important;
+	top: calc(100% + 4px) !important;
+	right: 0 !important;
+	left: auto !important;
+	transform: none !important;
+	z-index: 1060 !important;    /* above neighbouring cards */
+	min-width: 140px !important;
+	padding: 5px !important;
+	border-radius: 10px !important;
+	background: var(--myrmex-surface, #fff) !important;
+	border: 1px solid var(--myrmex-border, #e2e8f0) !important;
+	box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14), 0 2px 6px rgba(15, 23, 42, 0.07) !important;
+	animation: mx-dropdown-in 120ms ease forwards !important;
+}
+
+/* Normal menu item */
+.myrmex-enabled .widget .widget-control .dropdown-menu .dropdown-item,
+.myrmex-enabled .widget .widget-control .dropdown-menu a {
+	display: flex !important;
+	align-items: center !important;
+	gap: 8px !important;
+	padding: 7px 10px !important;
+	border-radius: 6px !important;
+	font-size: 13px !important;
+	font-weight: 500 !important;
+	color: var(--myrmex-text, #1e293b) !important;
+	cursor: pointer !important;
+	transition: background 100ms ease !important;
+	white-space: nowrap !important;
+	text-decoration: none !important;
+}
+
+.myrmex-enabled .widget .widget-control .dropdown-menu .dropdown-item:hover,
+.myrmex-enabled .widget .widget-control .dropdown-menu a:hover {
+	background: var(--myrmex-hover, #f1f5f9) !important;
+	color: var(--myrmex-primary, #6366f1) !important;
+}
+
+/* ── Delete / Supprimer — danger style with red trash icon ── */
+.myrmex-enabled .widget .widget-control .dropdown-menu .dropdown-item.text-danger,
+.myrmex-enabled .widget .widget-control .dropdown-menu .dropdown-item[data-fieldname="delete"],
+.myrmex-enabled .widget .widget-control .dropdown-menu a.text-danger,
+.myrmex-enabled .widget .widget-control .dropdown-menu li:last-child .dropdown-item {
+	color: var(--myrmex-error, #ef4444) !important;
+}
+
+.myrmex-enabled .widget .widget-control .dropdown-menu .dropdown-item.text-danger:hover,
+.myrmex-enabled .widget .widget-control .dropdown-menu a.text-danger:hover,
+.myrmex-enabled .widget .widget-control .dropdown-menu li:last-child .dropdown-item:hover {
+	background: rgba(239, 68, 68, 0.08) !important;
+	color: #dc2626 !important;
+}
+
+/* Trash icon before delete item (if Frappe uses svg/icon class) */
+.myrmex-enabled .widget .widget-control .dropdown-menu .dropdown-item.text-danger svg,
+.myrmex-enabled .widget .widget-control .dropdown-menu a.text-danger svg,
+.myrmex-enabled .widget .widget-control .dropdown-menu li:last-child .dropdown-item svg {
+	color: var(--myrmex-error, #ef4444) !important;
+	flex-shrink: 0 !important;
+}
+
+/* Divider before delete */
+.myrmex-enabled .widget .widget-control .dropdown-menu .dropdown-divider {
+	margin: 4px 0 !important;
+	border-color: var(--myrmex-border, #e2e8f0) !important;
+}
+
+/* Dark mode */
+[data-theme="dark"] .myrmex-enabled .widget .widget-control .dropdown-menu,
+[data-theme="dark"].myrmex-enabled .widget .widget-control .dropdown-menu {
+	background: var(--myrmex-surface, #1e293b) !important;
+	border-color: var(--myrmex-border, #334155) !important;
+}
+
+[data-theme="dark"] .myrmex-enabled .widget .widget-control .btn,
+[data-theme="dark"].myrmex-enabled .widget .widget-control button {
+	background: rgba(255, 255, 255, 0.07) !important;
+	border-color: var(--myrmex-border, #334155) !important;
+	color: var(--myrmex-muted, #94a3b8) !important;
+}
