@@ -135,43 +135,63 @@ def get_branding_doc():
 	return _get_or_create_doc()
 
 
+def _read_singles() -> dict:
+	"""Read all Branding Settings fields directly from tabSingles.
+
+	Avoids frappe.get_single() which throws DoesNotExistError on Frappe v15
+	when no row has been saved yet.  Returns an empty dict on a fresh install.
+	"""
+	if not _doctype_exists():
+		return {}
+	rows = frappe.db.sql(
+		"SELECT `field`, `value` FROM `tabSingles` WHERE `doctype` = %s",
+		("Branding Settings",),
+	)
+	return {r[0]: r[1] for r in rows} if rows else {}
+
+
 def build_branding_payload() -> dict:
 	"""Return branding tokens ready for the browser."""
-	doc = _get_or_create_doc()
-	if not doc:
+	if not _doctype_exists():
 		return _empty_payload()
+
+	data = _read_singles()
+	# Merge in scalar defaults for any field not yet saved
+	for field, default in _SCALAR_DEFAULTS.items():
+		if not data.get(field):
+			data[field] = str(default)
 
 	image_vars = {}
 	for field, var in BRANDING_IMAGE_FIELDS.items():
-		value = doc.get(field) or ""
+		value = data.get(field) or ""
 		image_vars[var] = f'url("{value}")' if value else "none"
 
 	scalar_vars = {}
 	for field, var in BRANDING_SCALAR_FIELDS.items():
-		value = doc.get(field)
+		value = data.get(field)
 		if value is not None and value != "":
 			if "height" in field and str(value).isdigit():
 				scalar_vars[var] = f"{value}px"
 			else:
 				scalar_vars[var] = str(value)
 
+	app_logo = data.get("app_logo") or ""
 	return {
 		"image_vars": image_vars,
 		"scalar_vars": scalar_vars,
-		# Flat copies for JS convenience
-		"app_logo":           doc.get("app_logo") or "",
-		"login_logo":         doc.get("login_logo") or "",
-		"favicon":            doc.get("favicon") or "",
-		"navbar_logo":        doc.get("navbar_logo") or doc.get("app_logo") or "",
-		"login_background":   doc.get("login_background") or "",
-		"loader_image":       doc.get("loader_image") or "",
-		"loader_animation":   doc.get("loader_animation") or "",
-		"loader_bg_color":    doc.get("loader_bg_color") or "#ffffff",
-		"loader_spinner_color": doc.get("loader_spinner_color") or "#6366f1",
-		"logo_max_height":    frappe.utils.cint(doc.get("logo_max_height") or 32),
-		"app_name_override":  doc.get("app_name_override") or "",
-		"custom_css_branding": doc.get("custom_css_branding") or "",
-		"custom_head_html":   doc.get("custom_head_html") or "",
+		"app_logo":            app_logo,
+		"login_logo":          data.get("login_logo") or "",
+		"favicon":             data.get("favicon") or "",
+		"navbar_logo":         data.get("navbar_logo") or app_logo,
+		"login_background":    data.get("login_background") or "",
+		"loader_image":        data.get("loader_image") or "",
+		"loader_animation":    data.get("loader_animation") or "",
+		"loader_bg_color":     data.get("loader_bg_color") or "#ffffff",
+		"loader_spinner_color": data.get("loader_spinner_color") or "#6366f1",
+		"logo_max_height":     frappe.utils.cint(data.get("logo_max_height") or 32),
+		"app_name_override":   data.get("app_name_override") or "",
+		"custom_css_branding": data.get("custom_css_branding") or "",
+		"custom_head_html":    data.get("custom_head_html") or "",
 	}
 
 
@@ -241,23 +261,25 @@ def save_branding(values: str | dict) -> dict:
 	frappe.only_for("System Manager")
 	values = frappe.parse_json(values) or {}
 
-	# _get_or_create_doc_for_write() ensures the row exists before we set fields
-	doc = _get_or_create_doc_for_write()
-	doc.check_permission("write")
-
 	allowed = (
 		set(BRANDING_IMAGE_FIELDS.keys())
 		| set(BRANDING_SCALAR_FIELDS.keys())
 		| {"app_name_override", "custom_css_branding", "custom_head_html"}
 	)
+
+	# Use set_single_value() for every allowed field — this issues an
+	# INSERT … ON DUPLICATE KEY UPDATE directly into tabSingles, so it
+	# works whether the row exists or not, without ever calling get_single()
+	# (which throws DoesNotExistError on Frappe v15 when no row exists yet).
 	for field, value in values.items():
 		if field in allowed:
-			doc.set(field, value)
+			frappe.db.set_single_value(
+				"Branding Settings",
+				field,
+				value if value is not None else "",
+			)
 
-	doc.flags.ignore_permissions = True
-	doc.save()
 	frappe.db.commit()
-
 	clear_branding_cache()
 	frappe.msgprint(frappe._("Branding settings saved"), alert=True, indicator="green")
 	return build_branding_payload()
@@ -267,12 +289,10 @@ def save_branding(values: str | dict) -> dict:
 def get_branding_settings() -> dict:
 	"""Return current branding for the Theme Builder image manager tab."""
 	frappe.only_for("System Manager")
-	doc = _get_or_create_doc()
-	if not doc:
-		return {}
+	data = _read_singles()
 	all_fields = (
 		list(BRANDING_IMAGE_FIELDS.keys())
 		+ list(BRANDING_SCALAR_FIELDS.keys())
 		+ ["app_name_override", "custom_css_branding", "custom_head_html"]
 	)
-	return {f: doc.get(f) or "" for f in all_fields}
+	return {f: data.get(f) or "" for f in all_fields}
