@@ -114,15 +114,44 @@ def ensure_chatbot_settings():
 	frappe.db.commit()
 
 
+def ensure_branding_settings():
+	"""Create the Branding Settings Single doc with safe defaults if missing."""
+	if not frappe.db.exists("DocType", "Branding Settings"):
+		return
+
+	doc = frappe.get_single("Branding Settings")
+	changed = False
+
+	defaults = {
+		"logo_max_height": 32,
+		"login_bg_overlay_color": "#1e1b4b",
+		"login_bg_overlay_opacity": 0.5,
+		"loader_bg_color": "#ffffff",
+		"loader_spinner_color": "#6366f1",
+	}
+
+	for field, value in defaults.items():
+		if doc.get(field) in (None, ""):
+			doc.set(field, value)
+			changed = True
+
+	if changed:
+		doc.flags.ignore_permissions = True
+		doc.save()
+		frappe.db.commit()
+
+
 def after_install():
 	ensure_theme_settings()
 	ensure_chatbot_settings()
+	ensure_branding_settings()
 	clear_theme_cache()
 
 
 def after_migrate():
 	ensure_theme_settings()
 	ensure_chatbot_settings()
+	ensure_branding_settings()
 	clear_theme_cache()
 
 
