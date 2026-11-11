@@ -655,8 +655,12 @@ class BrandingManager {
 
 		host.find(".mx-branding-save").on("click", () => this._save());
 
-		// Delegate drop zone clicks to the hidden file input
+		// Delegate drop zone clicks to the hidden file input.
+		// Stop propagation on the input itself so its click doesn't re-bubble
+		// back to .mx-drop-zone and cause an infinite trigger loop.
 		host.on("click", ".mx-drop-zone", (e) => {
+			if ($(e.target).is('input[type="file"]')) return; // already the input — let it open
+			e.stopPropagation();
 			$(e.currentTarget).find('input[type="file"]').trigger("click");
 		});
 	}
@@ -837,16 +841,21 @@ class BrandingManager {
 		statusBadge.removeClass("mx-status-ok mx-status-empty").addClass("mx-status-uploading").text(__("Uploading…"));
 
 		// ── Upload via Frappe's upload_file endpoint ─────────────────────────
-		// We use a bare FormData POST — no pre-flight folder creation needed.
-		// "Home" always exists; Frappe creates sub-folders on the fly in v15.
+		// Plain FormData POST. "Home" always exists in every Frappe site.
+		// We read frappe.csrf_token fresh at call time (it may rotate).
 		const formData = new FormData();
 		formData.append("file", file, file.name);
 		formData.append("is_private", "0");
 		formData.append("folder", "Home");
+		formData.append("doctype", "Branding Settings");
+		formData.append("docname", "Branding Settings");
+		formData.append("fieldname", key);
+
+		const csrfToken = frappe.csrf_token || $('meta[name="csrf-token"]').attr("content") || "";
 
 		fetch("/api/method/upload_file", {
 			method: "POST",
-			headers: { "X-Frappe-CSRF-Token": frappe.csrf_token },
+			headers: { "X-Frappe-CSRF-Token": csrfToken },
 			body: formData,
 		})
 			.then((res) => {
