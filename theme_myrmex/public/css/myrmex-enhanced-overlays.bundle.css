@@ -1138,3 +1138,195 @@ html[data-theme="dark"] .myrmex-enabled .navbar .dropdown-btn .dropdown-list {
 }
 
 /* END Section 22 ============================================================ */
+
+/* ===========================================================================
+   Section 23 — SIDEBAR ITEM & HEADER WIDGET DROPDOWN LAYERING
+   ---------------------------------------------------------------------------
+   Two additional .dropdown-list contexts that need the same unclip + elevate
+   treatment as Section 22.
+
+   A) Sidebar workspace item:
+      .desk-sidebar-item → .sidebar-item-control → .dropdown-btn → .dropdown-list
+
+   B) Header widget block:
+      .ce-block__content → .widget.header → .widget-head
+        → .widget-control → .dropdown-btn → .dropdown-list
+   =========================================================================== */
+
+/* ── A. Sidebar item ───────────────────────────────────────────────────── */
+
+/* Unclip the chain */
+.myrmex-enabled .desk-sidebar-item {
+	overflow: visible !important;
+	position: relative !important;
+}
+
+.myrmex-enabled .sidebar-item-control {
+	position: relative !important;
+	overflow: visible !important;
+	z-index: 10 !important;
+}
+
+.myrmex-enabled .sidebar-item-control .dropdown-btn {
+	position: relative !important;
+	overflow: visible !important;
+}
+
+/* The list */
+.myrmex-enabled .sidebar-item-control .dropdown-list {
+	position: absolute !important;
+	top: 100% !important;
+	left: 0 !important;          /* open to the right of the item */
+	right: auto !important;
+	z-index: 999999 !important;
+	overflow: visible !important;
+
+	background-color: var(--myrmex-surface, #ffffff) !important;
+	border: 1px solid var(--myrmex-border, #e2e8f0) !important;
+	color: var(--myrmex-text, #1e293b) !important;
+	border-radius: 10px !important;
+	min-width: 180px !important;
+	box-shadow:
+		0 10px 32px rgba(15, 23, 42, 0.14),
+		0 3px 8px  rgba(15, 23, 42, 0.07) !important;
+	padding: 4px !important;
+}
+
+/* Elevate the whole sidebar item when its dropdown is open */
+.myrmex-enabled .desk-sidebar-item:has(.dropdown-list:not(.hidden)) {
+	z-index: 9999 !important;
+}
+
+/* Items */
+.myrmex-enabled .sidebar-item-control .dropdown-list .dropdown-item {
+	display: flex !important;
+	align-items: center !important;
+	gap: 8px !important;
+	padding: 8px 12px !important;
+	border-radius: 6px !important;
+	cursor: pointer !important;
+	color: var(--myrmex-text, #1e293b) !important;
+	background: transparent !important;
+	white-space: nowrap !important;
+	transition: background 0.1s ease, color 0.1s ease !important;
+}
+
+.myrmex-enabled .sidebar-item-control .dropdown-list .dropdown-item:hover {
+	background-color: var(--myrmex-primary-soft, #eef2ff) !important;
+	color: var(--myrmex-primary, #6366f1) !important;
+}
+
+/* Dark mode — sidebar */
+html[data-theme="dark"] .myrmex-enabled .sidebar-item-control .dropdown-list,
+html[data-theme="dark"].myrmex-enabled .sidebar-item-control .dropdown-list {
+	background-color: #18181b !important;
+	border-color: #27272a !important;
+	color: #fafafa !important;
+	box-shadow:
+		0 10px 32px rgba(0, 0, 0, 0.55),
+		0 3px 8px  rgba(0, 0, 0, 0.35) !important;
+}
+
+html[data-theme="dark"] .myrmex-enabled .sidebar-item-control .dropdown-list .dropdown-item {
+	color: #fafafa !important;
+}
+
+html[data-theme="dark"] .myrmex-enabled .sidebar-item-control .dropdown-list .dropdown-item:hover {
+	background-color: rgba(129, 140, 248, 0.14) !important;
+	color: #818cf8 !important;
+}
+
+/* ── B. Header widget block ─────────────────────────────────────────────── */
+
+/* Unclip the chain (widget.header differs from widget.shortcut) */
+.myrmex-enabled .widget.header,
+.myrmex-enabled .widget.header .widget-head {
+	overflow: visible !important;
+}
+
+/* .widget-control already handled in Section 22 — no duplicate needed.
+   Only add the header-widget-specific :has() elevation:               */
+.myrmex-enabled .ce-block:has(.widget.header .dropdown-list:not(.hidden)) {
+	position: relative !important;
+	z-index: 9999 !important;
+}
+
+/* The .dropdown-list inside header widget uses the same .widget-control
+   rules from Section 22 — explicitly re-state right:0 alignment here   */
+.myrmex-enabled .widget.header .widget-control .dropdown-list {
+	position: absolute !important;
+	top: 100% !important;
+	right: 0 !important;
+	left: auto !important;
+	z-index: 999999 !important;
+	overflow: visible !important;
+
+	background-color: var(--myrmex-surface, #ffffff) !important;
+	border: 1px solid var(--myrmex-border, #e2e8f0) !important;
+	color: var(--myrmex-text, #1e293b) !important;
+	border-radius: 10px !important;
+	min-width: 160px !important;
+	box-shadow:
+		0 10px 32px rgba(15, 23, 42, 0.14),
+		0 3px 8px  rgba(15, 23, 42, 0.07) !important;
+	padding: 4px !important;
+}
+
+/* Items */
+.myrmex-enabled .widget.header .widget-control .dropdown-list .dropdown-item {
+	display: flex !important;
+	align-items: center !important;
+	gap: 8px !important;
+	padding: 8px 12px !important;
+	border-radius: 6px !important;
+	cursor: pointer !important;
+	color: var(--myrmex-text, #1e293b) !important;
+	background: transparent !important;
+	white-space: nowrap !important;
+	transition: background 0.1s ease, color 0.1s ease !important;
+}
+
+.myrmex-enabled .widget.header .widget-control .dropdown-list .dropdown-item:hover {
+	background-color: var(--myrmex-primary-soft, #eef2ff) !important;
+	color: var(--myrmex-primary, #6366f1) !important;
+}
+
+/* Delete item — always red */
+.myrmex-enabled .widget.header .widget-control .dropdown-list .dropdown-item[title="Delete Block"] {
+	color: var(--myrmex-error, #ef4444) !important;
+}
+.myrmex-enabled .widget.header .widget-control .dropdown-list .dropdown-item[title="Delete Block"]:hover {
+	background-color: rgba(239, 68, 68, 0.08) !important;
+	color: #dc2626 !important;
+}
+
+/* Dark mode — header widget */
+html[data-theme="dark"] .myrmex-enabled .widget.header .widget-control .dropdown-list,
+html[data-theme="dark"].myrmex-enabled .widget.header .widget-control .dropdown-list {
+	background-color: #18181b !important;
+	border-color: #27272a !important;
+	color: #fafafa !important;
+	box-shadow:
+		0 10px 32px rgba(0, 0, 0, 0.55),
+		0 3px 8px  rgba(0, 0, 0, 0.35) !important;
+}
+
+html[data-theme="dark"] .myrmex-enabled .widget.header .widget-control .dropdown-list .dropdown-item {
+	color: #fafafa !important;
+}
+
+html[data-theme="dark"] .myrmex-enabled .widget.header .widget-control .dropdown-list .dropdown-item:hover {
+	background-color: rgba(129, 140, 248, 0.14) !important;
+	color: #818cf8 !important;
+}
+
+html[data-theme="dark"] .myrmex-enabled .widget.header .widget-control .dropdown-list .dropdown-item[title="Delete Block"] {
+	color: #f87171 !important;
+}
+
+html[data-theme="dark"] .myrmex-enabled .widget.header .widget-control .dropdown-list .dropdown-item[title="Delete Block"]:hover {
+	background-color: rgba(248, 113, 113, 0.12) !important;
+	color: #fca5a5 !important;
+}
+
+/* END Section 23 ============================================================ */
