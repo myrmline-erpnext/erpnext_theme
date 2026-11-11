@@ -48,6 +48,7 @@ app_include_css = [
 	"myrmex-enhanced-lists.bundle.css",       # table headers, rows, kanban, calendar
 	"myrmex-enhanced-dark.bundle.css",        # zinc-950 dark surfaces + bright accents
 	"myrmex-enhanced-overlays.bundle.css",    # z-index hierarchy, dropdowns, modals, tooltips, multi-selects
+	"myrmex-dropdown-theme.bundle.css",       # theme-aware dropdown colours — dark/light mode, portal-mounted elements
 	"myrmex-branding.bundle.css",             # dynamic branding (logo, favicon injection point)
 ]
 
