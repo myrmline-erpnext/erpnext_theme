@@ -527,28 +527,41 @@ class ThemeBuilder {
 				if (!r.message) return;
 				this.settings = Object.assign({}, r.message.settings, {
 					custom_css: this.settings.custom_css,
+					// Always keep theme enabled when a preset is applied
+					enable_theme: this.settings.enable_theme ?? 1,
 				});
 				this.dirty = true;
 				this.page.set_indicator(__("Unsaved"), "orange");
 				this.render_fields();
 				this.refresh_preview();
+				// Apply the preset payload to the live Desk immediately
+				if (r.message.payload && window.myrmex && window.myrmex.theme) {
+					window.myrmex.theme.apply(r.message.payload);
+				}
 			},
 		});
 	}
 
 	save() {
+		// Ensure enable_theme is treated as truthy so the payload comes back
+		// with enabled:true and myrmex.theme.apply() actually writes the variables.
+		const values = Object.assign({}, this.settings);
+		if (values.enable_theme === undefined) values.enable_theme = 1;
+
 		frappe.call({
 			method: "theme_myrmex.api.save_theme",
-			args: { values: this.settings },
+			args: { values },
 			freeze: true,
 			freeze_message: __("Saving theme"),
 			callback: (r) => {
 				if (!r.message) return;
 				this.dirty = false;
 				this.page.set_indicator(__("Saved"), "green");
-				// Apply straight away in this tab; other open tabs get it over
-				// realtime from the server.
-				if (window.myrmex && window.myrmex.theme) window.myrmex.theme.apply(r.message);
+				// Apply straight away in this tab; other open tabs get it via
+				// the myrmex_theme_updated realtime event the server fires.
+				if (window.myrmex && window.myrmex.theme) {
+					window.myrmex.theme.apply(r.message);
+				}
 			},
 		});
 	}
@@ -822,38 +835,45 @@ class BrandingManager {
 		const statusBadge = card.find(".mx-upload-status");
 		statusBadge.removeClass("mx-status-ok mx-status-empty").addClass("mx-status-uploading").text(__("Uploading…"));
 
-		const formData = new FormData();
-		formData.append("file", file, file.name);
-		formData.append("is_private", "0");
-		formData.append("folder", "Home/Branding");
-
+		// Ensure the target folder exists, then upload
 		frappe.call({
-			method: "upload_file",
-			args: {},
-			type: "POST",
-			filedata: file,
-			callback: () => {}, // handled below via raw fetch
+			method: "frappe.core.api.file.create_new_folder",
+			args: { file_name: "Branding", folder: "Home" },
+			// Ignore errors (folder may already exist)
+			error: () => {},
+			callback: () => {
+				const formData = new FormData();
+				formData.append("file", file, file.name);
+				formData.append("is_private", "0");
+				formData.append("folder", "Home/Branding");
+				// Frappe v15 requires cmd in the form body, not query string
+				formData.append("cmd", "upload_file");
+
+				fetch("/api/method/upload_file", {
+					method: "POST",
+					headers: { "X-Frappe-CSRF-Token": frappe.csrf_token },
+					body: formData,
+				})
+					.then((res) => {
+						if (!res.ok) throw new Error(`HTTP ${res.status}`);
+						return res.json();
+					})
+					.then((data) => {
+						// Frappe wraps the result in `message`
+						const msg = data.message || data;
+						const url = msg.file_url || msg.file_name;
+						if (!url) throw new Error("No file URL returned");
+
+						this._data[key] = url;
+						this._setCardImage(card, url);
+						frappe.show_alert({ message: __("{0} uploaded", [def ? def.label : key]), indicator: "green" });
+					})
+					.catch((err) => {
+						statusBadge.removeClass("mx-status-uploading").addClass("mx-status-empty").text(__("Failed"));
+						frappe.show_alert({ message: __("Upload failed: {0}", [err.message]), indicator: "red" });
+					});
+			},
 		});
-
-		// Use raw fetch for file upload (Frappe's upload_file endpoint)
-		fetch("/api/method/upload_file", {
-			method: "POST",
-			headers: { "X-Frappe-CSRF-Token": frappe.csrf_token },
-			body: formData,
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				const url = data.message && (data.message.file_url || data.message.file_name);
-				if (!url) throw new Error("No file URL returned");
-
-				this._data[key] = url;
-				this._setCardImage(card, url);
-				frappe.show_alert({ message: __("{0} uploaded", [def ? def.label : key]), indicator: "green" });
-			})
-			.catch((err) => {
-				statusBadge.removeClass("mx-status-uploading").addClass("mx-status-empty").text(__("Failed"));
-				frappe.show_alert({ message: __("Upload failed: {0}", [err.message]), indicator: "red" });
-			});
 	}
 
 	_removeImage(key, card) {
@@ -870,11 +890,13 @@ class BrandingManager {
 			freeze: true,
 			freeze_message: __("Saving branding…"),
 			callback: (r) => {
-				if (r.message && r.message.ok) {
+				// save_branding returns build_branding_payload() — a plain dict,
+				// not {ok: true}. Any truthy r.message means success.
+				if (r.message) {
 					frappe.show_alert({ message: __("Branding saved"), indicator: "green" });
 					// Apply immediately in this tab
 					if (window.myrmex && window.myrmex.branding) {
-						window.myrmex.branding.apply(r.message.payload || this._data);
+						window.myrmex.branding.apply(r.message);
 					}
 				} else {
 					frappe.show_alert({ message: __("Failed to save branding"), indicator: "red" });
