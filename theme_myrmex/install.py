@@ -59,30 +59,20 @@ DEFAULT_SUGGESTIONS = [
 
 
 def ensure_theme_settings():
-	"""Create the Single doc with the default preset if it is still empty."""
+	"""Seed Theme Settings defaults using set_single_value.
+
+	Same approach as ensure_branding_settings — avoids get_single() and
+	new_doc().save() which both crash on Frappe v15 with no existing row.
+	"""
 	if not frappe.db.exists("DocType", "Theme Settings"):
 		return
 
-	has_row = frappe.db.sql(
-		"SELECT 1 FROM `tabSingles` WHERE doctype = %s LIMIT 1",
-		("Theme Settings",),
-	)
-	try:
-		doc = frappe.get_single("Theme Settings") if has_row else frappe.new_doc("Theme Settings")
-	except Exception:
-		doc = frappe.new_doc("Theme Settings")
-
-	changed = False
 	for field, value in DEFAULTS.items():
-		if doc.get(field) in (None, ""):
-			doc.set(field, value)
-			changed = True
+		existing = frappe.db.get_single_value("Theme Settings", field)
+		if existing in (None, ""):
+			frappe.db.set_single_value("Theme Settings", field, value)
 
-	if changed:
-		doc.flags.ignore_permissions = True
-		doc.flags.ignore_mandatory = True
-		doc.save()
-		frappe.db.commit()
+	frappe.db.commit()
 
 
 def _suggestion_rows():
@@ -124,30 +114,15 @@ def ensure_chatbot_settings():
 
 
 def ensure_branding_settings():
-	"""Create the Branding Settings Single doc with safe defaults if missing.
+	"""Seed Branding Settings defaults using set_single_value.
 
-	frappe.db.exists("Branding Settings", "Branding Settings") always returns a
-	truthy value on a Single DocType in Frappe v15 — it matches the DocType name,
-	not an actual row in tabSingles.  We therefore query tabSingles directly to
-	know whether any row has been saved yet, and always wrap get_single() in a
-	try/except so a fresh install never crashes.
+	Avoids frappe.get_single() (throws DoesNotExistError when tabSingles has no
+	row yet) and new_doc().save() (crashes with AttributeError on creation in
+	Frappe v15).  set_single_value issues INSERT … ON DUPLICATE KEY UPDATE
+	directly, so it is safe whether or not any row already exists.
 	"""
 	if not frappe.db.exists("DocType", "Branding Settings"):
 		return
-
-	# Direct tabSingles probe — the only reliable way on v15/v16
-	has_row = frappe.db.sql(
-		"SELECT 1 FROM `tabSingles` WHERE doctype = %s LIMIT 1",
-		("Branding Settings",),
-	)
-
-	if has_row:
-		try:
-			doc = frappe.get_single("Branding Settings")
-		except Exception:
-			doc = frappe.new_doc("Branding Settings")
-	else:
-		doc = frappe.new_doc("Branding Settings")
 
 	defaults = {
 		"logo_max_height": 32,
@@ -157,17 +132,13 @@ def ensure_branding_settings():
 		"loader_spinner_color": "#6366f1",
 	}
 
-	changed = False
 	for field, value in defaults.items():
-		if doc.get(field) in (None, ""):
-			doc.set(field, value)
-			changed = True
+		# Only write when no value has been set yet
+		existing = frappe.db.get_single_value("Branding Settings", field)
+		if existing in (None, ""):
+			frappe.db.set_single_value("Branding Settings", field, value)
 
-	if changed:
-		doc.flags.ignore_permissions = True
-		doc.flags.ignore_mandatory = True
-		doc.save()
-		frappe.db.commit()
+	frappe.db.commit()
 
 
 def after_install():
