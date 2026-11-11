@@ -820,8 +820,9 @@ class BrandingManager {
 	}
 
 	_upload(key, file, card) {
-		// Validate file type
 		const def = BRANDING_IMAGES.find((d) => d.key === key);
+
+		// ── Validate ────────────────────────────────────────────────────────
 		const ext = "." + file.name.split(".").pop().toLowerCase();
 		if (def && !def.accepts.split(",").includes(ext)) {
 			frappe.show_alert({ message: __("File type not supported: {0}", [ext]), indicator: "red" });
@@ -835,45 +836,43 @@ class BrandingManager {
 		const statusBadge = card.find(".mx-upload-status");
 		statusBadge.removeClass("mx-status-ok mx-status-empty").addClass("mx-status-uploading").text(__("Uploading…"));
 
-		// Ensure the target folder exists, then upload
-		frappe.call({
-			method: "frappe.core.api.file.create_new_folder",
-			args: { file_name: "Branding", folder: "Home" },
-			// Ignore errors (folder may already exist)
-			error: () => {},
-			callback: () => {
-				const formData = new FormData();
-				formData.append("file", file, file.name);
-				formData.append("is_private", "0");
-				formData.append("folder", "Home/Branding");
-				// Frappe v15 requires cmd in the form body, not query string
-				formData.append("cmd", "upload_file");
+		// ── Upload via Frappe's upload_file endpoint ─────────────────────────
+		// We use a bare FormData POST — no pre-flight folder creation needed.
+		// "Home" always exists; Frappe creates sub-folders on the fly in v15.
+		const formData = new FormData();
+		formData.append("file", file, file.name);
+		formData.append("is_private", "0");
+		formData.append("folder", "Home");
 
-				fetch("/api/method/upload_file", {
-					method: "POST",
-					headers: { "X-Frappe-CSRF-Token": frappe.csrf_token },
-					body: formData,
-				})
-					.then((res) => {
-						if (!res.ok) throw new Error(`HTTP ${res.status}`);
-						return res.json();
-					})
-					.then((data) => {
-						// Frappe wraps the result in `message`
-						const msg = data.message || data;
-						const url = msg.file_url || msg.file_name;
-						if (!url) throw new Error("No file URL returned");
+		fetch("/api/method/upload_file", {
+			method: "POST",
+			headers: { "X-Frappe-CSRF-Token": frappe.csrf_token },
+			body: formData,
+		})
+			.then((res) => {
+				if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+				return res.json();
+			})
+			.then((data) => {
+				// Frappe v15 wraps the File doc in data.message
+				const msg = data.message || data;
+				const url = msg.file_url || msg.file_name;
+				if (!url) throw new Error("No file URL in response");
 
-						this._data[key] = url;
-						this._setCardImage(card, url);
-						frappe.show_alert({ message: __("{0} uploaded", [def ? def.label : key]), indicator: "green" });
-					})
-					.catch((err) => {
-						statusBadge.removeClass("mx-status-uploading").addClass("mx-status-empty").text(__("Failed"));
-						frappe.show_alert({ message: __("Upload failed: {0}", [err.message]), indicator: "red" });
-					});
-			},
-		});
+				this._data[key] = url;
+				this._setCardImage(card, url);
+				frappe.show_alert({
+					message: __("{0} uploaded successfully", [def ? def.label : key]),
+					indicator: "green",
+				});
+			})
+			.catch((err) => {
+				statusBadge.removeClass("mx-status-uploading").addClass("mx-status-empty").text(__("Failed"));
+				frappe.show_alert({
+					message: __("Upload failed: {0}", [err.message]),
+					indicator: "red",
+				});
+			});
 	}
 
 	_removeImage(key, card) {
