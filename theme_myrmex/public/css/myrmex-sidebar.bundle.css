@@ -31,7 +31,10 @@
 		border: 1px solid var(--myrmex-border);
 		border-radius: var(--myrmex-card-radius);
 		box-shadow: var(--myrmex-shadow);
-		overflow-x: hidden;
+		/* Do NOT set overflow-x: hidden here — it creates a clip boundary that
+		 * swallows the absolutely-positioned .dropdown-list when it is opened.
+		 * Text overflow is already controlled by text-overflow: ellipsis on
+		 * individual label and wordmark elements. */
 		transition: flex-basis var(--myrmex-transition-slow), max-width var(--myrmex-transition-slow),
 			padding var(--myrmex-transition-slow);
 	}
@@ -222,8 +225,11 @@
 
 /* Controls: hidden at rest, revealed when the row is hovered or keyboard-focused.
  * We set both directions explicitly so Frappe's native opacity-0/opacity-1
- * rules cannot fight us regardless of specificity order. */
+ * rules cannot fight us regardless of specificity order.
+ * position: relative makes the absolutely-positioned .dropdown-list anchor
+ * to this element's right edge. */
 .myrmex-enabled .desk-sidebar .sidebar-item-control {
+	position: relative;
 	display: flex !important;
 	align-items: center;
 	padding-inline-end: var(--myrmex-space-1);
@@ -246,6 +252,41 @@
 
 .myrmex-enabled .desk-sidebar .sidebar-item-control .drop-icon:hover {
 	background-color: color-mix(in srgb, var(--myrmex-sidebar-hover) 60%, var(--myrmex-border));
+}
+
+/* Sidebar item dropdown (Edit / Duplicate / Hide / Delete).
+ * Frappe toggles the native .hidden class; we size, position and paint it. */
+.myrmex-enabled .desk-sidebar .sidebar-item-control .dropdown-list {
+	position: absolute;
+	inset-inline-end: 0;
+	top: calc(100% + 4px);
+	z-index: 1050;
+	min-width: 160px;
+	padding: var(--myrmex-space-1) 0;
+	background-color: var(--myrmex-surface);
+	border: 1px solid var(--myrmex-border);
+	border-radius: var(--myrmex-radius-md);
+	box-shadow: var(--myrmex-shadow-lg);
+}
+
+.myrmex-enabled .desk-sidebar .sidebar-item-control .dropdown-list .dropdown-item {
+	display: flex;
+	align-items: center;
+	gap: var(--myrmex-space-2);
+	padding: var(--myrmex-space-2) var(--myrmex-space-3);
+	font-size: var(--myrmex-text-sm);
+	color: var(--myrmex-text);
+	cursor: pointer;
+	transition: background-color var(--myrmex-transition);
+}
+
+.myrmex-enabled .desk-sidebar .sidebar-item-control .dropdown-list .dropdown-item:hover {
+	background-color: var(--myrmex-surface-alt);
+}
+
+.myrmex-enabled .desk-sidebar .sidebar-item-control .dropdown-list .dropdown-item .dropdown-item-icon {
+	flex: 0 0 auto;
+	color: var(--myrmex-muted);
 }
 
 /* Nested (child workspace) items: a guide line instead of deep padding. */
