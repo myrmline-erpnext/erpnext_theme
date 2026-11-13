@@ -168,16 +168,16 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	flex: 0 0 24px;
-	width: 24px;
-	height: 24px;
+	flex: 0 0 28px;
+	width: 28px;
+	height: 28px;
 	color: var(--myrmex-sidebar-icon);
 }
 
 .myrmex-enabled .desk-sidebar .sidebar-item-icon .icon {
 	--icon-stroke: currentColor;
-	width: 22px;
-	height: 22px;
+	width: 26px;
+	height: 26px;
 }
 
 .myrmex-enabled .desk-sidebar .sidebar-item-label {
@@ -250,8 +250,8 @@
 }
 
 .myrmex-enabled .desk-sidebar .sidebar-child-item .sidebar-item-icon {
-	flex-basis: 18px;
-	width: 18px;
+	flex-basis: 20px;
+	width: 20px;
 }
 
 /* Private workspaces use a coloured dot instead of an icon. */
