@@ -50,11 +50,6 @@
 	color-scheme: dark;
 }
 
-/* Dark mode: enforce solid background — no translucency */
-.myrmex-enabled[data-theme="dark"] header.navbar {
-	background-color: var(--myrmex-navbar-background) !important;
-}
-
 .myrmex-enabled[data-theme="dark"] header.navbar.myrmex-scrolled,
 .myrmex-enabled[data-theme="dark"] .page-head.myrmex-stuck {
 	box-shadow: 0 1px 0 var(--myrmex-border);
