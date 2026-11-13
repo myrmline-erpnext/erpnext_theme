@@ -31,6 +31,9 @@
 		border: 1px solid var(--myrmex-border);
 		border-radius: var(--myrmex-card-radius);
 		box-shadow: var(--myrmex-shadow);
+		/* z-index creates a stacking context so sidebar dropdowns (z-index 1100+)
+		 * always paint above the main workspace content column. */
+		z-index: 10;
 		/* Do NOT set overflow-x: hidden here — it creates a clip boundary that
 		 * swallows the absolutely-positioned .dropdown-list when it is opened.
 		 * Text overflow is already controlled by text-overflow: ellipsis on
@@ -138,17 +141,33 @@
 
 .myrmex-enabled .desk-sidebar .sidebar-item-container {
 	position: relative;
+	/* Default stacking order; raised when its dropdown is open (see below). */
+	z-index: 0;
+}
+
+/* When a dropdown is open, pop the whole container above the sidebar panel
+ * and all workspace content so the card is never clipped or buried. */
+.myrmex-enabled .desk-sidebar .sidebar-item-container:has(.dropdown-list:not(.hidden)) {
+	z-index: 1200;
 }
 
 .myrmex-enabled .desk-sidebar .standard-sidebar-item {
 	position: relative;
 	display: flex;
 	align-items: center;
-	margin: 1px 0;
+	margin: 2px 0;
 	border-radius: var(--myrmex-radius-md);
 	color: var(--myrmex-sidebar-text);
-	background-color: transparent;
-	transition: background-color var(--myrmex-transition), color var(--myrmex-transition);
+	/* Subtle resting background so each row is visually defined. */
+	background-color: color-mix(in srgb, var(--myrmex-sidebar-background) 96%, var(--myrmex-border));
+	border: 1px solid transparent;
+	transition: background-color var(--myrmex-transition), border-color var(--myrmex-transition),
+		color var(--myrmex-transition);
+}
+
+.myrmex-enabled .desk-sidebar .standard-sidebar-item:hover {
+	background-color: var(--myrmex-sidebar-hover);
+	border-color: var(--myrmex-border);
 }
 
 .myrmex-enabled .desk-sidebar .item-anchor {
@@ -187,10 +206,6 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	transition: opacity var(--myrmex-transition);
-}
-
-.myrmex-enabled .desk-sidebar .standard-sidebar-item:hover {
-	background-color: var(--myrmex-sidebar-hover);
 }
 
 .myrmex-enabled .desk-sidebar .standard-sidebar-item:hover .sidebar-item-icon {
