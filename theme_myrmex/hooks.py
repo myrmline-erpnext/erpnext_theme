@@ -95,5 +95,5 @@ scheduler_events = {
 	],
 }
 
-# Chatbot DocTypes are deliberately not exported as fixtures: settings hold an
+# Myrmex DocTypes are deliberately not exported as fixtures: settings hold an
 # encrypted API key and conversations hold user data.

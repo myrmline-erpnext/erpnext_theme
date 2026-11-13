@@ -35,7 +35,7 @@ BOUNDS = {
 LOCAL_HOSTS = {"localhost", "127.0.0.1", "::1"}
 
 
-class ChatbotSettings(Document):
+class MyrmexSettings(Document):
 	def validate(self):
 		self.apply_bounds()
 		self.validate_colors()

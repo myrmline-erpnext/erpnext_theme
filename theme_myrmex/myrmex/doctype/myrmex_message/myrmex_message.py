@@ -9,7 +9,7 @@ from frappe import _
 from frappe.model.document import Document
 
 
-class ChatbotMessage(Document):
+class MyrmexMessage(Document):
 	def validate(self):
 		if self.role not in ("user", "assistant"):
 			frappe.throw(_("Invalid message role: {0}").format(self.role))

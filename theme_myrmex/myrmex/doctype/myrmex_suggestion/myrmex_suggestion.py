@@ -3,5 +3,5 @@
 from frappe.model.document import Document
 
 
-class ChatbotSuggestion(Document):
+class MyrmexSuggestion(Document):
 	pass

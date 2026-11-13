@@ -9,6 +9,6 @@ import frappe
 from frappe.model.document import Document
 
 
-class ChatbotConversation(Document):
+class MyrmexConversation(Document):
 	def on_trash(self):
 		frappe.db.delete("Myrmex Message", {"conversation": self.name})
