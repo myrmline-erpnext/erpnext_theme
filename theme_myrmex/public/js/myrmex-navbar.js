@@ -1,5 +1,5 @@
-// Navbar behaviour: the rail toggle, elevation on scroll, and a search
-// placeholder that names the shortcut.
+// Navbar behaviour: branding injection, rail toggle, elevation on scroll,
+// and a search placeholder that names the shortcut.
 //
 // Frappe v15 markup: .sticky-top > header.navbar > .container >
 //   a.navbar-brand, ul#navbar-breadcrumbs, .navbar-collapse (search + controls).
@@ -9,6 +9,9 @@ const myrmex = window.myrmex;
 
 myrmex.navbar = {
 	init() {
+		// Branding runs once at boot — independent of route changes.
+		this.mountBranding();
+
 		myrmex.onRoute(() => {
 			const navbar = document.querySelector("header.navbar");
 			if (!navbar) return;
@@ -18,6 +21,54 @@ myrmex.navbar = {
 		});
 
 		this.trackScroll();
+	},
+
+	/**
+	 * Replace the default Frappe logo + text with the application's own name
+	 * (or logo if one is set in Branding Settings / System Settings).
+	 *
+	 * Priority:
+	 *   1. frappe.boot.app_logo_url     — custom logo uploaded via Branding Settings
+	 *   2. frappe.boot.app_name         — application name string
+	 *   3. frappe.sys_defaults.app_name — fallback from System Settings
+	 *   4. frappe.app_name              — Frappe global default
+	 */
+	mountBranding() {
+		const navbar = document.querySelector("header.navbar");
+		if (!navbar) return;
+
+		myrmex.once(navbar, "Branding", () => {
+			const brand = navbar.querySelector(".navbar-brand, .navbar-home");
+			if (!brand) return;
+
+			// Collect name and logo from the boot payload (set by Frappe/ERPNext).
+			const boot         = (window.frappe && frappe.boot) || {};
+			const sysDefaults  = boot.sysdefaults || boot.sys_defaults || {};
+			const logoUrl      = boot.app_logo_url || sysDefaults.app_logo_url || "";
+			const appName      =
+				boot.app_name ||
+				sysDefaults.app_name ||
+				(window.frappe && frappe.app_name) ||
+				"";
+
+			// Remove every existing child (the core "F" logo + "Frappe" text).
+			while (brand.firstChild) brand.removeChild(brand.firstChild);
+
+			if (logoUrl) {
+				// Custom logo: render an <img> and an accessible label.
+				const img = document.createElement("img");
+				img.src       = logoUrl;
+				img.alt       = appName || "Home";
+				img.className = "myrmex-brand-logo";
+				brand.appendChild(img);
+			} else {
+				// No logo: show the app name as styled text.
+				const name = document.createElement("span");
+				name.className   = "myrmex-brand-name";
+				name.textContent = appName || "Home";
+				brand.appendChild(name);
+			}
+		});
 	},
 
 	/**

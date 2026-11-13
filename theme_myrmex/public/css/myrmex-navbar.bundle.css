@@ -4,20 +4,57 @@
  *     .navbar-collapse > form (search) + ul.navbar-nav (controls)
  * Every native control is restyled in place; none is removed or re-parented. */
 
+/* ── 1. Stacking context ───────────────────────────────────────────────────
+ * .sticky-top is Bootstrap's wrapper; we set z-index here so it wins over
+ * all page content, kanban cards, list rows, sticky table headers, etc.
+ * Bootstrap uses 1020 for sticky-top; we raise ours to 1030. */
+.myrmex-enabled .sticky-top {
+	z-index: 1030 !important;
+}
+
 .myrmex-enabled header.navbar {
 	height: var(--myrmex-navbar-height);
 	min-height: var(--myrmex-navbar-height);
-	background-color: color-mix(in srgb, var(--myrmex-navbar-background) 92%, transparent);
-	-webkit-backdrop-filter: saturate(1.4) blur(10px);
-	backdrop-filter: saturate(1.4) blur(10px);
+	/* Solid background — content must never bleed through the navbar */
+	background-color: var(--myrmex-navbar-background) !important;
 	border-bottom: 1px solid var(--myrmex-navbar-border);
 	box-shadow: none;
 	padding: 0 var(--myrmex-space-4);
-	transition: box-shadow var(--myrmex-transition), background-color var(--myrmex-transition);
+	/* Isolate so inner dropdowns paint above page content */
+	isolation: isolate;
+	transition: box-shadow var(--myrmex-transition);
 }
 
 .myrmex-enabled header.navbar.myrmex-scrolled {
-	box-shadow: 0 4px 14px -8px rgba(16, 24, 40, 0.2);
+	box-shadow: 0 4px 14px -8px rgba(16, 24, 40, 0.18);
+}
+
+/* ── 2. Branding area ──────────────────────────────────────────────────────
+ * Hide the default Frappe "F" logo + "Frappe" text injected by the core.
+ * myrmex-navbar.js injects .myrmex-brand-logo and .myrmex-brand-name instead. */
+.myrmex-enabled .navbar-brand .app-logo,
+.myrmex-enabled .navbar-brand img.app-logo {
+	/* Core logo — hidden; replaced by .myrmex-brand-logo below */
+	display: none !important;
+}
+
+/* The injected app-name span */
+.myrmex-enabled .myrmex-brand-name {
+	font-size: 15px;
+	font-weight: var(--myrmex-weight-bold);
+	color: var(--myrmex-navbar-text);
+	letter-spacing: -0.01em;
+	white-space: nowrap;
+	line-height: 1;
+}
+
+/* Custom logo (when a logo URL is set in Branding Settings) */
+.myrmex-enabled .myrmex-brand-logo {
+	height: 28px;
+	width: auto;
+	max-width: 160px;
+	object-fit: contain;
+	display: block;
 }
 
 .myrmex-enabled header.navbar > .container {
@@ -77,9 +114,30 @@
 	color: var(--myrmex-navbar-text);
 }
 
+/* ── 3. Larger navbar icons ─────────────────────────────────────────────────
+ * All SVG icons in the right-hand nav controls: 20 → 22px for better
+ * visibility. The toggle sidebar icon keeps its own size below. */
+.myrmex-enabled .navbar-nav .nav-link svg,
+.myrmex-enabled .navbar-nav .nav-link .icon,
+.myrmex-enabled .navbar-nav .nav-link use {
+	width: 22px !important;
+	height: 22px !important;
+}
+
+/* Frappe v15 uses <use> inside <svg class="icon icon-sm"> for nav icons.
+ * The icon class controls size via CSS; bump the two most common sizes. */
+.myrmex-enabled header.navbar .icon.icon-sm {
+	width: 22px !important;
+	height: 22px !important;
+}
+.myrmex-enabled header.navbar .icon.icon-md {
+	width: 24px !important;
+	height: 24px !important;
+}
+
 .myrmex-enabled .myrmex-nav-toggle svg {
-	width: 18px;
-	height: 18px;
+	width: 20px;
+	height: 20px;
 }
 
 .myrmex-enabled[dir="rtl"] .myrmex-nav-toggle svg {
