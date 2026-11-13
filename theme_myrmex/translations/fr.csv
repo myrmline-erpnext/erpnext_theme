@@ -4,7 +4,7 @@ API endpoint,Point de terminaison de l'API
 Accent colour,Couleur d'accent
 Accent edge,Liseré d'accent
 "Add at least one page pattern, or show the assistant everywhere.","Ajoutez au moins un modèle de page, ou affichez l'assistant partout."
-All borders,Toutes les bordures
+All,Toutes les bordures
 Allowed roles,Rôles autorisés
 Application context,Contexte de l'application
 "Applies to list views, report views, child tables and grids.","S'applique aux vues liste, aux vues rapport, aux tableaux enfants et aux grilles."
@@ -67,7 +67,7 @@ Header text,Texte de l'en-tête
 Header weight,Graisse de l'en-tête
 Hello {0}! How can I help you today?,Bonjour {0} ! Comment puis-je vous aider aujourd'hui ?
 Hello! How can I help you today?,Bonjour ! Comment puis-je vous aider aujourd'hui ?
-Horizontal lines,Lignes horizontales
+Horizontal,Lignes horizontales
 Hover,Survol
 Hover background,Fond au survol
 Invalid message role: {0},Rôle de message invalide : {0}

@@ -4,16 +4,30 @@
  *     .navbar-collapse > form (search) + ul.navbar-nav (controls)
  * Every native control is restyled in place; none is removed or re-parented. */
 
+/* ── 1. Stacking context ─────────────────────────────────────────────────────
+ * Bootstrap sets .sticky-top at z-index 1020; raise to 1030 so the bar stays
+ * above kanban columns, sticky table headers, modals backdrops and any card
+ * that Bootstrap gives z-index 1000–1019. isolation: isolate lets inner
+ * dropdowns stack above page content without leaking their z-index out. */
+.myrmex-enabled .sticky-top {
+	position: sticky;
+	top: 0;
+	z-index: 1030 !important;
+}
+
 .myrmex-enabled header.navbar {
 	height: var(--myrmex-navbar-height);
 	min-height: var(--myrmex-navbar-height);
-	background-color: color-mix(in srgb, var(--myrmex-navbar-background) 92%, transparent);
-	-webkit-backdrop-filter: saturate(1.4) blur(10px);
-	backdrop-filter: saturate(1.4) blur(10px);
+	/* Solid background — content must never bleed through */
+	background-color: var(--myrmex-navbar-background) !important;
+	-webkit-backdrop-filter: none;
+	backdrop-filter: none;
 	border-bottom: 1px solid var(--myrmex-navbar-border);
 	box-shadow: none;
 	padding: 0 var(--myrmex-space-4);
-	transition: box-shadow var(--myrmex-transition), background-color var(--myrmex-transition);
+	/* Own stacking context so inner dropdowns paint above page content */
+	isolation: isolate;
+	transition: box-shadow var(--myrmex-transition);
 }
 
 .myrmex-enabled header.navbar.myrmex-scrolled {
