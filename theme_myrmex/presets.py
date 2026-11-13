@@ -172,6 +172,7 @@ DARK_SURFACES = {
 # The Myrmex Default palette doubles as the fallback for any empty field.
 DEFAULTS = {
 	"enable_theme": 1,
+	"app_name": "",
 	"theme_preset": "Myrmex Default",
 	"default_appearance": "System",
 	"density": "Comfortable",

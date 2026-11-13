@@ -111,6 +111,7 @@ def build_payload(settings: dict | None = None) -> dict:
 		"appearance": settings.get("default_appearance") or "System",
 		"density": settings.get("density") or "Comfortable",
 		"zebra_tables": bool(frappe.utils.cint(settings.get("zebra_tables"))),
+		"app_name": settings.get("app_name") or "",
 		"collapse_sidebar_by_default": bool(
 			frappe.utils.cint(settings.get("collapse_sidebar_by_default"))
 		),

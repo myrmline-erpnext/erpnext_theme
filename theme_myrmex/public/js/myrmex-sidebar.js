@@ -93,20 +93,19 @@ myrmex.sidebar = {
 
 	mountBrand(deskSidebar) {
 		myrmex.once(deskSidebar, "Brand", () => {
-			// Prefer a custom name from myrmex_theme boot key, then sysdefaults,
-			// then app_name — but reject "Frappe" at every level so the sidebar
-			// never shows the framework name instead of the actual application name.
+			// Priority:
+			//   1. app_name set in Theme Settings (sent via frappe.boot.myrmex_theme)
+			//   2. sysdefaults.app_name from System Settings
+			//   3. frappe.boot.app_name
+			//   4. "Frappe" as the hard default
 			const boot = (window.frappe && frappe.boot) || {};
 			const sysDefaults = boot.sysdefaults || {};
 			const myrmexBoot = boot.myrmex_theme || {};
-			const candidates = [
-				myrmexBoot.app_name,
-				sysDefaults.app_name,
-				boot.app_name,
-			];
 			const brandText =
-				candidates.find((v) => v && v.trim() && v.trim().toLowerCase() !== "frappe") ||
-				"Myrmex";
+				(myrmexBoot.app_name && myrmexBoot.app_name.trim()) ||
+				(sysDefaults.app_name && sysDefaults.app_name.trim()) ||
+				(boot.app_name && boot.app_name.trim()) ||
+				"Frappe";
 			const brand = document.createElement("a");
 			brand.className = "myrmex-sidebar-brand";
 			brand.href = "/app";
