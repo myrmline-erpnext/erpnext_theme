@@ -261,12 +261,15 @@
 	inset-inline-end: 0;
 	top: calc(100% + 4px);
 	z-index: 1050;
-	min-width: 160px;
+	min-width: 172px;
 	padding: var(--myrmex-space-1) 0;
-	background-color: var(--myrmex-surface);
-	border: 1px solid var(--myrmex-border);
+	/* Match the navbar's surface: same background, border and elevation */
+	background-color: var(--myrmex-navbar-background);
+	border: 1px solid var(--myrmex-navbar-border);
 	border-radius: var(--myrmex-radius-md);
-	box-shadow: var(--myrmex-shadow-lg);
+	box-shadow:
+		0 4px 6px -2px rgba(16, 24, 40, 0.06),
+		0 12px 24px -4px rgba(16, 24, 40, 0.14);
 }
 
 .myrmex-enabled .desk-sidebar .sidebar-item-control .dropdown-list .dropdown-item {
@@ -275,18 +278,25 @@
 	gap: var(--myrmex-space-2);
 	padding: var(--myrmex-space-2) var(--myrmex-space-3);
 	font-size: var(--myrmex-text-sm);
-	color: var(--myrmex-text);
+	font-weight: var(--myrmex-weight-medium);
+	color: var(--myrmex-navbar-text);
 	cursor: pointer;
-	transition: background-color var(--myrmex-transition);
+	transition: background-color var(--myrmex-transition), color var(--myrmex-transition);
 }
 
 .myrmex-enabled .desk-sidebar .sidebar-item-control .dropdown-list .dropdown-item:hover {
-	background-color: var(--myrmex-surface-alt);
+	background-color: var(--myrmex-sidebar-hover);
+	color: var(--myrmex-text);
 }
 
 .myrmex-enabled .desk-sidebar .sidebar-item-control .dropdown-list .dropdown-item .dropdown-item-icon {
 	flex: 0 0 auto;
 	color: var(--myrmex-muted);
+	transition: color var(--myrmex-transition);
+}
+
+.myrmex-enabled .desk-sidebar .sidebar-item-control .dropdown-list .dropdown-item:hover .dropdown-item-icon {
+	color: var(--myrmex-primary);
 }
 
 /* Nested (child workspace) items: a guide line instead of deep padding. */
