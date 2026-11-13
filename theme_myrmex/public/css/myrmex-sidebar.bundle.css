@@ -70,10 +70,39 @@
 	background-color: var(--myrmex-sidebar-hover);
 }
 
+.myrmex-enabled .myrmex-sidebar-brand .myrmex-mark {
+	/* Coloured square badge: primary-colour background, white initial, pill corners */
+	flex: 0 0 auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	border-radius: var(--myrmex-radius-md);
+	background-color: var(--myrmex-primary);
+	color: #ffffff;
+	font-size: 13px;
+	font-weight: var(--myrmex-weight-bold);
+	letter-spacing: 0;
+	line-height: 1;
+	/* Subtle depth: a soft inner shadow + a faint outer ring */
+	box-shadow:
+		inset 0 1px 0 rgba(255, 255, 255, 0.25),
+		0 0 0 1px rgba(29, 161, 242, 0.35);
+	/* Keeps the badge sharp even when the sidebar panel animates */
+	transition: box-shadow var(--myrmex-transition);
+}
+
+.myrmex-enabled .myrmex-sidebar-brand:hover .myrmex-mark {
+	box-shadow:
+		inset 0 1px 0 rgba(255, 255, 255, 0.25),
+		0 0 0 2px var(--myrmex-primary);
+}
+
 .myrmex-enabled .myrmex-sidebar-brand .myrmex-wordmark {
 	overflow: hidden;
 	text-overflow: ellipsis;
-	transition: opacity var(--myrmex-transition);
+	transition: opacity var(--myrmex-transition), width var(--myrmex-transition-slow);
 }
 
 /* Section headings (Public, Private, …). v15 upper-cases these; sentence case
@@ -269,6 +298,15 @@
 	.myrmex-sidebar-collapsed.myrmex-enabled [data-page-route="Workspaces"] .myrmex-sidebar-brand {
 		justify-content: center;
 		padding: 0;
+	}
+
+	/* In the rail the badge is the only brand element visible — give it a
+	 * touch more room so it reads clearly at reduced sidebar width. */
+	.myrmex-sidebar-collapsed.myrmex-enabled [data-page-route="Workspaces"] .myrmex-mark {
+		width: 32px;
+		height: 32px;
+		font-size: 14px;
+		border-radius: var(--myrmex-radius-md);
 	}
 
 	.myrmex-sidebar-collapsed.myrmex-enabled [data-page-route="Workspaces"] .item-anchor {
