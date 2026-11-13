@@ -142,7 +142,7 @@
 .myrmex-enabled .desk-sidebar .sidebar-item-container {
 	position: relative;
 	/* Default stacking order; raised when its dropdown is open (see below). */
-	z-index: -1000;
+	z-index: 0;
 }
 
 /* When a dropdown is open, pop the whole container above the sidebar panel
@@ -155,19 +155,15 @@
 	position: relative;
 	display: flex;
 	align-items: center;
-	margin: 2px 0;
+	margin: 1px 0;
 	border-radius: var(--myrmex-radius-md);
 	color: var(--myrmex-sidebar-text);
-	/* Subtle resting background so each row is visually defined. */
-	background-color: color-mix(in srgb, var(--myrmex-sidebar-background) 96%, var(--myrmex-border));
-	border: 1px solid transparent;
-	transition: background-color var(--myrmex-transition), border-color var(--myrmex-transition),
-		color var(--myrmex-transition);
+	background-color: transparent;
+	transition: background-color var(--myrmex-transition), color var(--myrmex-transition);
 }
 
 .myrmex-enabled .desk-sidebar .standard-sidebar-item:hover {
 	background-color: var(--myrmex-sidebar-hover);
-	border-color: var(--myrmex-border);
 }
 
 .myrmex-enabled .desk-sidebar .item-anchor {
