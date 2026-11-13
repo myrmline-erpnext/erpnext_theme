@@ -142,7 +142,7 @@
 .myrmex-enabled .desk-sidebar .sidebar-item-container {
 	position: relative;
 	/* Default stacking order; raised when its dropdown is open (see below). */
-	z-index: 0;
+	z-index: -1000;
 }
 
 /* When a dropdown is open, pop the whole container above the sidebar panel
