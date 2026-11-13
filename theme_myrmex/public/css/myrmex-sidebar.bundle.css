@@ -31,9 +31,6 @@
 		border: 1px solid var(--myrmex-border);
 		border-radius: var(--myrmex-card-radius);
 		box-shadow: var(--myrmex-shadow);
-		/* z-index creates a stacking context so sidebar dropdowns (z-index 1100+)
-		 * always paint above the main workspace content column. */
-		z-index: 10;
 		/* Do NOT set overflow-x: hidden here — it creates a clip boundary that
 		 * swallows the absolutely-positioned .dropdown-list when it is opened.
 		 * Text overflow is already controlled by text-overflow: ellipsis on
@@ -142,13 +139,16 @@
 .myrmex-enabled .desk-sidebar .sidebar-item-container {
 	position: relative;
 	/* Default stacking order; raised when its dropdown is open (see below). */
-	z-index: 134440;
+	z-index: 0;
 }
 
-/* When a dropdown is open, pop the whole container above the sidebar panel
- * and all workspace content so the card is never clipped or buried. */
+/* When a dropdown is open: break the container out of any parent stacking
+ * context and push it to the absolute maximum z-index (2^31 − 1) so the
+ * card paints above every Frappe panel, modal backdrop, and Bootstrap layer.
+ * position: relative is required for z-index to take effect.               */
 .myrmex-enabled .desk-sidebar .sidebar-item-container:has(.dropdown-list:not(.hidden)) {
-	z-index: 1200;
+	z-index: 2147483647;
+	isolation: auto;
 }
 
 .myrmex-enabled .desk-sidebar .standard-sidebar-item {
@@ -271,6 +271,29 @@
 	transition: none;
 }
 
+/* Drag handle and settings (dot) buttons */
+.myrmex-enabled .desk-sidebar .sidebar-item-control .drag-handle,
+.myrmex-enabled .desk-sidebar .sidebar-item-control .setting-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 26px;
+	height: 26px;
+	padding: 0;
+	border: none;
+	border-radius: var(--myrmex-radius-sm);
+	background: transparent;
+	color: var(--myrmex-muted);
+	cursor: pointer;
+	transition: background-color var(--myrmex-transition), color var(--myrmex-transition);
+}
+
+.myrmex-enabled .desk-sidebar .sidebar-item-control .drag-handle:hover,
+.myrmex-enabled .desk-sidebar .sidebar-item-control .setting-btn:hover {
+	background-color: color-mix(in srgb, var(--myrmex-sidebar-hover) 80%, var(--myrmex-border));
+	color: var(--myrmex-sidebar-text);
+}
+
 .myrmex-enabled .desk-sidebar .sidebar-item-control .drop-icon {
 	color: var(--myrmex-muted);
 	border-radius: var(--myrmex-radius-xs);
@@ -287,8 +310,8 @@
 	position: absolute;
 	inset-inline-end: 0;
 	top: calc(100% + 6px);
-	/* Above modals (1050), navbar (1030), dropdowns (1020) */
-	z-index: 1100;
+	/* Maximum possible z-index — in front of absolutely everything */
+	z-index: 2147483647;
 	min-width: 180px;
 	padding: 6px;
 	/* Override any inherited visibility: hidden from the control row */
