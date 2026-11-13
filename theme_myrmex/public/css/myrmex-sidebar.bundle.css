@@ -220,10 +220,22 @@
 	background-color: var(--myrmex-sidebar-active);
 }
 
+/* Controls: hidden at rest, revealed when the row is hovered or keyboard-focused.
+ * We set both directions explicitly so Frappe's native opacity-0/opacity-1
+ * rules cannot fight us regardless of specificity order. */
 .myrmex-enabled .desk-sidebar .sidebar-item-control {
-	display: flex;
+	display: flex !important;
 	align-items: center;
 	padding-inline-end: var(--myrmex-space-1);
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity var(--myrmex-transition);
+}
+
+.myrmex-enabled .desk-sidebar .standard-sidebar-item:hover .sidebar-item-control,
+.myrmex-enabled .desk-sidebar .standard-sidebar-item:focus-within .sidebar-item-control {
+	opacity: 1 !important;
+	pointer-events: auto;
 }
 
 .myrmex-enabled .desk-sidebar .sidebar-item-control .drop-icon {
