@@ -3,7 +3,7 @@ name = "theme_myrmex"
 authors = [
     { name = "Myrmex", email = "hello@example.com" }
 ]
-description = "Modern UI/UX theme layer for ERPNext v15"
+description = "Modern UI/UX theme and permission-aware AI assistant for ERPNext v15"
 requires-python = ">=3.10"
 readme = "README.md"
 dynamic = ["version"]

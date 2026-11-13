@@ -1,14 +1,14 @@
 // Theme Myrmex — Desk bundle entry.
+// esbuild builds this into assets/theme_myrmex/dist/js/myrmex.bundle.js; the
+// app_include_js hook loads it after Frappe's own bundles.
 //
-// Import order is the initialisation order: utils create the namespace, compat
-// works out which Desk shell we are in, theme paints the variables, and the
-// surface modules attach. Logout is loaded early and is independent of the
-// rest, so a styling problem can never take the session controls with it.
+// Import order is the initialisation order: utils create the namespace, theme
+// paints the variables, then the individual surfaces attach, and the
+// assistant mounts last.
 
 import "./myrmex-utils.js";
-import "./myrmex-compat.js";
 import "./myrmex-theme.js";
-import "./myrmex-logout.js";
 import "./myrmex-sidebar.js";
 import "./myrmex-navbar.js";
 import "./myrmex-workspace.js";
+import "./myrmex-chatbot.js";

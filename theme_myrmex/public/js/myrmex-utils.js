@@ -6,7 +6,7 @@
 
 const myrmex = (window.myrmex = window.myrmex || {});
 
-myrmex.version = "1.0.0";
+myrmex.version = "1.1.0";
 myrmex.ROOT = document.documentElement;
 
 // --- one-time guards -------------------------------------------------------
@@ -138,7 +138,59 @@ myrmex.storage = {
 	},
 };
 
+/** Same API as myrmex.storage, but cleared when the tab closes. */
+myrmex.sessionStore = {
+	get(key, fallback) {
+		try {
+			const value = window.sessionStorage.getItem(`myrmex:${key}`);
+			return value === null ? fallback : JSON.parse(value);
+		} catch (error) {
+			return fallback;
+		}
+	},
+	set(key, value) {
+		try {
+			window.sessionStorage.setItem(`myrmex:${key}`, JSON.stringify(value));
+		} catch (error) {
+			// Storage unavailable: the value lives for this page view only.
+		}
+	},
+	remove(key) {
+		try {
+			window.sessionStorage.removeItem(`myrmex:${key}`);
+		} catch (error) {
+			// Nothing to clean up.
+		}
+	},
+};
+
 myrmex.isMobile = () => window.matchMedia("(max-width: 991px)").matches;
+
+/** The wrapper element of the page Frappe is currently showing. */
+myrmex.currentPage = function () {
+	const page = window.frappe && frappe.container && frappe.container.page;
+	if (page && page.nodeType === 1) return page;
+	return document.querySelector("#body .page-container:not([style*='display: none'])");
+};
+
+/**
+ * True when a keystroke belongs to a text field or rich-text editor, so global
+ * shortcuts (Ctrl+B) do not steal it from bold formatting and the like.
+ */
+myrmex.isTypingTarget = function (target) {
+	if (!target || target.nodeType !== 1) return false;
+	if (target.isContentEditable) return true;
+	return !!target.closest("input, textarea, select, [contenteditable=''], [contenteditable='true'], .ql-editor, .ace_editor");
+};
+
+myrmex.escape = function (value) {
+	return String(value === undefined || value === null ? "" : value)
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/"/g, "&quot;")
+		.replace(/'/g, "&#39;");
+};
 
 myrmex.ready = function (fn) {
 	if (document.readyState === "loading") {

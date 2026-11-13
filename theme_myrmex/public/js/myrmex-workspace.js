@@ -10,18 +10,19 @@ myrmex.workspace = {
 	init() {
 		myrmex.onRoute((route) => {
 			const view = (route && route[0]) || "";
+			// Frappe keeps previously visited pages in the DOM, hidden. Always
+			// work inside the page that is showing now.
+			const page = myrmex.currentPage();
+			if (!page) return;
 
-			if (view === "Workspaces" || view === "" || view === "workspace") {
-				this.decorateWorkspace();
-			}
-
-			if (view === "List") this.decorateList();
-			if (view === "Form") this.decorateForm();
+			if (view === "Workspaces" || view === "") this.decorateWorkspace(page);
+			if (view === "List" || view === "Report") this.decorateList(page);
+			if (view === "Form") this.decorateForm(page);
 		});
 	},
 
-	decorateWorkspace() {
-		const main = document.querySelector(".layout-main-section");
+	decorateWorkspace(page) {
+		const main = page.querySelector(".layout-main-section");
 		if (!main) return;
 
 		const tag = () => {
@@ -35,8 +36,8 @@ myrmex.workspace = {
 		myrmex.observe(main, tag);
 	},
 
-	decorateList() {
-		const container = document.querySelector(".layout-main-section");
+	decorateList(page) {
+		const container = page.querySelector(".layout-main-section");
 		if (!container) return;
 
 		myrmex.observe(container, () => {
@@ -54,8 +55,8 @@ myrmex.workspace = {
 		});
 	},
 
-	decorateForm() {
-		const form = document.querySelector(".form-page");
+	decorateForm(page) {
+		const form = page.querySelector(".form-layout");
 		if (!form) return;
 
 		myrmex.observe(form, () => {

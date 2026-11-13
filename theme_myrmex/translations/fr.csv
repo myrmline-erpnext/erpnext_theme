@@ -1,165 +1,202 @@
-400,400
-500,500
-600,600
-700,700
-Accounting,Comptabilité
-Active,Actif
-Advanced,Avancé
-All,Toutes
-Appended after every Myrmex stylesheet. Use it for site-specific tweaks.,Ajouté après chaque feuille de style Myrmex. À utiliser pour les ajustements propres au site.
-Applied the first time a user opens the Desk. Their own choice always wins afterwards.,Appliqué à la première ouverture du Desk. Le choix de l’utilisateur prévaut ensuite toujours.
-"Applies to list view headers, report tables, child-table grids and datatables.","S’applique aux en-têtes des vues liste, aux tableaux de rapport, aux grilles des tableaux enfants et aux datatables."
-"Applies to list views, report tables, child tables and datatables.","S’applique aux vues liste, aux tableaux de rapport, aux tableaux enfants et aux datatables."
-Are you sure you want to log out?,Êtes-vous sûr de vouloir vous déconnecter ?
-Background,Arrière-plan
-Border,Bordure
+0 keeps them until the user deletes them.,0 les conserve jusqu'à ce que l'utilisateur les supprime.
+AI provider,Fournisseur d'IA
+API endpoint,Point de terminaison de l'API
+Accent colour,Couleur d'accent
+Accent edge,Liseré d'accent
+"Add at least one page pattern, or show the assistant everywhere.","Ajoutez au moins un modèle de page, ou affichez l'assistant partout."
+All borders,Toutes les bordures
+Allowed roles,Rôles autorisés
+Application context,Contexte de l'application
+"Applies to list views, report views, child tables and grids.","S'applique aux vues liste, aux vues rapport, aux tableaux enfants et aux grilles."
+Ask a question…,Posez une question…
+Assistant hidden for this session. Open it again from your user menu.,Assistant masqué pour cette session. Rouvrez-le depuis votre menu utilisateur.
+Assistant is typing,L'assistant écrit
+Assistant message bubble,Bulle des messages de l'assistant
+Assistant name,Nom de l'assistant
+Assistant not ready,Assistant non prêt
+Assistant said:,L'assistant a dit :
+Azure OpenAI needs the full chat completions URL as the API endpoint.,Azure OpenAI nécessite l'URL complète de chat/completions comme point de terminaison.
+Back to conversation,Retour à la conversation
+Background tint,Teinte de fond
+Between 0 and 50.,Entre 0 et 50.
+Border colour,Couleur des bordures
+Border width (px),Épaisseur des bordures (px)
 Borders,Bordures
-Button height (px),Hauteur des boutons (px)
-Button label weight,Graisse du texte des boutons
-Button radius (px),Rayon des boutons (px)
+Borders and spacing,Bordures et espacement
+Bottom left,En bas à gauche
+Bottom right,En bas à droite
 Buttons,Boutons
-Cancel,Annuler
-Card padding (px),Marge intérieure des cartes (px)
-Card radius (px),Rayon des cartes (px)
-Cards,Cartes
 Cell padding (px),Marge intérieure des cellules (px)
-Changes preview on the right. Nothing is applied to the Desk until you save.,Les modifications s’affichent à droite. Rien n’est appliqué au Desk tant que vous n’avez pas enregistré.
-Clear,Effacer
-Colours,Couleurs
-"Colours, sizes and behaviour for the Theme Myrmex UI layer.","Couleurs, tailles et comportement de la couche d’interface Theme Myrmex."
-Comfortable,Confortable
-Compact,Compact
-Could not log out. Check your connection and try again.,Impossible de se déconnecter. Vérifiez votre connexion et réessayez.
-Create,Créer
-Custom,Personnalisé
-Custom CSS,CSS personnalisé
-Customer,Client
-Customers,Clients
-Dark,Sombre
-Dark background,Arrière-plan sombre
-Dark border,Bordure sombre
-Dark Mode,Mode sombre
-Dark surface,Surface sombre
-Dark text,Texte sombre
-Date,Date
-Default appearance,Apparence par défaut
-Density,Densité
-derived,déduit
-Discard changes,Annuler les modifications
-Enable Theme Myrmex,Activer Theme Myrmex
-Enter a hex colour like #1DA1F2,"Saisissez une couleur hexadécimale, par exemple #1DA1F2"
-Error,Erreur
-Filter,Filtrer
-Forms,Formulaires
-General,Général
-Header background,Arrière-plan de l’en-tête
-Header font size (px),Taille de police de l’en-tête (px)
-Header text,Texte de l’en-tête
-Height (px),Hauteur (px)
-Home,Accueil
-Horizontal,Horizontales
-Horizontal draws row separators only — usually the quietest choice.,« Horizontales » ne trace que les séparateurs de lignes — en général le choix le plus discret.
+Centre,Au centre
+Chatbot Conversation,Conversation de l'assistant
+Chatbot Message,Message de l'assistant
+Chatbot Settings,Paramètres de l'assistant
+Chatbot Settings has not been created yet.,Les paramètres de l'assistant n'ont pas encore été créés.
+Chatbot Suggestion,Suggestion de l'assistant
+Close assistant,Fermer l'assistant
+Collapse sidebar,Réduire la barre latérale
+Connection failed,Échec de la connexion
+Connection works,La connexion fonctionne
+Contacting the AI provider,Contact du fournisseur d'IA
+Conversation history,Historique des conversations
+Conversation history is turned off on this site.,L'historique des conversations est désactivé sur ce site.
+Conversations kept per user,Conversations conservées par utilisateur
+Corner radius (px),Arrondi des coins (px)
+Could not load this conversation. Check your connection and try again.,Impossible de charger cette conversation. Vérifiez votre connexion et réessayez.
+Could not load your conversations.,Impossible de charger vos conversations.
+Current page and module,Page et module actuels
+Delete all conversations,Supprimer toutes les conversations
+Delete all your conversations with the assistant?,Supprimer toutes vos conversations avec l'assistant ?
+Delete conversation,Supprimer la conversation
+Delete idle conversations after (days),Supprimer les conversations inactives après (jours)
+Delete this conversation? This cannot be undone.,Supprimer cette conversation ? Cette action est irréversible.
+Document: form views. List: list and report views.,Document : vues formulaire. Liste : vues liste et rapport.
+Don't share,Ne pas partager
+Edges,Aux extrémités
+Empty shows the suggestion in every language.,Vide : la suggestion s'affiche dans toutes les langues.
+Enable assistant,Activer l'assistant
+"Enter to send, Shift+Enter for a new line","Entrée pour envoyer, Maj+Entrée pour aller à la ligne"
+Everywhere,Partout
+Everywhere except listed pages,Partout sauf sur les pages listées
+Expand sidebar,Développer la barre latérale
+Fields of the open document,Champs du document ouvert
+Fill in {0} before enabling the assistant.,Renseignez {0} avant d'activer l'assistant.
+Header,En-tête
+Header background,Fond de l'en-tête
+Header text,Texte de l'en-tête
+Header weight,Graisse de l'en-tête
+Hello {0}! How can I help you today?,Bonjour {0} ! Comment puis-je vous aider aujourd'hui ?
+Hello! How can I help you today?,Bonjour ! Comment puis-je vous aider aujourd'hui ?
+Horizontal lines,Lignes horizontales
 Hover,Survol
-Icon,Icône
-Input height (px),Hauteur des champs (px)
-Input radius (px),Rayon des champs (px)
-Keep header visible,Garder l’en-tête visible
-Label weight,Graisse du libellé
-Large,Grande
-Last week,La semaine dernière
-Leave a colour empty to derive it from the palette.,Laissez une couleur vide pour la déduire de la palette.
-Leave empty to derive it from the palette.,Laissez vide pour la déduire de la palette.
-Light,Clair
-Loading theme,Chargement du thème
-Logging out...,Déconnexion en cours…
-Logout failed,Échec de la déconnexion
-Medium,Moyenne
-Muted text,Texte atténué
-Myrmex Blue,Myrmex Blue
-Myrmex Dark,Myrmex Dark
-Myrmex Default,Myrmex Default
-Myrmex Enterprise,Myrmex Enterprise
-Myrmex Minimal,Myrmex Minimal
-Myrmex styling stops after you save and reload.,La mise en forme Myrmex cessera après l’enregistrement et le rechargement.
-Navbar,Barre de navigation
-Navbar background,Arrière-plan de la barre de navigation
-Navbar border,Bordure de la barre de navigation
-Navbar height (px),Hauteur de la barre de navigation (px)
-Navbar text,Texte de la barre de navigation
-None,Aucune
-Open Theme Builder,Ouvrir le générateur de thème
-Open Theme Settings,Ouvrir les paramètres du thème
-Padding (px),Marge intérieure (px)
-Pending,En attente
-Preset,Préréglage
-Presets,Préréglages
-Primary,Principal
-Primary colour,Couleur principale
-Quotations,Devis
-Radius (px),Rayon (px)
-Replace the current palette with Myrmex Default?,Remplacer la palette actuelle par Myrmex Default ?
-Reset,Réinitialiser
-Reset to default,Réinitialiser aux valeurs par défaut
-Reset to Myrmex Default,Réinitialiser à Myrmex Default
-Resetting theme,Réinitialisation du thème
-Row height (px),Hauteur de ligne (px)
-Row hover,Survol de ligne
-Sales Orders,Commandes clients
-Save,Enregistrer
-Save theme,Enregistrer le thème
-Saved,Enregistré
-Saving theme,Enregistrement du thème
-Search,Rechercher
-Search background,Arrière-plan de la recherche
-Secondary,Secondaire
-Secondary colour,Couleur secondaire
-Selling,Ventes
-Settings,Paramètres
-Shadow,Ombre
-Sidebar,Barre latérale
-Sidebar active,Élément actif de la barre latérale
-Sidebar background,Arrière-plan de la barre latérale
-Sidebar hover,Survol dans la barre latérale
-Sidebar icon,Icône de la barre latérale
-Sidebar text,Texte de la barre latérale
-Sidebar width (px),Largeur de la barre latérale (px)
-Small,Petite
-Space between sections (px),Espace entre les sections (px)
-Start collapsed,Démarrer replié
-Status,Statut
-Stock,Stock
-Stripe,Rayure
-Stripe colour,Couleur des rayures
+Hover background,Fond au survol
+Invalid message role: {0},Rôle de message invalide : {0}
+Keep conversation history,Conserver l'historique des conversations
+Last message,Dernier message
+Leave a colour empty to follow the active Myrmex theme.,Laissez une couleur vide pour suivre le thème Myrmex actif.
+Leave empty for the provider's default. Azure: the full chat/completions URL including api-version.,Laissez vide pour la valeur par défaut du fournisseur. Azure : l'URL chat/completions complète avec api-version.
+Leave empty to allow every Desk user. Portal (website) users never see the assistant.,Laissez vide pour autoriser tous les utilisateurs du Desk. Les utilisateurs du portail ne voient jamais l'assistant.
+Maximum document fields,Nombre maximal de champs du document
+Maximum message length (characters),Longueur maximale d'un message (caractères)
+Maximum reply tokens,Nombre maximal de jetons de réponse
+Messages per conversation,Messages par conversation
+Messages per user per day,Messages par utilisateur par jour
+Messages per user per minute,Messages par utilisateur par minute
+Minimal,Minimal
+Minimize,Réduire
+Myrmex Assistant,Assistant Myrmex
+Never share these DocTypes,Ne jamais partager ces DocTypes
+New conversation,Nouvelle conversation
+New {0},Nouveau {0}
+No saved conversations yet.,Aucune conversation enregistrée pour l'instant.
+"One Desk route per line, * as wildcard. Examples: Form/Sales Order/*, List/*, Workspaces/Selling","Une route du Desk par ligne, * comme joker. Exemples : Form/Sales Order/*, List/*, Workspaces/Selling"
+"One DocType per line. User, credentials, logs and the assistant's own records are always excluded.","Un DocType par ligne. Les utilisateurs, identifiants, journaux et enregistrements de l'assistant sont toujours exclus."
+Only on listed pages,Uniquement sur les pages listées
+Open assistant,Ouvrir l'assistant
+Open automatically when the Desk loads,Ouvrir automatiquement au chargement du Desk
+Open once right after login,Ouvrir une fois juste après la connexion
+Open {0},Ouvrir {0}
+"OpenAI Compatible also covers Ollama, vLLM, LM Studio, Mistral, Groq and similar services.","OpenAI Compatible couvre aussi Ollama, vLLM, LM Studio, Mistral, Groq et services similaires."
+Page not shared,Page non partagée
+Page patterns,Modèles de pages
+Pagination alignment,Alignement de la pagination
+Pagination style,Style de pagination
+Panel background,Arrière-plan du panneau
+Panel height (px),Hauteur du panneau (px)
+Panel width (px),Largeur du panneau (px)
+Pills,Pastilles
+Please log in to use the assistant.,Connectez-vous pour utiliser l'assistant.
+Previous messages sent with each question,Messages précédents envoyés avec chaque question
+Prompt sent,Invite envoyée
+Prompt tokens,Jetons d'invite
+Provider latency (ms),Latence du fournisseur (ms)
+"Put credentials in the API key field, not in the endpoint URL.","Mettez les identifiants dans le champ Clé API, pas dans l'URL."
+Replace the suggestion table with the default prompts?,Remplacer le tableau des suggestions par les invites par défaut ?
+Reply language,Langue des réponses
+Reply tokens,Jetons de réponse
+Request timeout (seconds),Délai d'expiration de la requête (secondes)
+Restore default suggestions,Restaurer les suggestions par défaut
+"Rounding of report tables, child tables and grids. List views follow the card radius.","Arrondi des tableaux de rapport, des tableaux enfants et des grilles. Les vues liste suivent l'arrondi des cartes."
+Row background,Fond des lignes
+Row height (px),Hauteur des lignes (px)
+Row hover,Survol des lignes
+Row text,Texte des lignes
+Rows,Lignes
+Search or type a command,Rechercher ou saisir une commande
+Selected row,Ligne sélectionnée
+Semibold,Semi-gras
+Send message,Envoyer le message
+Set a model and test the connection before saving.,Définissez un modèle et testez la connexion avant d'enregistrer.
+Share page,Partager la page
+Share this page with the assistant,Partager cette page avec l'assistant
+Show on pages,Afficher sur les pages
+Show only on,Afficher uniquement sur
+Show suggested prompts,Afficher les suggestions
+Show typing indicator,Afficher l'indicateur de saisie
+"Shown when a conversation starts. Leave empty for the built-in, translated greeting.",Affiché au début d'une conversation. Laissez vide pour la salutation intégrée et traduite.
+Something went wrong.,Une erreur s'est produite.
+Spacing,Espacement
+"Square image. Without one, the assistant uses the Myrmex mark with its initial.","Image carrée. Sans image, l'assistant utilise le logo Myrmex avec son initiale."
+Start a conversation,Démarrer une conversation
+Start a new conversation,Démarrer une nouvelle conversation
+Started on page,Commencée sur la page
+Stop sharing this page with the assistant,Ne plus partager cette page avec l'assistant
+Stored encrypted and only used on the server. It is never sent to browsers.,Stockée chiffrée et utilisée uniquement sur le serveur. Elle n'est jamais envoyée aux navigateurs.
+Stripe background,Fond des lignes alternées
 Striped rows,Lignes alternées
-Submit,Valider
-Success,Succès
-Surface,Surface
-System,Système
-Table border,Bordure du tableau
-Tables,Tableaux
-Text,Texte
-The header stays put while the table body scrolls.,L’en-tête reste en place pendant le défilement du tableau.
-Theme Builder,Générateur de thème
-Theme enabled,Thème activé
-"Theme Myrmex supports Frappe v15 and v16. This site reports v{0}, so the theme may not match the Desk.",Theme Myrmex prend en charge Frappe v15 et v16. Ce site indique v{0} ; le thème peut donc ne pas correspondre au Desk.
-Theme reset,Thème réinitialisé
-Theme saved,Thème enregistré
-Theme Settings,Paramètres du thème
+Suggested prompts,Invites suggérées
+Suggested questions,Questions suggérées
+System prompt,Invite système
+Table Styles,Styles de tableau
+Table radius (px),Arrondi des tableaux (px)
+Test connection,Tester la connexion
+That conversation no longer exists.,Cette conversation n'existe plus.
+The AI provider is busy right now. Try again in a minute.,Le fournisseur d'IA est occupé. Réessayez dans une minute.
+The AI provider rejected the assistant's credentials. Ask an administrator to check the API key.,Le fournisseur d'IA a refusé les identifiants de l'assistant. Demandez à un administrateur de vérifier la clé API.
+The AI provider returned an error ({0}).,Le fournisseur d'IA a renvoyé une erreur ({0}).
+The AI provider sent a reply the assistant could not read.,Le fournisseur d'IA a envoyé une réponse illisible pour l'assistant.
+The AI provider sent an unexpectedly large reply.,Le fournisseur d'IA a envoyé une réponse anormalement volumineuse.
+The API endpoint must be a full http(s) URL.,Le point de terminaison doit être une URL http(s) complète.
+The API endpoint uses plain http. Messages and the API key will travel unencrypted.,Le point de terminaison utilise http simple. Les messages et la clé API circuleront sans chiffrement.
+The assistant could not be reached. Check your connection.,Impossible de joindre l'assistant. Vérifiez votre connexion.
+The assistant could not reach the AI provider.,L'assistant n'a pas pu joindre le fournisseur d'IA.
+The assistant has no API endpoint configured.,Aucun point de terminaison n'est configuré pour l'assistant.
+The assistant has no API key configured.,Aucune clé API n'est configurée pour l'assistant.
+The assistant has no model configured.,Aucun modèle n'est configuré pour l'assistant.
+The assistant is turned off.,L'assistant est désactivé.
+The assistant returned an empty answer. Try rephrasing.,L'assistant a renvoyé une réponse vide. Essayez de reformuler.
+The assistant took too long to answer. Try again in a moment.,L'assistant a mis trop de temps à répondre. Réessayez dans un instant.
+The model or deployment name your provider expects.,Le nom du modèle ou du déploiement attendu par votre fournisseur.
+"The page or document the user was on. Only the reference is stored, not its data.","La page ou le document consulté. Seule la référence est stockée, pas ses données."
 Theme updated,Thème mis à jour
-Today,Aujourd’hui
-Toggle dark preview,Basculer l’aperçu sombre
-Toggle sidebar,Afficher/masquer la barre latérale
-Turn the theme off to fall back to the stock ERPNext look without uninstalling the app.,Désactivez le thème pour revenir à l’apparence d’origine d’ERPNext sans désinstaller l’application.
-Unknown preset: {0},Préréglage inconnu : {0}
-Unsaved,Non enregistré
-Unsupported Frappe version,Version de Frappe non prise en charge
+Thinking…,Réflexion…
+This conversation is full. Start a new one to keep going.,Cette conversation est pleine. Démarrez-en une nouvelle pour continuer.
+This page,Cette page
+"Tone, scope and company-specific guidance. Safety and permission rules are always added after it and cannot be removed here.","Ton, périmètre et consignes propres à l'entreprise. Les règles de sécurité et d'autorisation sont toujours ajoutées ensuite et ne peuvent pas être retirées ici."
+Try again,Réessayer
+Turn on after the AI provider below is configured and tested.,Activez après avoir configuré et testé le fournisseur d'IA ci-dessous.
+Type a message first.,Saisissez d'abord un message.
+Unknown AI provider: {0},Fournisseur d'IA inconnu : {0}
+Unknown error,Erreur inconnue
+Untitled conversation,Conversation sans titre
 Uppercase headers,En-têtes en majuscules
-Use transitions,Utiliser les transitions
-Used only when striped rows are on.,Utilisé uniquement lorsque les lignes alternées sont activées.
-v15 only — on v16 the sidebar has its own resize handle.,"v15 uniquement — sur v16, la barre latérale possède sa propre poignée de redimensionnement."
-v15 only. v16 has no top navbar — its shell lives in the sidebar.,v15 uniquement. v16 n’a pas de barre de navigation supérieure : son interface se trouve dans la barre latérale.
-Warning,Avertissement
-Width (px),Largeur (px)
-Yesterday,Hier
-{0} is not a valid hex colour: {1},{0} n’est pas une couleur hexadécimale valide : {1}
-{0} loaded — save to apply,{0} chargé — enregistrez pour appliquer
+Use at most 100 page patterns.,Utilisez au maximum 100 modèles de pages.
+User language,Langue de l'utilisateur
+User language follows each person's language setting in Frappe.,La langue de l'utilisateur suit le réglage de langue de chaque personne dans Frappe.
+User's open assignments (ToDo),Affectations ouvertes de l'utilisateur (ToDo)
+User's recent changes in the current DocType,Modifications récentes de l'utilisateur dans le DocType actuel
+Uses only data you can access,N'utilise que les données auxquelles vous avez accès
+Using: {0},Utilise : {0}
+View conversations,Voir les conversations
+Welcome message,Message d'accueil
+What the assistant may read about the page a user is on. Everything is read with that user's permissions; restricted fields and records are left out.,Ce que l'assistant peut lire de la page consultée. Tout est lu avec les autorisations de l'utilisateur ; les champs et enregistrements restreints sont exclus.
+"When off, nothing is stored on the server and conversations last only for the browser tab.",Désactivé : rien n'est stocké sur le serveur et les conversations ne durent que le temps de l'onglet.
+You are not allowed to use the assistant.,Vous n'êtes pas autorisé à utiliser l'assistant.
+You said:,Vous avez dit :
+"You're sending messages quickly. Wait a minute, then try again.",Vous envoyez des messages trop vite. Patientez une minute puis réessayez.
+You've reached today's message limit. It resets within 24 hours.,Vous avez atteint la limite de messages du jour. Elle se réinitialise sous 24 heures.
+Your message bubble,Bulle de vos messages
+Your message is too long. Keep it under {0} characters.,Votre message est trop long. Limitez-le à {0} caractères.
+{0} answered in {1} ms using {2}.,{0} a répondu en {1} ms avec {2}.
+{0} is not a valid hex colour: {1},{0} n'est pas une couleur hexadécimale valide : {1}
+{0} list,Liste {0}

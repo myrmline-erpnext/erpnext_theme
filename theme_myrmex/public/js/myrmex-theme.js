@@ -12,10 +12,6 @@ myrmex.theme = {
 
 	/** Read the boot payload and apply everything it describes. */
 	init() {
-		// Which shell we are in decides which selectors exist at all, so this
-		// is settled before anything is painted or mounted.
-		myrmex.compat.detect();
-
 		const payload = (frappe.boot && frappe.boot.myrmex_theme) || null;
 		this.apply(payload);
 
@@ -34,10 +30,7 @@ myrmex.theme = {
 
 	apply(payload) {
 		if (!payload || !payload.enabled) {
-			myrmex.ROOT.classList.remove("myrmex-enabled", "myrmex-zebra", "myrmex-table-sticky", "myrmex-table-upper");
-			for (const option of ["all", "horizontal", "none"]) {
-				myrmex.ROOT.classList.remove(`myrmex-table-borders-${option}`);
-			}
+			myrmex.ROOT.classList.remove("myrmex-enabled");
 			const existing = document.getElementById(STYLE_ID);
 			if (existing) existing.remove();
 			return;
@@ -47,25 +40,13 @@ myrmex.theme = {
 		myrmex.ROOT.classList.add("myrmex-enabled");
 		myrmex.ROOT.dataset.myrmexDensity = (payload.density || "Comfortable").toLowerCase();
 		myrmex.ROOT.classList.toggle("myrmex-zebra", !!payload.zebra_tables);
-		this.applyTableFlags(payload);
+		// Table hover and pagination need a selector rather than a variable,
+		// so they travel as attributes on <html>.
+		const table = payload.table || {};
+		myrmex.ROOT.dataset.myrmexTableHover = table.hover || "tint";
+		myrmex.ROOT.dataset.myrmexTablePaging = table.pagination || "pills";
 		this.writeVariables(payload);
 		this.applyDefaultAppearance(payload.appearance);
-	},
-
-	/**
-	 * The three table settings that are not a single value: border style is
-	 * three mutually exclusive rule sets, sticky and uppercase are switches.
-	 * See the class list in myrmex-lists.bundle.css.
-	 */
-	applyTableFlags(payload) {
-		const style = payload.table_border_style || "horizontal";
-
-		for (const option of ["all", "horizontal", "none"]) {
-			myrmex.ROOT.classList.toggle(`myrmex-table-borders-${option}`, option === style);
-		}
-
-		myrmex.ROOT.classList.toggle("myrmex-table-sticky", !!payload.table_sticky_header);
-		myrmex.ROOT.classList.toggle("myrmex-table-upper", !!payload.table_header_uppercase);
 	},
 
 	writeVariables(payload) {
@@ -106,14 +87,20 @@ myrmex.theme = {
 		const target = { Light: "light", Dark: "dark", System: "automatic" }[appearance];
 		if (!target) return;
 
+		// Frappe v15 stores "Light" for everyone who never opened the theme
+		// switcher, so only a different value is treated as a deliberate choice.
 		const userChoice = frappe.boot && frappe.boot.user && frappe.boot.user.desk_theme;
-		if (userChoice) {
+		if (userChoice && userChoice !== "Light") {
 			myrmex.storage.set("appearance-applied", true);
 			return;
 		}
 
+		// Frappe v15's set_theme(theme) writes its argument straight into
+		// data-theme, so passing "automatic" would leave the page with neither a
+		// light nor a dark palette. Set the mode, then let Frappe resolve it.
+		myrmex.ROOT.setAttribute("data-theme-mode", target);
 		if (frappe.ui && typeof frappe.ui.set_theme === "function") {
-			frappe.ui.set_theme(target);
+			frappe.ui.set_theme();
 		} else {
 			myrmex.ROOT.setAttribute("data-theme", target === "automatic" ? this.systemTheme() : target);
 		}

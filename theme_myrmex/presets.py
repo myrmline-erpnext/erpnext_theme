@@ -26,32 +26,14 @@ COLOR_VARIABLE_MAP = {
 	"navbar_text": "--myrmex-navbar-text",
 	"navbar_border": "--myrmex-navbar-border",
 	"navbar_search_background": "--myrmex-navbar-search-background",
-	# Tables. Dark-mode equivalents are derived from the resolved dark surfaces
-	# in api.build_payload, not carried over from these light values.
 	"table_header_background": "--myrmex-table-header-bg",
 	"table_header_text": "--myrmex-table-header-text",
+	"table_row_background": "--myrmex-table-row-bg",
+	"table_row_text": "--myrmex-table-row-text",
+	"table_stripe_background": "--myrmex-table-stripe-bg",
+	"table_row_hover": "--myrmex-table-hover-bg",
+	"table_selected_background": "--myrmex-table-selected-bg",
 	"table_border_color": "--myrmex-table-border",
-	"table_row_hover": "--myrmex-table-row-hover",
-	"table_stripe_color": "--myrmex-table-stripe",
-}
-
-# Table colours are re-derived for dark mode rather than inherited, so they are
-# listed here to keep build_payload honest about which is which.
-TABLE_COLOR_FIELDS = (
-	"table_header_background",
-	"table_header_text",
-	"table_border_color",
-	"table_row_hover",
-	"table_stripe_color",
-)
-
-# Optional dark-mode overrides. Left empty, the derived DARK_SURFACES value is
-# used; set, they replace it. This is what the Dark Mode tab edits.
-DARK_OVERRIDE_MAP = {
-	"dark_background_color": "--myrmex-background",
-	"dark_surface_color": "--myrmex-surface",
-	"dark_text_color": "--myrmex-text",
-	"dark_border_color": "--myrmex-border",
 }
 
 # Numeric fields -> CSS custom property. Emitted once, shared by both schemes.
@@ -62,17 +44,9 @@ SIZE_VARIABLE_MAP = {
 	"button_radius": "--myrmex-button-radius",
 	"input_radius": "--myrmex-input-radius",
 	"card_padding": "--myrmex-card-padding",
-	"button_height": "--myrmex-button-height",
-	"input_height": "--myrmex-input-height",
-	"form_section_spacing": "--myrmex-form-section-gap",
+	"table_radius": "--myrmex-table-radius",
 	"table_row_height": "--myrmex-table-row-height",
 	"table_cell_padding": "--myrmex-table-cell-padding",
-	"table_header_font_size": "--myrmex-table-header-size",
-}
-
-# Emitted as-is rather than with a px suffix.
-UNITLESS_VARIABLE_MAP = {
-	"button_font_weight": "--myrmex-button-weight",
 }
 
 SHADOWS = {
@@ -98,6 +72,74 @@ SHADOWS = {
 	},
 }
 
+# Sane ranges for the numeric fields, shared by the Theme Settings validation
+# and by payload building, so a value typed into the form and a value set by a
+# script are clamped the same way.
+NUMBER_BOUNDS = {
+	"sidebar_width": (180, 380),
+	"navbar_height": (48, 88),
+	"card_radius": (0, 32),
+	"button_radius": (0, 32),
+	"input_radius": (0, 32),
+	"card_padding": (8, 40),
+	"table_radius": (0, 24),
+	"table_row_height": (28, 64),
+	"table_cell_padding": (4, 28),
+	"table_border_width": (0, 3),
+}
+
+# Non-colour, non-numeric fields that still change how the Desk looks. Used to
+# tell whether the saved values still match the chosen preset.
+CHOICE_FIELDS = (
+	"shadow_size",
+	"density",
+	"table_header_weight",
+	"table_header_uppercase",
+	"table_hover_effect",
+	"table_border_style",
+	"table_pagination_style",
+	"table_pagination_align",
+	"zebra_tables",
+)
+
+# Header weight choices, as font-weight values.
+TABLE_HEADER_WEIGHTS = {
+	"Regular": "420",
+	"Medium": "500",
+	"Semibold": "600",
+}
+
+# Which edges the border width applies to. "Horizontal lines" keeps the row
+# rules and drops the cell separators, which is the default table look.
+TABLE_BORDER_EDGES = {
+	"All": ("row", "cell"),
+	"Horizontal": ("row",),
+	"None": (),
+}
+
+# justify-content for the pagination bar. "Edges" keeps Frappe's own split of
+# page-size buttons on one side and "Load more" on the other.
+TABLE_PAGINATION_ALIGN = {
+	"Edges": "space-between",
+	"Left": "flex-start",
+	"Centre": "center",
+	"Right": "flex-end",
+}
+
+# Values written to data attributes on <html> for the rules that need a
+# selector rather than a variable.
+TABLE_HOVER_MODES = {
+	"None": "none",
+	"Background tint": "tint",
+	"Accent edge": "accent",
+}
+
+TABLE_PAGINATION_STYLES = {
+	"Pills": "pills",
+	"Buttons": "buttons",
+	"Minimal": "minimal",
+}
+
 # Surfaces used when the Desk is in dark mode. Accent colours (primary,
 # secondary, success, warning, error) are carried over from the user's palette,
 # so a custom brand colour stays recognisable in dark mode.
@@ -115,6 +157,16 @@ DARK_SURFACES = {
 	"--myrmex-navbar-text": "#E5E7EB",
 	"--myrmex-navbar-border": "#272D3A",
 	"--myrmex-navbar-search-background": "#1C202A",
+	# Table colours follow the dark surfaces too: a light custom header or row
+	# colour would be unreadable here. The accent-derived selected row is
+	# rebuilt from the user's primary colour in api.build_payload.
+	"--myrmex-table-header-bg": "#1C202A",
+	"--myrmex-table-header-text": "#9AA3B2",
+	"--myrmex-table-row-bg": "#171A21",
+	"--myrmex-table-row-text": "#E5E7EB",
+	"--myrmex-table-stripe-bg": "#1B2029",
+	"--myrmex-table-hover-bg": "#1F2430",
+	"--myrmex-table-border": "#272D3A",
 }
 
 # The Myrmex Default palette doubles as the fallback for any empty field.
@@ -152,29 +204,24 @@ DEFAULTS = {
 	"input_radius": 8,
 	"card_padding": 20,
 	"shadow_size": "Medium",
-	# Buttons
-	"button_height": 32,
-	"button_font_weight": "500",
-	# Forms
-	"input_height": 32,
-	"form_section_spacing": 16,
-	# Tables
 	"table_header_background": "#FBFBFC",
 	"table_header_text": "#6B7280",
-	"table_border_color": "#E5E7EB",
-	"table_row_hover": "#F7F7F9",
-	"table_stripe_color": "#FAFAFB",
-	"table_row_height": 42,
-	"table_cell_padding": 12,
-	"table_header_font_size": 12,
-	"table_border_style": "Horizontal",
-	"table_sticky_header": 1,
+	"table_header_weight": "Semibold",
 	"table_header_uppercase": 0,
-	# Dark mode overrides (empty = derive from the palette)
-	"dark_background_color": "",
-	"dark_surface_color": "",
-	"dark_text_color": "",
-	"dark_border_color": "",
+	"table_row_background": "#FFFFFF",
+	"table_row_text": "#111827",
+	"table_stripe_background": "#F8F8FA",
+	"table_row_hover": "#F6F7F9",
+	"table_selected_background": "#E8F5FE",
+	"table_hover_effect": "Background tint",
+	"table_border_style": "Horizontal",
+	"table_border_color": "#E5E7EB",
+	"table_border_width": 1,
+	"table_radius": 10,
+	"table_row_height": 42,
+	"table_cell_padding": 16,
+	"table_pagination_style": "Pills",
+	"table_pagination_align": "Edges",
 }
 
 
@@ -188,10 +235,6 @@ PRESETS = {
 	"Myrmex Default": _preset(),
 	"Myrmex Blue": _preset(
 		theme_preset="Myrmex Blue",
-		table_header_background="#EEF3FF",
-		table_header_text="#2563EB",
-		table_row_hover="#F5F8FF",
-		table_stripe_color="#FAFCFF",
 		primary_color="#2563EB",
 		secondary_color="#1E3A8A",
 		background_color="#F4F7FE",
@@ -202,14 +245,15 @@ PRESETS = {
 		card_radius=16,
 		button_radius=10,
 		input_radius=10,
+		table_header_background="#F7FAFF",
+		table_row_hover="#EEF3FF",
+		table_stripe_background="#F9FBFF",
+		table_selected_background="#E3ECFF",
+		table_border_color="#E3E8F4",
+		table_radius=12,
 	),
 	"Myrmex Dark": _preset(
 		theme_preset="Myrmex Dark",
-		table_header_background="#1C202A",
-		table_header_text="#9AA3B2",
-		table_border_color="#272D3A",
-		table_row_hover="#1C202A",
-		table_stripe_color="#191D26",
 		default_appearance="Dark",
 		primary_color="#38BDF8",
 		secondary_color="#818CF8",
@@ -227,19 +271,17 @@ PRESETS = {
 		navbar_text="#E5E7EB",
 		navbar_border="#272D3A",
 		navbar_search_background="#1C202A",
+		table_header_background="#1C202A",
+		table_header_text="#9AA3B2",
+		table_row_background="#171A21",
+		table_row_text="#E5E7EB",
+		table_stripe_background="#1B2029",
+		table_row_hover="#1F2430",
+		table_selected_background="#1E3A4C",
+		table_border_color="#272D3A",
 	),
 	"Myrmex Minimal": _preset(
 		theme_preset="Myrmex Minimal",
-		table_header_background="#FFFFFF",
-		table_header_text="#111827",
-		table_border_color="#E7E7E9",
-		table_row_hover="#F4F4F5",
-		table_border_style="Horizontal",
-		table_row_height=36,
-		table_cell_padding=8,
-		button_height=30,
-		input_height=30,
-		form_section_spacing=12,
 		primary_color="#111827",
 		secondary_color="#374151",
 		background_color="#FFFFFF",
@@ -255,18 +297,19 @@ PRESETS = {
 		card_padding=16,
 		shadow_size="None",
 		density="Compact",
+		table_header_background="#FFFFFF",
+		table_stripe_background="#FAFAFA",
+		table_row_hover="#F4F4F5",
+		table_selected_background="#EFEFF1",
+		table_border_color="#E7E7E9",
+		table_border_width=1,
+		table_radius=6,
+		table_row_height=36,
+		table_cell_padding=12,
+		table_pagination_style="Minimal",
 	),
 	"Myrmex Enterprise": _preset(
 		theme_preset="Myrmex Enterprise",
-		table_header_background="#F2F4F8",
-		table_header_text="#4D5358",
-		table_border_color="#DDE1E6",
-		table_row_hover="#EDF1F7",
-		table_stripe_color="#F8F9FB",
-		table_border_style="All",
-		table_header_uppercase=1,
-		zebra_tables=1,
-		button_font_weight="600",
 		primary_color="#0F62FE",
 		secondary_color="#0043CE",
 		background_color="#F2F4F8",
@@ -283,6 +326,18 @@ PRESETS = {
 		button_radius=6,
 		input_radius=6,
 		shadow_size="Small",
+		table_header_background="#F2F4F8",
+		table_header_text="#4D5358",
+		table_header_uppercase=1,
+		table_row_hover="#EDF1F8",
+		table_stripe_background="#F7F9FC",
+		table_selected_background="#D9E7FF",
+		table_border_style="All",
+		table_border_color="#DDE1E6",
+		table_radius=4,
+		table_row_height=38,
+		table_cell_padding=14,
+		table_pagination_style="Buttons",
 	),
 }
 

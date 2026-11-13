@@ -12,6 +12,7 @@
   "enable_theme",
   "theme_preset",
   "general_col_1",
+  "default_appearance",
   "density",
   "enable_animations",
   "colors_section",
@@ -43,43 +44,38 @@
   "navbar_border",
   "navbar_search_background",
   "navbar_height",
-  "cards_section",
+  "components_section",
   "card_radius",
-  "card_padding",
-  "cards_col_1",
-  "shadow_size",
-  "buttons_section",
   "button_radius",
-  "button_height",
-  "buttons_col_1",
-  "button_font_weight",
-  "forms_section",
   "input_radius",
-  "input_height",
-  "forms_col_1",
-  "form_section_spacing",
+  "components_col_1",
+  "card_padding",
+  "shadow_size",
   "tables_section",
   "table_header_background",
   "table_header_text",
-  "table_border_color",
+  "table_header_weight",
+  "table_header_uppercase",
   "tables_col_1",
-  "table_row_hover",
-  "table_stripe_color",
+  "table_row_background",
+  "table_row_text",
   "zebra_tables",
+  "table_stripe_background",
   "tables_col_2",
+  "table_hover_effect",
+  "table_row_hover",
+  "table_selected_background",
+  "tables_borders_section",
+  "table_border_style",
+  "table_border_color",
+  "table_border_width",
+  "tables_borders_col_1",
+  "table_radius",
   "table_row_height",
   "table_cell_padding",
-  "table_header_font_size",
-  "table_border_style",
-  "table_sticky_header",
-  "table_header_uppercase",
-  "dark_mode_section",
-  "default_appearance",
-  "dark_background_color",
-  "dark_surface_color",
-  "dark_col_1",
-  "dark_text_color",
-  "dark_border_color",
+  "tables_borders_col_2",
+  "table_pagination_style",
+  "table_pagination_align",
   "advanced_section",
   "custom_css"
  ],
@@ -106,6 +102,14 @@
   {
    "fieldname": "general_col_1",
    "fieldtype": "Column Break"
+  },
+  {
+   "default": "System",
+   "description": "Applied the first time a user opens the Desk. Their own choice always wins afterwards.",
+   "fieldname": "default_appearance",
+   "fieldtype": "Select",
+   "label": "Default appearance",
+   "options": "Light\nDark\nSystem"
   },
   {
    "default": "Comfortable",
@@ -234,7 +238,6 @@
   },
   {
    "default": "260",
-   "description": "v15 only \u2014 on v16 the sidebar has its own resize handle.",
    "fieldname": "sidebar_width",
    "fieldtype": "Int",
    "label": "Sidebar width (px)",
@@ -281,16 +284,15 @@
   },
   {
    "default": "60",
-   "description": "v15 only. v16 has no top navbar \u2014 its shell lives in the sidebar.",
    "fieldname": "navbar_height",
    "fieldtype": "Int",
    "label": "Navbar height (px)",
    "non_negative": 1
   },
   {
-   "fieldname": "cards_section",
+   "fieldname": "components_section",
    "fieldtype": "Section Break",
-   "label": "Cards"
+   "label": "Components"
   },
   {
    "default": "14",
@@ -300,57 +302,11 @@
    "non_negative": 1
   },
   {
-   "default": "20",
-   "fieldname": "card_padding",
-   "fieldtype": "Int",
-   "label": "Card padding (px)",
-   "non_negative": 1
-  },
-  {
-   "fieldname": "cards_col_1",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "Medium",
-   "fieldname": "shadow_size",
-   "fieldtype": "Select",
-   "label": "Shadow",
-   "options": "None\nSmall\nMedium\nLarge"
-  },
-  {
-   "fieldname": "buttons_section",
-   "fieldtype": "Section Break",
-   "label": "Buttons"
-  },
-  {
    "default": "8",
    "fieldname": "button_radius",
    "fieldtype": "Int",
    "label": "Button radius (px)",
    "non_negative": 1
-  },
-  {
-   "default": "32",
-   "fieldname": "button_height",
-   "fieldtype": "Int",
-   "label": "Button height (px)",
-   "non_negative": 1
-  },
-  {
-   "fieldname": "buttons_col_1",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "500",
-   "fieldname": "button_font_weight",
-   "fieldtype": "Select",
-   "label": "Button label weight",
-   "options": "400\n500\n600\n700"
-  },
-  {
-   "fieldname": "forms_section",
-   "fieldtype": "Section Break",
-   "label": "Forms"
   },
   {
    "default": "8",
@@ -360,31 +316,31 @@
    "non_negative": 1
   },
   {
-   "default": "32",
-   "fieldname": "input_height",
-   "fieldtype": "Int",
-   "label": "Input height (px)",
-   "non_negative": 1
-  },
-  {
-   "fieldname": "forms_col_1",
+   "fieldname": "components_col_1",
    "fieldtype": "Column Break"
   },
   {
-   "default": "16",
-   "fieldname": "form_section_spacing",
+   "default": "20",
+   "fieldname": "card_padding",
    "fieldtype": "Int",
-   "label": "Space between sections (px)",
+   "label": "Card padding (px)",
    "non_negative": 1
   },
   {
+   "default": "Medium",
+   "fieldname": "shadow_size",
+   "fieldtype": "Select",
+   "label": "Shadow",
+   "options": "None\nSmall\nMedium\nLarge"
+  },
+  {
+   "description": "Applies to list views, report views, child tables and grids.",
    "fieldname": "tables_section",
    "fieldtype": "Section Break",
-   "label": "Tables"
+   "label": "Table Styles"
   },
   {
    "default": "#FBFBFC",
-   "description": "Applies to list view headers, report tables, child-table grids and datatables.",
    "fieldname": "table_header_background",
    "fieldtype": "Color",
    "label": "Header background"
@@ -396,73 +352,11 @@
    "label": "Header text"
   },
   {
-   "default": "#E5E7EB",
-   "fieldname": "table_border_color",
-   "fieldtype": "Color",
-   "label": "Table border"
-  },
-  {
-   "fieldname": "tables_col_1",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "#F7F7F9",
-   "fieldname": "table_row_hover",
-   "fieldtype": "Color",
-   "label": "Row hover"
-  },
-  {
-   "default": "#FAFAFB",
-   "description": "Used only when striped rows are on.",
-   "fieldname": "table_stripe_color",
-   "fieldtype": "Color",
-   "label": "Stripe colour"
-  },
-  {
-   "default": "0",
-   "fieldname": "zebra_tables",
-   "fieldtype": "Check",
-   "label": "Striped rows"
-  },
-  {
-   "fieldname": "tables_col_2",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "42",
-   "fieldname": "table_row_height",
-   "fieldtype": "Int",
-   "label": "Row height (px)",
-   "non_negative": 1
-  },
-  {
-   "default": "12",
-   "fieldname": "table_cell_padding",
-   "fieldtype": "Int",
-   "label": "Cell padding (px)",
-   "non_negative": 1
-  },
-  {
-   "default": "12",
-   "fieldname": "table_header_font_size",
-   "fieldtype": "Int",
-   "label": "Header font size (px)",
-   "non_negative": 1
-  },
-  {
-   "default": "Horizontal",
-   "description": "Horizontal draws row separators only \u2014 usually the quietest choice.",
-   "fieldname": "table_border_style",
+   "default": "Semibold",
+   "fieldname": "table_header_weight",
    "fieldtype": "Select",
-   "label": "Borders",
-   "options": "All\nHorizontal\nNone"
-  },
-  {
-   "default": "1",
-   "description": "The header stays put while the table body scrolls.",
-   "fieldname": "table_sticky_header",
-   "fieldtype": "Check",
-   "label": "Keep header visible"
+   "label": "Header weight",
+   "options": "Regular\nMedium\nSemibold"
   },
   {
    "default": "0",
@@ -471,45 +365,120 @@
    "label": "Uppercase headers"
   },
   {
-   "fieldname": "dark_mode_section",
-   "fieldtype": "Section Break",
-   "label": "Dark Mode"
-  },
-  {
-   "default": "System",
-   "description": "Applied the first time a user opens the Desk. Their own choice always wins afterwards.",
-   "fieldname": "default_appearance",
-   "fieldtype": "Select",
-   "label": "Default appearance",
-   "options": "Light\nDark\nSystem"
-  },
-  {
-   "description": "Leave empty to derive it from the palette.",
-   "fieldname": "dark_background_color",
-   "fieldtype": "Color",
-   "label": "Dark background"
-  },
-  {
-   "description": "Leave empty to derive it from the palette.",
-   "fieldname": "dark_surface_color",
-   "fieldtype": "Color",
-   "label": "Dark surface"
-  },
-  {
-   "fieldname": "dark_col_1",
+   "fieldname": "tables_col_1",
    "fieldtype": "Column Break"
   },
   {
-   "description": "Leave empty to derive it from the palette.",
-   "fieldname": "dark_text_color",
+   "default": "#FFFFFF",
+   "fieldname": "table_row_background",
    "fieldtype": "Color",
-   "label": "Dark text"
+   "label": "Row background"
   },
   {
-   "description": "Leave empty to derive it from the palette.",
-   "fieldname": "dark_border_color",
+   "default": "#111827",
+   "fieldname": "table_row_text",
    "fieldtype": "Color",
-   "label": "Dark border"
+   "label": "Row text"
+  },
+  {
+   "default": "0",
+   "fieldname": "zebra_tables",
+   "fieldtype": "Check",
+   "label": "Striped rows"
+  },
+  {
+   "default": "#F8F8FA",
+   "fieldname": "table_stripe_background",
+   "fieldtype": "Color",
+   "label": "Stripe background"
+  },
+  {
+   "fieldname": "tables_col_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Background tint",
+   "fieldname": "table_hover_effect",
+   "fieldtype": "Select",
+   "label": "Row hover",
+   "options": "None\nBackground tint\nAccent edge"
+  },
+  {
+   "default": "#F6F7F9",
+   "fieldname": "table_row_hover",
+   "fieldtype": "Color",
+   "label": "Hover background"
+  },
+  {
+   "default": "#E8F5FE",
+   "fieldname": "table_selected_background",
+   "fieldtype": "Color",
+   "label": "Selected row"
+  },
+  {
+   "fieldname": "tables_borders_section",
+   "fieldtype": "Section Break",
+   "label": "Borders and spacing"
+  },
+  {
+   "default": "Horizontal",
+   "fieldname": "table_border_style",
+   "fieldtype": "Select",
+   "label": "Borders",
+   "options": "All\nHorizontal\nNone"
+  },
+  {
+   "default": "#E5E7EB",
+   "fieldname": "table_border_color",
+   "fieldtype": "Color",
+   "label": "Border colour"
+  },
+  {
+   "default": "1",
+   "fieldname": "table_border_width",
+   "fieldtype": "Int",
+   "label": "Border width (px)"
+  },
+  {
+   "fieldname": "tables_borders_col_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "10",
+   "description": "Rounding of report tables, child tables and grids. List views follow the card radius.",
+   "fieldname": "table_radius",
+   "fieldtype": "Int",
+   "label": "Table radius (px)"
+  },
+  {
+   "default": "42",
+   "fieldname": "table_row_height",
+   "fieldtype": "Int",
+   "label": "Row height (px)"
+  },
+  {
+   "default": "16",
+   "fieldname": "table_cell_padding",
+   "fieldtype": "Int",
+   "label": "Cell padding (px)"
+  },
+  {
+   "fieldname": "tables_borders_col_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Pills",
+   "fieldname": "table_pagination_style",
+   "fieldtype": "Select",
+   "label": "Pagination style",
+   "options": "Pills\nButtons\nMinimal"
+  },
+  {
+   "default": "Edges",
+   "fieldname": "table_pagination_align",
+   "fieldtype": "Select",
+   "label": "Pagination alignment",
+   "options": "Edges\nLeft\nCentre\nRight"
   },
   {
    "collapsible": 1,
@@ -528,7 +497,7 @@
  "index_web_pages_for_search": 0,
  "issingle": 1,
  "links": [],
- "modified": "2026-03-01 00:00:00.000000",
+ "modified": "2026-01-01 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Myrmex",
  "name": "Theme Settings",
