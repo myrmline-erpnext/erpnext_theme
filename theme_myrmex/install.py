@@ -59,20 +59,21 @@ DEFAULT_SUGGESTIONS = [
 
 
 def ensure_theme_settings():
-	"""Seed Theme Settings defaults using set_single_value.
-
-	Same approach as ensure_branding_settings — avoids get_single() and
-	new_doc().save() which both crash on Frappe v15 with no existing row.
-	"""
+	"""Create the Single doc with the default preset if it is still empty."""
 	if not frappe.db.exists("DocType", "Theme Settings"):
 		return
 
+	doc = frappe.get_single("Theme Settings")
+	changed = False
 	for field, value in DEFAULTS.items():
-		existing = frappe.db.get_single_value("Theme Settings", field)
-		if existing in (None, ""):
-			frappe.db.set_single_value("Theme Settings", field, value)
+		if doc.get(field) in (None, ""):
+			doc.set(field, value)
+			changed = True
 
-	frappe.db.commit()
+	if changed:
+		doc.flags.ignore_permissions = True
+		doc.save()
+		frappe.db.commit()
 
 
 def _suggestion_rows():
@@ -83,21 +84,21 @@ def _suggestion_rows():
 
 
 @frappe.whitelist()
-def default_chatbot_suggestions():
+def default_myrmex_suggestions():
 	"""The shipped suggestion rows, for the "Restore default suggestions" button."""
 	frappe.only_for("System Manager")
 	return _suggestion_rows()
 
 
-def ensure_chatbot_settings():
-	"""Seed Chatbot Settings once. Existing values are never overwritten.
+def ensure_myrmex_settings():
+	"""Seed Myrmex Settings once. Existing values are never overwritten.
 
 	The assistant stays disabled until an administrator configures a provider.
 	"""
-	if not frappe.db.exists("DocType", "Chatbot Settings"):
+	if not frappe.db.exists("DocType", "Myrmex Settings"):
 		return
 
-	doc = frappe.get_single("Chatbot Settings")
+	doc = frappe.get_single("Myrmex Settings")
 	if doc.get("bot_name"):
 		# Already seeded, or configured by hand.
 		return
@@ -113,52 +114,18 @@ def ensure_chatbot_settings():
 	frappe.db.commit()
 
 
-def ensure_branding_settings():
-	"""Seed Branding Settings defaults using set_single_value.
-
-	Avoids frappe.get_single() (throws DoesNotExistError when tabSingles has no
-	row yet) and new_doc().save() (crashes with AttributeError on creation in
-	Frappe v15).  set_single_value issues INSERT … ON DUPLICATE KEY UPDATE
-	directly, so it is safe whether or not any row already exists.
-	"""
-	if not frappe.db.exists("DocType", "Branding Settings"):
-		return
-
-	defaults = {
-		"logo_max_height": 32,
-		"login_bg_overlay_color": "#1e1b4b",
-		"login_bg_overlay_opacity": 0.5,
-		"loader_bg_color": "#ffffff",
-		"loader_spinner_color": "#6366f1",
-	}
-
-	for field, value in defaults.items():
-		# Only write when no value has been set yet
-		existing = frappe.db.get_single_value("Branding Settings", field)
-		if existing in (None, ""):
-			frappe.db.set_single_value("Branding Settings", field, value)
-
-	frappe.db.commit()
-
-
 def after_install():
 	ensure_theme_settings()
-	ensure_chatbot_settings()
-	ensure_branding_settings()
+	ensure_myrmex_settings()
 	clear_theme_cache()
 
 
 def after_migrate():
 	ensure_theme_settings()
-	ensure_chatbot_settings()
-	ensure_branding_settings()
+	ensure_myrmex_settings()
 	clear_theme_cache()
 
 
-def after_app_install(app_name=None, site=None):
-	"""Another app was installed; drop the cached payload so assets re-resolve.
-
-	Frappe v16 passes ``site`` as a second positional argument; accepting it here
-	(and ignoring it) keeps the hook callable on both v15 and v16.
-	"""
+def after_app_install(app_name=None):
+	"""Another app was installed; drop the cached payload so assets re-resolve."""
 	clear_theme_cache()

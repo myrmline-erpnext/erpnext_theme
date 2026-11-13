@@ -1,11 +1,10 @@
-// Sidebar behaviour for the Frappe Desk (v15 and v16).
+// Sidebar behaviour for the Frappe v15 Desk.
 //
-// Frappe v15/v16 renders the workspace sidebar inside each page:
+// v15 renders the workspace sidebar inside each page:
 //   .layout-side-section > .list-sidebar.overlay-sidebar > .desk-sidebar
 //     > .standard-sidebar-section > .sidebar-item-container > .item-anchor
 // and ships its own toggle (.page-head .sidebar-toggle-btn) that hides the
 // sidebar on desktop and opens it as an overlay drawer on mobile.
-// The DOM structure is unchanged between v15 and v16; boot property paths differ.
 //
 // Myrmex keeps that native toggle and drawer exactly as they are, and adds:
 //   * a brand block at the top of the workspace sidebar;
@@ -94,14 +93,9 @@ myrmex.sidebar = {
 
 	mountBrand(deskSidebar) {
 		myrmex.once(deskSidebar, "Brand", () => {
-			// Read app_name from wherever the running Frappe version stores it.
-			// v15: frappe.boot.sysdefaults.app_name  or frappe.boot.app_name
-			// v16: frappe.boot.app_name  or frappe.boot.sysdefaults.app_name
-			const boot = frappe.boot || {};
 			const brandText =
-				(boot.app_name) ||
-				(boot.sysdefaults && boot.sysdefaults.app_name) ||
-				(boot.sitename) ||
+				(frappe.boot && frappe.boot.sysdefaults && frappe.boot.sysdefaults.app_name) ||
+				(frappe.boot && frappe.boot.app_name) ||
 				"Myrmex";
 			const brand = document.createElement("a");
 			brand.className = "myrmex-sidebar-brand";

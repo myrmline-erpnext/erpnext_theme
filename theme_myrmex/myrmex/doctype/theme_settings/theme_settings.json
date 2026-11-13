@@ -421,11 +421,11 @@
    "label": "Borders and spacing"
   },
   {
-   "default": "Horizontal lines",
+   "default": "Horizontal",
    "fieldname": "table_border_style",
    "fieldtype": "Select",
    "label": "Borders",
-   "options": "All borders\nHorizontal lines\nNone"
+   "options": "All\nHorizontal\nNone"
   },
   {
    "default": "#E5E7EB",

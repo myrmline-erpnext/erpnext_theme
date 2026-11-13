@@ -129,7 +129,7 @@ const GROUPS = [
 				fieldname: "table_border_style",
 				label: __("Borders"),
 				type: "select",
-				options: ["All borders", "Horizontal lines", "None"],
+				options: ["All", "Horizontal", "None"],
 			},
 			{ fieldname: "table_border_color", label: __("Border colour"), type: "color" },
 			{ fieldname: "table_border_width", label: __("Border width (px)"), type: "number", min: 0, max: 3 },
@@ -161,71 +161,6 @@ const GROUPS = [
 	},
 ];
 
-// ---------------------------------------------------------------------------
-// Image / Branding definitions (used by BrandingManager)
-// ---------------------------------------------------------------------------
-const BRANDING_IMAGES = [
-	{
-		key: "app_logo",
-		label: __("App Logo"),
-		hint: __("Main application logo. PNG, SVG or WebP recommended."),
-		dims: "240 × 80 px",
-		preview: "checkerboard",
-		accepts: ".png,.jpg,.jpeg,.svg,.webp",
-	},
-	{
-		key: "navbar_logo",
-		label: __("Navbar Logo"),
-		hint: __("Shown in the top navigation bar. Leave blank to use the app logo."),
-		dims: "240 × 64 px",
-		preview: "dark",
-		accepts: ".png,.jpg,.jpeg,.svg,.webp",
-	},
-	{
-		key: "login_logo",
-		label: __("Login Logo"),
-		hint: __("Shown on the sign-in page above the form."),
-		dims: "280 × 100 px",
-		preview: "checkerboard",
-		accepts: ".png,.jpg,.jpeg,.svg,.webp",
-	},
-	{
-		key: "favicon",
-		label: __("Favicon"),
-		hint: __("Browser tab icon. Use a square .ico or 32 × 32 PNG."),
-		dims: "32 × 32 px",
-		preview: "checkerboard",
-		accepts: ".ico,.png,.svg",
-	},
-	{
-		key: "login_background",
-		label: __("Login Background"),
-		hint: __("Full-screen background image on the login page."),
-		dims: "1920 × 1080 px",
-		preview: "dark",
-		accepts: ".png,.jpg,.jpeg,.webp",
-	},
-	{
-		key: "loader_image",
-		label: __("Loader Logo"),
-		hint: __("Static logo shown while the application is loading."),
-		dims: "160 × 100 px",
-		preview: "checkerboard",
-		accepts: ".png,.jpg,.jpeg,.svg,.webp",
-	},
-	{
-		key: "loader_animation",
-		label: __("Loader Animation"),
-		hint: __("Animated GIF or WebP shown during loading. Replaces the spinner."),
-		dims: "120 × 120 px",
-		preview: "checkerboard",
-		accepts: ".gif,.webp,.png,.svg",
-	},
-];
-
-// Add Branding as a special tab (rendered by BrandingManager, not from GROUPS fields)
-const BRANDING_TAB_KEY = "branding";
-
 class ThemeBuilder {
 	constructor(page) {
 		this.page = page;
@@ -237,7 +172,6 @@ class ThemeBuilder {
 		this.render_shell();
 		this.load();
 		this.bind_page_actions();
-		this._brandingManager = new BrandingManager(this.page);
 	}
 
 	// --- data ---------------------------------------------------------------
@@ -276,7 +210,6 @@ class ThemeBuilder {
 					</p>
 					<div class="myrmex-builder__tabs" role="tablist"></div>
 					<div class="myrmex-builder__groups"></div>
-					<div class="myrmex-builder__branding-panel" style="display:none;"></div>
 					<div class="myrmex-builder__actions">
 						<button class="btn btn-primary btn-sm" data-action="save">${__("Save theme")}</button>
 						<button class="btn btn-default btn-sm" data-action="revert">${__("Discard changes")}</button>
@@ -350,11 +283,6 @@ class ThemeBuilder {
 				.on("click", () => this.activate(group.key))
 				.appendTo(tabs);
 		});
-		// Branding tab (special — rendered by BrandingManager)
-		$(`<button class="myrmex-builder__tab" role="tab" data-group="${BRANDING_TAB_KEY}">${__("Branding")}</button>`)
-			.attr("aria-selected", false)
-			.on("click", () => this.activate(BRANDING_TAB_KEY))
-			.appendTo(tabs);
 
 		this.page.main.on("click", "[data-action]", (event) => {
 			const action = $(event.currentTarget).data("action");
@@ -369,20 +297,9 @@ class ThemeBuilder {
 		this.page.main
 			.find(".myrmex-builder__tab")
 			.each((_, el) => $(el).attr("aria-selected", $(el).data("group") === key));
-
-		const isBranding = key === BRANDING_TAB_KEY;
-		// Show/hide the theme fields panel vs branding panel
-		this.page.main.find(".myrmex-builder__groups").toggle(!isBranding);
-		this.page.main.find(".myrmex-builder__branding-panel").toggle(isBranding);
-		this.page.main.find(".myrmex-builder__actions").toggle(!isBranding);
-
-		if (isBranding) {
-			this._brandingManager.mount(this.page.main.find(".myrmex-builder__branding-panel"));
-		} else {
-			this.page.main
-				.find(".myrmex-builder__group")
-				.each((_, el) => $(el).toggleClass("is-active", $(el).data("group") === key));
-		}
+		this.page.main
+			.find(".myrmex-builder__group")
+			.each((_, el) => $(el).toggleClass("is-active", $(el).data("group") === key));
 	}
 
 	// --- fields -------------------------------------------------------------
@@ -527,41 +444,28 @@ class ThemeBuilder {
 				if (!r.message) return;
 				this.settings = Object.assign({}, r.message.settings, {
 					custom_css: this.settings.custom_css,
-					// Always keep theme enabled when a preset is applied
-					enable_theme: this.settings.enable_theme ?? 1,
 				});
 				this.dirty = true;
 				this.page.set_indicator(__("Unsaved"), "orange");
 				this.render_fields();
 				this.refresh_preview();
-				// Apply the preset payload to the live Desk immediately
-				if (r.message.payload && window.myrmex && window.myrmex.theme) {
-					window.myrmex.theme.apply(r.message.payload);
-				}
 			},
 		});
 	}
 
 	save() {
-		// Ensure enable_theme is treated as truthy so the payload comes back
-		// with enabled:true and myrmex.theme.apply() actually writes the variables.
-		const values = Object.assign({}, this.settings);
-		if (values.enable_theme === undefined) values.enable_theme = 1;
-
 		frappe.call({
 			method: "theme_myrmex.api.save_theme",
-			args: { values },
+			args: { values: this.settings },
 			freeze: true,
 			freeze_message: __("Saving theme"),
 			callback: (r) => {
 				if (!r.message) return;
 				this.dirty = false;
 				this.page.set_indicator(__("Saved"), "green");
-				// Apply straight away in this tab; other open tabs get it via
-				// the myrmex_theme_updated realtime event the server fires.
-				if (window.myrmex && window.myrmex.theme) {
-					window.myrmex.theme.apply(r.message);
-				}
+				// Apply straight away in this tab; other open tabs get it over
+				// realtime from the server.
+				if (window.myrmex && window.myrmex.theme) window.myrmex.theme.apply(r.message);
 			},
 		});
 	}
@@ -597,325 +501,8 @@ class ThemeBuilder {
 			this.refresh_preview();
 		});
 
-		this.page.add_menu_item(__("Open Branding Settings"), () =>
-			frappe.set_route("Form", "Branding Settings")
-		);
-
 		// Leaving with unsaved edits should be a deliberate choice.
 		$(window).on("beforeunload.myrmex-builder", () => (this.dirty ? true : undefined));
 		this.page.wrapper.on("remove", () => $(window).off("beforeunload.myrmex-builder"));
-	}
-}
-
-// ===========================================================================
-// BrandingManager — Image upload / preview tab inside Theme Builder
-// ===========================================================================
-
-class BrandingManager {
-	constructor(page) {
-		this.page = page;
-		this._mounted = false;
-		this._host = null;
-		this._data = {};
-	}
-
-	mount(host) {
-		this._host = host;
-		if (this._mounted) return; // already rendered, just ensure visible
-		this._mounted = true;
-		this._render(host);
-		this._load();
-	}
-
-	_render(host) {
-		host.empty().append(`
-			<div class="mx-branding-manager" style="padding: 16px 0;">
-				<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-					<div>
-						<h5 style="margin:0 0 2px; font-weight:700;">${__("Image & Branding")}</h5>
-						<p style="margin:0; font-size:12px; color:var(--myrmex-muted,#64748b);">
-							${__("Upload logos, favicon, and backgrounds. Changes take effect immediately after saving.")}
-						</p>
-					</div>
-					<button class="btn btn-primary btn-sm mx-branding-save">${__("Save branding")}</button>
-				</div>
-				<div class="mx-branding-grid"></div>
-				<div style="margin-top:20px; padding-top:14px; border-top:1px solid var(--myrmex-border,#e2e8f0);">
-					<h6 style="margin:0 0 10px; font-size:12px; font-weight:700; text-transform:uppercase;
-						letter-spacing:.05em; color:var(--myrmex-muted,#64748b);">${__("Display settings")}</h6>
-					<div class="mx-branding-scalars"></div>
-				</div>
-			</div>
-		`);
-
-		const grid = host.find(".mx-branding-grid");
-		BRANDING_IMAGES.forEach((def) => grid.append(this._card(def)));
-
-		this._renderScalars(host.find(".mx-branding-scalars"));
-
-		host.find(".mx-branding-save").on("click", () => this._save());
-
-		// Delegate drop zone clicks to the hidden file input.
-		// Stop propagation on the input itself so its click doesn't re-bubble
-		// back to .mx-drop-zone and cause an infinite trigger loop.
-		host.on("click", ".mx-drop-zone", (e) => {
-			if ($(e.target).is('input[type="file"]')) return; // already the input — let it open
-			e.stopPropagation();
-			$(e.currentTarget).find('input[type="file"]').trigger("click");
-		});
-	}
-
-	_card(def) {
-		const card = $(`
-			<div class="mx-branding-card" data-key="${def.key}">
-				<div class="mx-branding-card-header">
-					<p class="mx-branding-card-title">${def.label}</p>
-					<p class="mx-branding-card-hint">${def.hint}
-						<span class="mx-dimension-badge">${def.dims}</span>
-					</p>
-				</div>
-				<div class="mx-branding-preview ${def.preview === "dark" ? "mx-preview-dark" : "mx-preview-checkerboard"}">
-					<div class="mx-no-image">
-						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-							<rect x="3" y="3" width="18" height="18" rx="2"/>
-							<circle cx="8.5" cy="8.5" r="1.5"/>
-							<path d="m21 15-5-5L5 21"/>
-						</svg>
-						<span>${__("No image")}</span>
-					</div>
-				</div>
-				<div class="mx-branding-controls">
-					<div class="mx-drop-zone">
-						<input type="file" accept="${def.accepts}" data-key="${def.key}">
-						<span>${__("Click or drop to upload")}</span>
-					</div>
-					<div class="mx-branding-actions">
-						<span class="mx-upload-status mx-status-empty">${__("Not set")}</span>
-						<button class="btn btn-xs btn-danger mx-btn-remove" style="display:none;">${__("Remove")}</button>
-					</div>
-				</div>
-			</div>
-		`);
-
-		// File input → upload
-		card.find('input[type="file"]').on("change", (e) => {
-			const file = e.target.files[0];
-			if (file) this._upload(def.key, file, card);
-		});
-
-		// Drag-and-drop
-		const dz = card.find(".mx-drop-zone");
-		dz.on("dragover", (e) => { e.preventDefault(); dz.addClass("mx-drag-over"); });
-		dz.on("dragleave", () => dz.removeClass("mx-drag-over"));
-		dz.on("drop", (e) => {
-			e.preventDefault();
-			dz.removeClass("mx-drag-over");
-			const file = e.originalEvent.dataTransfer.files[0];
-			if (file) this._upload(def.key, file, card);
-		});
-
-		// Remove button
-		card.find(".mx-btn-remove").on("click", () => this._removeImage(def.key, card));
-
-		return card;
-	}
-
-	_renderScalars(host) {
-		const scalars = [
-			{ key: "logo_max_height", label: __("Logo max height (px)"), type: "number", min: 20, max: 80, default: 32 },
-			{ key: "loader_bg_color", label: __("Loader background"), type: "color", default: "#ffffff" },
-			{ key: "loader_spinner_color", label: __("Loader spinner colour"), type: "color", default: "#6366f1" },
-			{ key: "login_bg_overlay_color", label: __("Login overlay colour"), type: "color", default: "#1e1b4b" },
-			{ key: "login_bg_overlay_opacity", label: __("Login overlay opacity (0–1)"), type: "number", min: 0, max: 1, step: 0.05, default: 0.5 },
-		];
-
-		scalars.forEach((s) => {
-			const row = $(`<div class="myrmex-builder__field" data-scalar="${s.key}"></div>`);
-			$("<label></label>").text(s.label).appendTo(row);
-			const ctrl = $('<div class="myrmex-builder__control"></div>').appendTo(row);
-
-			if (s.type === "color") {
-				const swatch = $('<input type="color" class="myrmex-builder__swatch">');
-				const hex = $('<input type="text" class="form-control input-sm myrmex-builder__hex" maxlength="7">');
-				const sync = (val) => { swatch.val(val); hex.val(val); this._data[s.key] = val; };
-				swatch.on("input", () => sync(swatch.val().toUpperCase()));
-				hex.on("change", () => { const c = this._normaliseHex(hex.val()); if (c) sync(c); });
-				ctrl.append(swatch, hex);
-			} else {
-				const input = $('<input type="number" class="form-control input-sm myrmex-builder__number">')
-					.attr({ min: s.min, max: s.max, step: s.step || 1 });
-				input.on("change", () => { this._data[s.key] = parseFloat(input.val()); });
-				ctrl.append(input);
-			}
-
-			host.append(row);
-		});
-	}
-
-	_load() {
-		frappe.call({
-			method: "theme_myrmex.branding.get_branding_settings",
-			callback: (r) => {
-				if (!r.message) return;
-				this._data = Object.assign({}, r.message);
-				this._refresh();
-			},
-		});
-	}
-
-	_refresh() {
-		if (!this._host) return;
-		const data = this._data;
-
-		// Update image cards
-		BRANDING_IMAGES.forEach((def) => {
-			const card = this._host.find(`.mx-branding-card[data-key="${def.key}"]`);
-			const url = data[def.key];
-			this._setCardImage(card, url);
-		});
-
-		// Update scalars
-		[
-			["logo_max_height", "number"],
-			["loader_bg_color", "color"],
-			["loader_spinner_color", "color"],
-			["login_bg_overlay_color", "color"],
-			["login_bg_overlay_opacity", "number"],
-		].forEach(([key]) => {
-			const row = this._host.find(`[data-scalar="${key}"]`);
-			const val = data[key];
-			if (val !== undefined && val !== null) {
-				row.find('input[type="color"]').val(val);
-				row.find('input[type="text"]').val(val);
-				row.find('input[type="number"]').val(val);
-			}
-		});
-	}
-
-	_setCardImage(card, url) {
-		const preview = card.find(".mx-branding-preview");
-		const statusBadge = card.find(".mx-upload-status");
-		const removeBtn = card.find(".mx-btn-remove");
-
-		if (url) {
-			preview.html(`<img src="${url}" alt="" loading="lazy">`);
-			statusBadge
-				.removeClass("mx-status-empty mx-status-uploading")
-				.addClass("mx-status-ok")
-				.text(__("Uploaded"));
-			removeBtn.show();
-		} else {
-			preview.html(`
-				<div class="mx-no-image">
-					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-						<rect x="3" y="3" width="18" height="18" rx="2"/>
-						<circle cx="8.5" cy="8.5" r="1.5"/>
-						<path d="m21 15-5-5L5 21"/>
-					</svg>
-					<span>${__("No image")}</span>
-				</div>
-			`);
-			statusBadge
-				.removeClass("mx-status-ok mx-status-uploading")
-				.addClass("mx-status-empty")
-				.text(__("Not set"));
-			removeBtn.hide();
-		}
-	}
-
-	_upload(key, file, card) {
-		const def = BRANDING_IMAGES.find((d) => d.key === key);
-
-		// ── Validate ────────────────────────────────────────────────────────
-		const ext = "." + file.name.split(".").pop().toLowerCase();
-		if (def && !def.accepts.split(",").includes(ext)) {
-			frappe.show_alert({ message: __("File type not supported: {0}", [ext]), indicator: "red" });
-			return;
-		}
-		if (file.size > 5 * 1024 * 1024) {
-			frappe.show_alert({ message: __("File is too large (max 5 MB)"), indicator: "red" });
-			return;
-		}
-
-		const statusBadge = card.find(".mx-upload-status");
-		statusBadge.removeClass("mx-status-ok mx-status-empty").addClass("mx-status-uploading").text(__("Uploading…"));
-
-		// ── Upload via Frappe's upload_file endpoint ─────────────────────────
-		// Plain FormData POST. "Home" always exists in every Frappe site.
-		// We read frappe.csrf_token fresh at call time (it may rotate).
-		const formData = new FormData();
-		formData.append("file", file, file.name);
-		formData.append("is_private", "0");
-		formData.append("folder", "Home");
-		// Do NOT pass doctype/docname — Frappe tries to create a linked comment
-		// for Single DocTypes and fails link validation because no named row exists.
-
-		const csrfToken = frappe.csrf_token || $('meta[name="csrf-token"]').attr("content") || "";
-
-		fetch("/api/method/upload_file", {
-			method: "POST",
-			headers: { "X-Frappe-CSRF-Token": csrfToken },
-			body: formData,
-		})
-			.then((res) => {
-				if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
-				return res.json();
-			})
-			.then((data) => {
-				// Frappe v15 wraps the File doc in data.message
-				const msg = data.message || data;
-				const url = msg.file_url || msg.file_name;
-				if (!url) throw new Error("No file URL in response");
-
-				this._data[key] = url;
-				this._setCardImage(card, url);
-				frappe.show_alert({
-					message: __("{0} uploaded successfully", [def ? def.label : key]),
-					indicator: "green",
-				});
-			})
-			.catch((err) => {
-				statusBadge.removeClass("mx-status-uploading").addClass("mx-status-empty").text(__("Failed"));
-				frappe.show_alert({
-					message: __("Upload failed: {0}", [err.message]),
-					indicator: "red",
-				});
-			});
-	}
-
-	_removeImage(key, card) {
-		frappe.confirm(__("Remove this image?"), () => {
-			this._data[key] = null;
-			this._setCardImage(card, null);
-		});
-	}
-
-	_save() {
-		frappe.call({
-			method: "theme_myrmex.branding.save_branding",
-			args: { values: JSON.stringify(this._data) },
-			freeze: true,
-			freeze_message: __("Saving branding…"),
-			callback: (r) => {
-				// save_branding returns build_branding_payload() — a plain dict,
-				// not {ok: true}. Any truthy r.message means success.
-				if (r.message) {
-					frappe.show_alert({ message: __("Branding saved"), indicator: "green" });
-					// Apply immediately in this tab
-					if (window.myrmex && window.myrmex.branding) {
-						window.myrmex.branding.apply(r.message);
-					}
-				} else {
-					frappe.show_alert({ message: __("Failed to save branding"), indicator: "red" });
-				}
-			},
-		});
-	}
-
-	_normaliseHex(value) {
-		let cleaned = (value || "").trim().replace(/^#/, "");
-		if (cleaned.length === 3) cleaned = cleaned.split("").map((c) => c + c).join("");
-		if (!/^[0-9a-fA-F]{6}$/.test(cleaned)) return null;
-		return "#" + cleaned.toUpperCase();
 	}
 }

@@ -112,8 +112,8 @@ TABLE_HEADER_WEIGHTS = {
 # Which edges the border width applies to. "Horizontal lines" keeps the row
 # rules and drops the cell separators, which is the default table look.
 TABLE_BORDER_EDGES = {
-	"All borders": ("row", "cell"),
-	"Horizontal lines": ("row",),
+	"All": ("row", "cell"),
+	"Horizontal": ("row",),
 	"None": (),
 }
 
@@ -214,7 +214,7 @@ DEFAULTS = {
 	"table_row_hover": "#F6F7F9",
 	"table_selected_background": "#E8F5FE",
 	"table_hover_effect": "Background tint",
-	"table_border_style": "Horizontal lines",
+	"table_border_style": "Horizontal",
 	"table_border_color": "#E5E7EB",
 	"table_border_width": 1,
 	"table_radius": 10,
@@ -332,7 +332,7 @@ PRESETS = {
 		table_row_hover="#EDF1F8",
 		table_stripe_background="#F7F9FC",
 		table_selected_background="#D9E7FF",
-		table_border_style="All borders",
+		table_border_style="All",
 		table_border_color="#DDE1E6",
 		table_radius=4,
 		table_row_height=38,
