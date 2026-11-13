@@ -223,25 +223,41 @@
 	background-color: var(--myrmex-sidebar-active);
 }
 
-/* Controls: hidden at rest, revealed when the row is hovered or keyboard-focused.
- * We set both directions explicitly so Frappe's native opacity-0/opacity-1
- * rules cannot fight us regardless of specificity order.
- * position: relative makes the absolutely-positioned .dropdown-list anchor
- * to this element's right edge. */
+/* Controls: hidden at rest, revealed on hover / focus / open dropdown.
+ *
+ * visibility (not opacity) is used because a child element can override
+ * a parent's visibility: hidden with visibility: visible — but no child
+ * can override a parent's opacity: 0.  This lets the dropdown stay fully
+ * painted even after the mouse leaves the row while the menu is open.
+ *
+ * position: relative makes the absolutely-positioned .dropdown-list
+ * anchor to this element's right edge.                                    */
 .myrmex-enabled .desk-sidebar .sidebar-item-control {
 	position: relative;
 	display: flex !important;
 	align-items: center;
 	padding-inline-end: var(--myrmex-space-1);
+	visibility: hidden;
 	opacity: 0;
 	pointer-events: none;
-	transition: opacity var(--myrmex-transition);
+	transition: opacity var(--myrmex-transition), visibility 0s var(--myrmex-transition);
 }
 
+/* Hover / keyboard-focus → show controls */
 .myrmex-enabled .desk-sidebar .standard-sidebar-item:hover .sidebar-item-control,
 .myrmex-enabled .desk-sidebar .standard-sidebar-item:focus-within .sidebar-item-control {
-	opacity: 1 !important;
+	visibility: visible;
+	opacity: 1;
 	pointer-events: auto;
+	transition: opacity var(--myrmex-transition), visibility 0s;
+}
+
+/* Dropdown open → keep the whole control row visible even after mouse leaves */
+.myrmex-enabled .desk-sidebar .sidebar-item-control:has(.dropdown-list:not(.hidden)) {
+	visibility: visible !important;
+	opacity: 1 !important;
+	pointer-events: auto !important;
+	transition: none;
 }
 
 .myrmex-enabled .desk-sidebar .sidebar-item-control .drop-icon {
@@ -260,8 +276,11 @@
 	position: absolute;
 	inset-inline-end: 0;
 	top: calc(100% + 4px);
-	z-index: 1050;
+	/* Above modals (1050), navbar (1030), dropdowns (1020) */
+	z-index: 1100;
 	min-width: 172px;
+	/* Override any inherited visibility: hidden from the control row */
+	visibility: visible !important;
 	padding: var(--myrmex-space-1) 0;
 	/* Match the navbar's surface: same background, border and elevation */
 	background-color: var(--myrmex-navbar-background);
