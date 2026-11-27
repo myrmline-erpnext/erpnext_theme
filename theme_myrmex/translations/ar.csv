@@ -4,7 +4,7 @@ API endpoint,عنوان واجهة البرمجة (API)
 Accent colour,لون التمييز
 Accent edge,حافة ملوّنة
 "Add at least one page pattern, or show the assistant everywhere.",أضف نمط صفحة واحدًا على الأقل، أو اعرض المساعد في كل الصفحات.
-All borders,كل الحدود
+All,كل الحدود
 Allowed roles,الأدوار المسموح بها
 Application context,سياق التطبيق
 "Applies to list views, report views, child tables and grids.",ينطبق على شاشات القوائم والتقارير والجداول الفرعية والشبكات.
@@ -28,11 +28,11 @@ Bottom right,أسفل اليمين
 Buttons,أزرار
 Cell padding (px),الحشو الداخلي للخلايا (px)
 Centre,في الوسط
-Chatbot Conversation,محادثة المساعد
-Chatbot Message,رسالة المساعد
-Chatbot Settings,إعدادات المساعد
-Chatbot Settings has not been created yet.,لم يتم إنشاء إعدادات المساعد بعد.
-Chatbot Suggestion,اقتراح المساعد
+Myrmex Conversation,محادثة المساعد
+Myrmex Message,رسالة المساعد
+Myrmex Settings,إعدادات المساعد
+Myrmex Settings has not been created yet.,لم يتم إنشاء إعدادات المساعد بعد.
+Myrmex Suggestion,اقتراح المساعد
 Close assistant,إغلاق المساعد
 Collapse sidebar,طيّ الشريط الجانبي
 Connection failed,فشل الاتصال
@@ -67,7 +67,7 @@ Header text,نص الرأس
 Header weight,سماكة خط الرأس
 Hello {0}! How can I help you today?,مرحبًا {0}! كيف يمكنني مساعدتك اليوم؟
 Hello! How can I help you today?,مرحبًا! كيف يمكنني مساعدتك اليوم؟
-Horizontal lines,خطوط أفقية
+Horizontal,خطوط أفقية
 Hover,التمرير
 Hover background,الخلفية عند التمرير
 Invalid message role: {0},دور رسالة غير صالح: {0}

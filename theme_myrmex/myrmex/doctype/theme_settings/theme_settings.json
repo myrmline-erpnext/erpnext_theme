@@ -10,6 +10,7 @@
  "field_order": [
   "general_section",
   "enable_theme",
+  "app_name",
   "theme_preset",
   "general_col_1",
   "default_appearance",
@@ -91,6 +92,12 @@
    "fieldname": "enable_theme",
    "fieldtype": "Check",
    "label": "Enable Theme Myrmex"
+  },
+  {
+   "description": "Shown in the sidebar brand block. Leave blank to use the default application name from Frappe.",
+   "fieldname": "app_name",
+   "fieldtype": "Data",
+   "label": "Application name"
   },
   {
    "default": "Myrmex Default",

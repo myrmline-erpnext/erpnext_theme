@@ -14,12 +14,12 @@ def boot_session(bootinfo):
 		frappe.log_error(title="Theme Myrmex: bootinfo failed")
 
 	try:
-		from theme_myrmex.chatbot.service import public_config
+		from theme_myrmex.myrmex_assistant.service import public_config
 
 		# Filtered per user; contains no provider details or secrets.
-		bootinfo.myrmex_chatbot = public_config()
+		bootinfo.myrmex_assistant = public_config()
 	except Exception:
-		bootinfo.myrmex_chatbot = {"enabled": False}
+		bootinfo.myrmex_assistant = {"enabled": False}
 		frappe.log_error(title="Myrmex Assistant: bootinfo failed")
 
 

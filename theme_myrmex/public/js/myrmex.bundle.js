@@ -11,4 +11,4 @@ import "./myrmex-theme.js";
 import "./myrmex-sidebar.js";
 import "./myrmex-navbar.js";
 import "./myrmex-workspace.js";
-import "./myrmex-chatbot.js";
+import "./myrmex-assistant.js";

@@ -32,7 +32,7 @@ app_include_css = [
 	"myrmex-forms.bundle.css",
 	"myrmex-lists.bundle.css",
 	"myrmex-states.bundle.css",
-	"myrmex-chatbot.bundle.css",
+	"myrmex-assistant.bundle.css",
 	"myrmex-dark.bundle.css",
 	"myrmex-responsive.bundle.css",
 ]
@@ -77,12 +77,12 @@ doc_events = {
 	"User": {
 		# Runs before Frappe's link check, so a user who used the assistant can
 		# still be deleted, and their conversations go with them.
-		"on_trash": "theme_myrmex.chatbot.tasks.delete_user_conversations",
+		"on_trash": "theme_myrmex.myrmex_assistant.tasks.delete_user_conversations",
 	},
 }
 
 # Belt and braces for the same case: never let assistant records block a delete.
-ignore_links_on_delete = ["Chatbot Conversation", "Chatbot Message"]
+ignore_links_on_delete = ["Myrmex Conversation", "Myrmex Message"]
 
 # ---------------------------------------------------------------------------
 # Assistant
@@ -91,9 +91,9 @@ ignore_links_on_delete = ["Chatbot Conversation", "Chatbot Message"]
 
 scheduler_events = {
 	"daily": [
-		"theme_myrmex.chatbot.tasks.delete_expired_conversations",
+		"theme_myrmex.myrmex_assistant.tasks.delete_expired_conversations",
 	],
 }
 
-# Chatbot DocTypes are deliberately not exported as fixtures: settings hold an
+# Myrmex DocTypes are deliberately not exported as fixtures: settings hold an
 # encrypted API key and conversations hold user data.

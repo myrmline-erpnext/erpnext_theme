@@ -93,17 +93,26 @@ myrmex.sidebar = {
 
 	mountBrand(deskSidebar) {
 		myrmex.once(deskSidebar, "Brand", () => {
+			// Priority:
+			//   1. app_name set in Theme Settings (sent via frappe.boot.myrmex_theme)
+			//   2. sysdefaults.app_name from System Settings
+			//   3. frappe.boot.app_name
+			//   4. "Frappe" as the hard default
+			const boot = (window.frappe && frappe.boot) || {};
+			const sysDefaults = boot.sysdefaults || {};
+			const myrmexBoot = boot.myrmex_theme || {};
 			const brandText =
-				(frappe.boot && frappe.boot.sysdefaults && frappe.boot.sysdefaults.app_name) ||
-				(frappe.boot && frappe.boot.app_name) ||
-				"Myrmex";
+				(myrmexBoot.app_name && myrmexBoot.app_name.trim()) ||
+				(sysDefaults.app_name && sysDefaults.app_name.trim()) ||
+				(boot.app_name && boot.app_name.trim()) ||
+				"Frappe";
 			const brand = document.createElement("a");
 			brand.className = "myrmex-sidebar-brand";
 			brand.href = "/app";
 			brand.setAttribute("aria-label", brandText);
 			brand.innerHTML = `
-				<span class="myrmex-mark" aria-hidden="true"></span>
-				<span class="myrmex-wordmark"></span>
+				<span class="myrmex-mark" aria-hidden="true">${myrmex.escape(brandText.charAt(0).toUpperCase())}</span>
+				<span class="myrmex-wordmark">${myrmex.escape(brandText)}</span>
 			`;
 			deskSidebar.prepend(brand);
 		});

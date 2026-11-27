@@ -84,21 +84,21 @@ def _suggestion_rows():
 
 
 @frappe.whitelist()
-def default_chatbot_suggestions():
+def default_myrmex_suggestions():
 	"""The shipped suggestion rows, for the "Restore default suggestions" button."""
 	frappe.only_for("System Manager")
 	return _suggestion_rows()
 
 
-def ensure_chatbot_settings():
-	"""Seed Chatbot Settings once. Existing values are never overwritten.
+def ensure_myrmex_settings():
+	"""Seed Myrmex Settings once. Existing values are never overwritten.
 
 	The assistant stays disabled until an administrator configures a provider.
 	"""
-	if not frappe.db.exists("DocType", "Chatbot Settings"):
+	if not frappe.db.exists("DocType", "Myrmex Settings"):
 		return
 
-	doc = frappe.get_single("Chatbot Settings")
+	doc = frappe.get_single("Myrmex Settings")
 	if doc.get("bot_name"):
 		# Already seeded, or configured by hand.
 		return
@@ -116,13 +116,13 @@ def ensure_chatbot_settings():
 
 def after_install():
 	ensure_theme_settings()
-	ensure_chatbot_settings()
+	ensure_myrmex_settings()
 	clear_theme_cache()
 
 
 def after_migrate():
 	ensure_theme_settings()
-	ensure_chatbot_settings()
+	ensure_myrmex_settings()
 	clear_theme_cache()
 
 
