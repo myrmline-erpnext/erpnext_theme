@@ -102,8 +102,8 @@ myrmex.sidebar = {
 			brand.href = "/app";
 			brand.setAttribute("aria-label", brandText);
 			brand.innerHTML = `
-				<span class="myrmex-mark" aria-hidden="true">${myrmex.escape(brandText.charAt(0).toUpperCase())}</span>
-				<span class="myrmex-wordmark">${myrmex.escape(brandText)}</span>
+				<span class="myrmex-mark" aria-hidden="true"></span>
+				<span class="myrmex-wordmark"></span>
 			`;
 			deskSidebar.prepend(brand);
 		});
